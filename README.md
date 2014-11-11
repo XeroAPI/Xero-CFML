@@ -37,9 +37,9 @@ coming soon
 ##Acknowledgements
 Thanks for the following Developers and Open Source libraries for making the wrapper and samples easier
 
-* [ColdFusion oAuth Library]((http://oauth.riaforge.org/)) - OAuth 1.0
+* [ColdFusion oAuth Library](http://oauth.riaforge.org/) - OAuth 1.0
 * [Sharad Gupta](http://www.jensbits.com/2010/05/16/generating-signatures-in-coldfusion-with-rsa-sha1-for-secure-authsub-in-google-analytics/) - RSA-SHA1 signature
-* [Matthew Bryant]((http://au.linkedin.com/in/mjbryant)) - For his work on a Xero API wrapper for Private applications
+* [Matthew Bryant](http://au.linkedin.com/in/mjbryant) - For his work on a Xero API wrapper for Private applications
 
 
 ##License
