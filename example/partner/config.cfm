@@ -31,7 +31,7 @@ These are used to sign RSA-SHA1 oAuth signatures
 Public key is uploaded into your Xero App at api.xero.com
 Public/Private Key Pair docs: http://developer.xero.com/documentation/advanced-docs/public-private-keypair/
 --->
-<cfset pathToKey = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "certs/privateKey.pk8" />
+<cfset pathToKey = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "certs/privatekey.pk8" />
 
 
 <!--- 

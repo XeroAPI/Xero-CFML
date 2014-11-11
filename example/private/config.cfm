@@ -10,7 +10,6 @@ Public and Partner Apps use both
 Private Apps only use consumer key
 --->
 <cfset sConsumerKey = "__PASTE_YOUR_CONSUMER_KEY__"> 
-<cfset sConsumerSecret = "__YOU_DON_NOT_NEED_YOUR_CONSUMER_SECRET__"> 
 
 <!--- 
 Base URL for API Endpoints 
@@ -26,4 +25,4 @@ Public key is uploaded into your Xero App at api.xero.com
 Public/Private Key Pair docs: http://developer.xero.com/documentation/advanced-docs/public-private-keypair/
 --->
 
-<cfset pathToKey = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "certs/privateKey.pk8" />
+<cfset pathToKey = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "certs/privatekey.pk8" />
