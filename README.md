@@ -22,13 +22,26 @@ Xero's API supports [3 application types] (http://developer.xero.com/documentati
 
 
 ## Getting Started
-### Public Applications
+### Create a Xero User Account
+You can [create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
+
+### Create a Xero Application
+After you create your free account and setup the demo company, you'll want to [add a Xero application](https://api.xero.com/Application).  
+
+### Install Xero-CFML Library
+Simply download this library and place it in your ColdFusion or Railo webroot. There is a single mapping of the cfc directory in the Application.cfc file.
+
+	<cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" />
+
+Next, follow the configuration steps based on your type of Xero application.
+
+### Public Application
 coming soon
 
-### Private Applications
+### Private Application
 coming soon
 
-### Partner Applications
+### Partner Application
 coming soon
 
 ## To Do
