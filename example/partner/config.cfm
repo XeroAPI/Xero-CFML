@@ -43,5 +43,5 @@ Required by Partner Application Only
 Provided by Xero API team after review of your integration by Developer Relations Team.
 contact: api@xero.com
 --->
-<cfset pathToSSLCert = GetDirectoryFromPath( GetCurrentTemplatePath()) & "certs/XeroSidPartnerTestApp.p12" />   
-<cfset passwordToSSLCert = "Mad07Liv11" />   
+<cfset pathToSSLCert = GetDirectoryFromPath( GetCurrentTemplatePath()) & "certs/your-entrust-cert.p12" />   
+<cfset passwordToSSLCert = "your-entrust-password" />   
