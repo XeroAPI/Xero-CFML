@@ -1,7 +1,7 @@
 <!---
 Description:
 ============
-	OAuth signaturemethod "HMAC SHA1"
+	OAuth signaturemethod "RSA SHA1"
 
 License:
 ============
@@ -21,8 +21,7 @@ limitations under the License.
 
 History:
 ============
-08/11/08 - Chris Blackwell: added java.net.URLEncoder code, see
-	http://code.google.com/p/oauth/issues/detail?id=35
+
 --->
 
 <cfcomponent extends="oauthsignaturemethod" displayname="oauthsignaturemethod_rsa_sha1" hint="signature method using RSA-SHA1">
@@ -67,6 +66,7 @@ History:
 		<cfreturn sHashed>
 	</cffunction>
 
+<!---
 	<cffunction name="hmac_sha1" returntype="string" access="public">
 	   <cfargument name="signKey" type="string" required="true">
 	   <cfargument name="signMessage" type="string" required="true">
@@ -86,7 +86,7 @@ History:
 
 	   <cfreturn ToBase64(mac.doFinal())>
 	</cffunction>
-
+--->
 
 
 <cffunction name="rsa_sha1" returntype="string" access="public" descrition="RSA-SHA1 computation based on supplied private key and supplied base signature string.">
