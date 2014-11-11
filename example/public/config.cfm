@@ -21,7 +21,7 @@ Required by Public & Partner Application Only
 <cfset sTokenEndpoint = "https://api.xero.com/oauth/RequestToken"> <!--- Request Token URL --->
 <cfset sAuthorizationEndpoint = "https://api.xero.com/oauth/Authorize"> <!--- Authorize URL --->
 <cfset sAccessTokenEndpoint = "https://api.xero.com/oauth/AccessToken"> <!--- AccessToken URL --->
-<cfset sCallbackURL = "http://localhost:8500/XeroCFML/example/public/callback.cfm"> 
+<cfset sCallbackURL = "http://localhost:8500/Xero-CFML/example/public/callback.cfm"> 
 
 <!--- 
 Base URL for API Endpoints 

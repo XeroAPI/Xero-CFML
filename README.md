@@ -13,7 +13,7 @@ CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
 ## Things to note
 * The library focuses on the authentication for Xero's API and provides a basis to be extended. There are examples of how to authenticate the different application types. These examples provide enough to get you going, but are not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
 
-## Selecting an Application Type
+## Select an application type
 Xero's API supports [3 application types] (http://developer.xero.com/documentation/getting-started/api-application-types/).  The three types are public, private and partner.  Each application type is supported by this library.  Please [review  each type] (http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
 
 * [Public] (http://developer.xero.com/documentation/getting-started/public-applications/)
@@ -33,7 +33,7 @@ Simply download this library and place it in your ColdFusion or Railo webroot. T
 Next, follow the configuration steps based on your type of Xero application.
 
 ### Public Application
-## Create Xero Application
+#### Create Xero Application
 Create a [Xero Public application](https://api.xero.com/Application). Enter a callback domain i.e. localhost.
 
 Open *config.cfm* file located in example/public directory.  Copy and paste the consumer key and secret.
@@ -48,7 +48,7 @@ Customize your callback URL to point to the location of example/public/callback.
 Point your browser to example/public/index.cfm and click "Connect to Xero" to begin the authentication flow.
 
 ### Private Application
-## Generate Public/Private Key
+#### Generate Public/Private Key
 A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key on your server.  To keep things simply, place the private key in the /example/private/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
 
 The basics command line steps to generate a private and public key using OpenSSL are as follows:
@@ -61,7 +61,7 @@ For this wrapper, you will need to run one additional command to create a .pk8 f
 
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
-## Create Xero Application
+#### Create Xero Application
 Create a [Xero Private application](https://api.xero.com/Application). You will upload the *publickey.cer* created as part of the public/private key pair. 
 
 Open *config.cfm* file located in example/private directory.  Copy and paste the consumer key.

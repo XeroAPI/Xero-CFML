@@ -22,7 +22,7 @@ Required by Public & Partner Application Only
 <cfset sAuthorizationEndpoint = "https://api.xero.com/oauth/Authorize"> <!--- Authorize URL --->
 <cfset sAccessTokenEndpoint = "https://api-partner.network.xero.com/oauth/AccessToken"> <!--- AccessToken URL --->
 <cfset sApiEndpoint = "https://api-partner.network.xero.com/api.xro/2.0/">
-<cfset sCallbackURL = "http://localhost:8500/XeroCFML/example/partner/callback.cfm"> 
+<cfset sCallbackURL = "http://localhost:8500/Xero-CFML/example/partner/callback.cfm"> 
 
 <!--- 
 PRIVATE KEY from your public/private keys pair
