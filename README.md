@@ -36,7 +36,16 @@ Simply download this library and place it in your ColdFusion or Railo webroot. T
 Next, follow the configuration steps based on your type of Xero application.
 
 ### Public Application
-coming soon
+Open *config.cfm* file located in example/public directory.  Copy and paste the Consumer Key and Secret from your [Public Xero application](https://api.xero.com/Application). 
+
+	<cfset sConsumerKey = "__PASTE_YOUR_CONSUMER_KEY__"> 
+	<cfset sConsumerSecret = "__PASTE_YOUR_CONSUMER_SECRET__">
+
+Customize your callback URL to point to the location of example/public/callback.cfm in your webroot.
+
+	<cfset sCallbackURL = "http://localhost:8500/XeroCFML/example/public/callback.cfm"> 
+
+Point your browser to example/public/index.cfm and click "Connect to Xero" to begin the authentication flow.
 
 ### Private Application
 coming soon
