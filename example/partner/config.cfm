@@ -1,7 +1,4 @@
 <!---
-Determine which TYPE of Xero App you are building
-Private Application Doc: http://developer.xero.com/documentation/getting-started/private-applications/
-Public Application Doc: http://developer.xero.com/documentation/getting-started/public-applications/
 Partner Application Doc: http://developer.xero.com/documentation/getting-started/partner-applications/
 --->
 
@@ -13,8 +10,8 @@ Public and Partner Apps use both
 Private Apps only use consumer key
 --->
 
-<cfset sConsumerKey = "7OSJAWDH8AAWGFFO7QDKLHOTHHHSFY"> 
-<cfset sConsumerSecret = "L6SAU7CMKTWGZM2UW24IFMCTGQ5FOK"> 
+<cfset sConsumerKey = "__PASTE_YOUR_CONSUMER_KEY__"> 
+<cfset sConsumerSecret = "__PASTE_YOUR_CONSUMER_SECRET__"> 
 
 <!--- 
 URL Endpoints for token request, authorization, callback, swapping accesstoken, accessing resources
