@@ -4,7 +4,7 @@ Xero-CFML
 CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
 
 * [Things to note] (#things-to-note)
-* [Selecting an Application Type] (#selecting-an-application-type)
+* [Selecting an Application Type] (#select-an-application-type)
 * [Getting Started] (#getting-started)
 * [To Do] (#to-do)
 * [Additional Reading] (#additional-reading)
@@ -52,7 +52,7 @@ Point your browser to example/public/index.cfm and click "Connect to Xero" to be
 #### Generate Public/Private Key
 A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key on your server.  To keep things simple, place the private key in the /example/private/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
 
-The basics command line steps to generate a public and private key using OpenSSL are as follows:
+The basic command line steps to generate a public and private key using OpenSSL are as follows:
 
 	openssl genrsa -out privatekey.pem 1024
 	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
@@ -81,7 +81,7 @@ Once your integration is complete, schedule a time with Xero Developer Relations
 #### Generate Public/Private Key
 A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key on your server.  To keep things simple, place the private key in the /example/partner/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
 
-The basics command line steps to generate a public and private key using OpenSSL are as follows:
+The basic command line steps to generate a public and private key using OpenSSL are as follows:
 
 	openssl genrsa -out privatekey.pem 1024
 	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
@@ -104,7 +104,7 @@ Customize your callback URL to point to the location of example/partner/callback
 	<cfset sCallbackURL = "http://localhost:8500/Xero-CFML/example/partner/callback.cfm"> 
 
 #### Entrust SSL Certificate
-Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server.  To keep things simple, place the .p12 file in the /example/partner/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
+Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server.  To keep things simple, place the .p12 file in the /example/partner-applications/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
 
 	<cfset pathToSSLCert = GetDirectoryFromPath( GetCurrentTemplatePath()) & "certs/your-entrust-cert.p12" />   
 	<cfset passwordToSSLCert = "your-entrust-password" /> 
