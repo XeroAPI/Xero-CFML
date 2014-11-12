@@ -69,17 +69,17 @@ Open *config.cfm* file located in example/private directory.  Copy and paste the
 
 	<cfset sConsumerKey = "__PASTE_YOUR_CONSUMER_KEY__"> 
 
-Point your browser to example/private/index.cfm and click "Connect to Xero" to begin accessing API resources. Note: private applications connect to a single Xero organzation and therefore does not require the 3-legged oAuth flow.
+Point your browser to example/private/index.cfm and click "Connect to Xero" to begin accessing API resources. Note: private applications connect to a single Xero organzation and therefore do not require the 3-legged oAuth flow.
 
 ### Partner Application
 Partner applications are only available to those joining [Xero's Add-on Partner Program](http://developer.xero.com/partner/).
 
-After you've applied to join the Partner Program and validated your integration with Xero Developer Relations, build your integration as a Public Application.  Public and Partner applications share all the same data endpoints. Public and Partner application access tokens both expire after 30 minutes, but Partner applications can be refresh access tokens when they expire.
+After you've applied to join the Partner Program and validated your integration with Xero Developer Relations, build your integration as a Public Application.  Public and Partner applications share all the same data endpoints. Public and Partner application access tokens both expire after 30 minutes, but Partner applications can refresh access tokens when they expire.
 
 Once your integration is complete, schedule a time with Xero Developer Relations to review your integration and upgrade your Public application to a Partner Application.
 
 #### Generate Public/Private Key
-A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key on your server.  To keep things simple, place the private key in the /example/private/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
+A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key on your server.  To keep things simple, place the private key in the /example/partner/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
 
 The basics command line steps to generate a public and private key using OpenSSL are as follows:
 
@@ -104,7 +104,7 @@ Customize your callback URL to point to the location of example/partner/callback
 	<cfset sCallbackURL = "http://localhost:8500/Xero-CFML/example/partner/callback.cfm"> 
 
 #### Entrust SSL Certificate
-Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server.  To keep things simple, place the .p12 file in the /example/private/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
+Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server.  To keep things simple, place the .p12 file in the /example/partner/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
 
 	<cfset pathToSSLCert = GetDirectoryFromPath( GetCurrentTemplatePath()) & "certs/your-entrust-cert.p12" />   
 	<cfset passwordToSSLCert = "your-entrust-password" /> 
