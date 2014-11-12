@@ -7,6 +7,7 @@ CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
 * [Selecting an Application Type] (#selecting-an-application-type)
 * [Getting Started] (#getting-started)
 * [To Do] (#to-do)
+* [Additional Reading] (#additional-reading)
 * [Acknowledgements] (#acknowledgements)
 * [License] (#license)
 
@@ -33,7 +34,7 @@ Simply download this library and place it in your ColdFusion or Railo webroot. T
 Next, follow the configuration steps based on your type of Xero application.
 
 ### Public Application
-#### Create Xero Application
+#### Configure Xero Application
 Create a [Xero Public application](https://api.xero.com/Application). Enter a callback domain i.e. localhost.
 
 Open *config.cfm* file located in example/public directory.  Copy and paste the consumer key and secret.
@@ -45,13 +46,13 @@ Customize your callback URL to point to the location of example/public/callback.
 
 	<cfset sCallbackURL = "http://localhost:8500/Xero-CFML/example/public/callback.cfm"> 
 
-Point your browser to example/public/index.cfm and click "Connect to Xero" to begin the authentication flow.
+Point your browser to example/public/index.cfm and click "Connect to Xero" to begin the authentication flow.  Public application access tokens expire after 30 minutes and require the user to authenticate again.
 
 ### Private Application
 #### Generate Public/Private Key
-A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key on your server.  To keep things simply, place the private key in the /example/private/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
+A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key on your server.  To keep things simple, place the private key in the /example/private/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
 
-The basics command line steps to generate a private and public key using OpenSSL are as follows:
+The basics command line steps to generate a public and private key using OpenSSL are as follows:
 
 	openssl genrsa -out privatekey.pem 1024
 	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
@@ -61,23 +62,63 @@ For this wrapper, you will need to run one additional command to create a .pk8 f
 
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
-#### Create Xero Application
-Create a [Xero Private application](https://api.xero.com/Application). You will upload the *publickey.cer* created as part of the public/private key pair. 
+#### Configure Xero Application
+Create a [Xero Private application](https://api.xero.com/Application). Select which Xero organization you are connecting to. Upload the *publickey.cer* created as part of the public/private key pair. 
 
 Open *config.cfm* file located in example/private directory.  Copy and paste the consumer key.
 
 	<cfset sConsumerKey = "__PASTE_YOUR_CONSUMER_KEY__"> 
 
-Point your browser to example/private/index.cfm and click "Connect to Xero" to begin accessing API resources.
+Point your browser to example/private/index.cfm and click "Connect to Xero" to begin accessing API resources. Note: private applications connect to a single Xero organzation and therefore does not require the 3-legged oAuth flow.
 
 ### Partner Application
-coming soon
+Partner applications are only available to those joining [Xero's Add-on Partner Program](http://developer.xero.com/partner/).
+
+After you've applied to join the Partner Program and validated your integration with Xero Developer Relations, build your integration as a Public Application.  Public and Partner applications share all the same data endpoints. Public and Partner application access tokens both expire after 30 minutes, but Partner applications can be refresh access tokens when they expire.
+
+Once your integration is complete, schedule a time with Xero Developer Relations to review your integration and upgrade your Public application to a Partner Application.
+
+#### Generate Public/Private Key
+A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key on your server.  To keep things simple, place the private key in the /example/private/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
+
+The basics command line steps to generate a public and private key using OpenSSL are as follows:
+
+	openssl genrsa -out privatekey.pem 1024
+	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
+	openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
+
+For this wrapper, you will need to run one additional command to create a .pk8 formatted private key.
+
+	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
+
+#### Configure Xero Application
+Go to your upgraded [Xero Partner application](https://api.xero.com/Application). Enter a callback domain i.e. localhost.
+
+Open *config.cfm* file located in example/partner directory.  Copy and paste the consumer key and secret.
+
+	<cfset sConsumerKey = "__PASTE_YOUR_CONSUMER_KEY__"> 
+	<cfset sConsumerSecret = "__PASTE_YOUR_CONSUMER_SECRET__">
+
+Customize your callback URL to point to the location of example/partner/callback.cfm in your webroot.
+
+	<cfset sCallbackURL = "http://localhost:8500/Xero-CFML/example/partner/callback.cfm"> 
+
+#### Entrust SSL Certificate
+Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server.  To keep things simple, place the .p12 file in the /example/private/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
+
+	<cfset pathToSSLCert = GetDirectoryFromPath( GetCurrentTemplatePath()) & "certs/your-entrust-cert.p12" />   
+	<cfset passwordToSSLCert = "your-entrust-password" /> 
+
+Point your browser to example/partner/index.cfm and click "Connect to Xero" to begin the authentication flow. 
 
 ## To Do
 * Refresh Token method for partner applications
 
+## Additional Reading
+* [oAuth Bibile](http://oauthbible.com/)
+
 ##Acknowledgements
-Thanks for the following Developers and Open Source libraries for making the wrapper and samples easier
+Thanks to the following Developers and Open Source libraries for making the wrapper and samples easier
 
 * [ColdFusion oAuth Library](http://oauth.riaforge.org/) - OAuth 1.0
 * [Sharad Gupta](http://www.jensbits.com/2010/05/16/generating-signatures-in-coldfusion-with-rsa-sha1-for-secure-authsub-in-google-analytics/) - RSA-SHA1 signature
