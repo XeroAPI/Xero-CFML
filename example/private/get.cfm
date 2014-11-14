@@ -6,9 +6,7 @@
 
 <cfinclude template="resource.cfm">
 
-
-<cfset sRequestToken = sConsumerKey> <!--- returned after an access token call --->
-<cfset sRequestTokenSecret = sConsumerSecret> <!--- returned after an access token call --->
+<cfset sRequestToken = sConsumerKey> <!--- use the consumer key as the access token  --->
 <cfset sResourceEndpoint = "#sApiEndpoint##form.endpoint#">
 
 	<!--- Build an API Call URL --->
