@@ -6,5 +6,3 @@
 <style type="text/css">
 body {padding:20px;}
 </style>
-
-<cfinclude template="config.cfm" />

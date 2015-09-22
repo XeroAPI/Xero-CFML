@@ -4,26 +4,27 @@
 --->
 <html>
 <head>
-	<title>CFML Xero Public Application - Request Token</title>
-	<cfinclude template="header.cfm">
+	<title>CFML Xero Public Application - Callback</title>
+	<cfinclude template="/common/header.cfm" >
+	<cfinclude template="config.cfm" >
 </head>
 <body>
-<div class="container">
-<!--- Build accessToken URL --->
-<cfset oAccessResult = CreateObject("component", "cfc.xero").accessToken(
-	sXeroAppType = sXeroAppType,
-	aCallbackParams = cgi.query_string,
-	sConsumerKey = sConsumerKey, 
-	sConsumerSecret = sConsumerSecret,
-	sAccessTokenEndpoint = sAccessTokenEndpoint)>
+	<div class="container">
+	<!--- Build accessToken URL --->
+	<cfset oAccessResult = CreateObject("component", "cfc.xero").accessToken(
+		sXeroAppType = sXeroAppType,
+		aCallbackParams = cgi.query_string,
+		sConsumerKey = sConsumerKey, 
+		sConsumerSecret = sConsumerSecret,
+		sAccessTokenEndpoint = sAccessTokenEndpoint)>
 
-<cfif oAccessResult["content"] EQ "success">
-	<cfinclude template="resource.cfm">
-<cfelse>
-	<cfoutput>#oAccessResult["content"]#</cfoutput>
-	<br><br>
-	<a class="btn btn-primary" href="request_token.cfm">Connect to Xero</a>
-</cfif>
-</div>
+	<cfif oAccessResult["content"] EQ "success">
+		<cfinclude template="/common/resource.cfm">
+	<cfelse>
+		<cfoutput>#oAccessResult["content"]#</cfoutput>
+		<br><br>
+		<a class="btn btn-primary" href="request_token.cfm">Connect to Xero</a>
+	</cfif>
+	</div>
 </body>
 </html>

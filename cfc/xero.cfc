@@ -249,6 +249,7 @@ History:
 		<cfargument name="sPathToPrivateKey" required="false" type="string" default="">
 		<cfargument name="sPathToSSLCert" required="false" type="string" default="">
 		<cfargument name="sPasswordToSSLCert" required="false" type="string" default="">
+		<cfargument name="stParameters" required="false" type="struct" default="">
 
 			<cfset var oResultRequest = StructNew()>
 
@@ -272,12 +273,14 @@ History:
 				oConsumer = oConsumer,
 				oToken = oToken,
 				sHttpMethod = "GET",
-				sHttpURL = arguments.sResourceEndpoint)>
+				sHttpURL = arguments.sResourceEndpoint,
+				stparameters= arguments.stParameters )>
 				
 			<cfset oReq.signRequest(
 				oSignatureMethod = oReqSigMethodSHA,
 				oConsumer = oConsumer,
 				oToken = oToken)>
+
 
 			<cfif arguments.sXeroAppType EQ "PUBLIC" OR arguments.sXeroAppType EQ "PRIVATE">	
 				<cfhttp url="#oREQ.getString()#" method="get" result="tokenResponse" />
@@ -288,7 +291,13 @@ History:
 					result="tokenResponse"/>
 			</cfif>
 
-		<cfreturn ConvertXmlToStruct(tokenResponse.Filecontent,structNew())>
+		<cfif isXML(tokenResponse.Filecontent)>
+			<cfreturn ConvertXmlToStruct(tokenResponse.Filecontent,structNew())>
+		<cfelse>
+			<cfset stReturn = structNew()>
+			<cfset stReturn.response = tokenResponse.Filecontent>
+			<cfreturn stReturn>
+		</cfif>
 	</cffunction>
 
 	<cffunction name="ConvertXmlToStruct" access="private" returntype="struct" output="true"

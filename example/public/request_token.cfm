@@ -6,19 +6,20 @@
 --->
 <html>
 <head>
-<title>CFML Xero Public Application - Request Token</title>
-<cfinclude template="header.cfm">
+	<title>CFML Xero Public Application - Request Token</title>
+	<cfinclude template="/common/header.cfm" >
+	<cfinclude template="config.cfm" >
 </head>
 <body>
-<!--- Make requestToken Call and build & return authorization URL --->
-<cfset oRequestResult = CreateObject("component", "cfc.xero").requestToken(
-	sXeroAppType = sXeroAppType,
-	sConsumerKey = sConsumerKey, 
-	sConsumerSecret = sConsumerSecret,
-	sCallbackURL = sCallbackURL,
-	sTokenEndpoint = sTokenEndpoint,
-	sAuthorizationEndpoint = sAuthorizationEndpoint)>
-<!--- Redirect user to Xero to login and authorize --->
-<cflocation url="#oRequestResult["url"]#">
+	<!--- Make requestToken Call and build & return authorization URL --->
+	<cfset oRequestResult = CreateObject("component", "cfc.xero").requestToken(
+		sXeroAppType = sXeroAppType,
+		sConsumerKey = sConsumerKey, 
+		sConsumerSecret = sConsumerSecret,
+		sCallbackURL = sCallbackURL,
+		sTokenEndpoint = sTokenEndpoint,
+		sAuthorizationEndpoint = sAuthorizationEndpoint)>
+	<!--- Redirect user to Xero to login and authorize --->
+	<cflocation url="#oRequestResult["url"]#">
 </body>
 </html>

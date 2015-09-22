@@ -5,8 +5,9 @@
 --->
 <html>
 <head>
-<title>CFML Xero Partner Application - Request Token</title>
-<cfinclude template="header.cfm">
+	<title>CFML Xero Partner Application - Request Token</title>
+	<cfinclude template="/common/header.cfm" >
+	<cfinclude template="config.cfm" >
 </head>
 <body>
 
