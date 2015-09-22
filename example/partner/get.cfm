@@ -21,6 +21,14 @@
 	<cfset sRequestTokenSecret = session.stToken["oauth_token_secret"]> <!--- returned after an access token call --->
 	<cfset sResourceEndpoint = "#sApiEndpoint##form.endpoint#">
 
+	<cfset stParameters = structNew()>
+	<cfif len(trim(form.isCustomer)) GT 0>
+		<cfset stParameters.where = "(isCustomer=#form.isCustomer#)">
+	</cfif>
+	<cfif len(trim(form.page)) GT 0>
+		<cfset stParameters.page = form.page>
+	</cfif>
+
 		<!--- Build an API Call URL --->
 		<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
 			sXeroAppType = sXeroAppType,
@@ -31,7 +39,8 @@
 			sRequestTokenSecret= sRequestTokenSecret,
 			sPathToPrivateKey = pathToKey,
 			sPathToSSLCert = pathToSSLCert,
-			sPasswordToSSLCert = passwordToSSLCert)>
+			sPasswordToSSLCert = passwordToSSLCert,
+			stParameters = stParameters)>
 
 	<div class="container">
 		<div class="row">
