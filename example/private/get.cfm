@@ -2,9 +2,6 @@
 ----------------------------------------------------------------------------
 1) Hit some Xero endpoints and show the response
 --->
-<cfif NOT StructKeyExists(session, "stToken")>
-	<cflocation url="index.cfm">
-</cfif>
 
 <html>
 <head>
@@ -15,8 +12,6 @@
 <body>
 	<cfinclude template="/common/resource.cfm">
 
-	<cfset sRequestToken = session.stToken["oauth_token"]> <!--- returned after an access token call --->
-	<cfset sRequestTokenSecret = session.stToken["oauth_token_secret"]> <!--- returned after an access token call --->
 	<cfset sResourceEndpoint = "#sApiEndpoint##form.endpoint#">
 	
 	<cfset stParameters = structNew()>
