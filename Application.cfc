@@ -5,13 +5,16 @@
  
  
     <!--- Set up the application. --->
-    <cfset this.Name = "XeroCFMLAppCFC" />
-    <cfset this.ApplicationTimeout = CreateTimeSpan( 0, 0, 3, 0 ) />
-    <cfset this.SessionManagement = true />
-    <cfset this.SetClientCookies = true />
-    <cfset this.directory = getDirectoryFromPath( getCurrentTemplatePath()) />
-    <cfset this.mappings = structNew() />
+    <cfset THIS.Name = "XeroCFMLAppCFC" />
+    <cfset THIS.ApplicationTimeout = CreateTimeSpan( 0, 0, 3, 0 ) />
+    <cfset THIS.SessionManagement = true />
+    <cfset THIS.SetClientCookies = true />
 
+    <cfset this.mappings = structNew() />
+    <cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" />
+    <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" />
+
+ 
     <!--- Define the page request properties. --->
     <cfsetting
         requesttimeout="20"
@@ -167,7 +170,8 @@
             required="false"
             default=""
             />
- 
+            
+            <cfdump var="#Exception#" >
         <!--- Return out. --->
         <cfreturn />
     </cffunction>

@@ -9,6 +9,7 @@
 	<title>CFML Xero Public Application - Request Token</title>
 	<cfinclude template="/common/header.cfm" >
 	<cfinclude template="config.cfm" >
+
 </head>
 <body>
 	<!--- Make requestToken Call and build & return authorization URL --->
@@ -19,6 +20,7 @@
 		sCallbackURL = sCallbackURL,
 		sTokenEndpoint = sTokenEndpoint,
 		sAuthorizationEndpoint = sAuthorizationEndpoint)>
+
 	<!--- Redirect user to Xero to login and authorize --->
 	<cflocation url="#oRequestResult["url"]#">
 </body>

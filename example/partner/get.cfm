@@ -9,7 +9,7 @@
 
 <html>
 <head>
-	<title>CFML Xero Partner Application - Callback</title>
+	<title>CFML Xero Partner Application</title>
 	<cfinclude template="/common/header.cfm" >
 	<cfinclude template="config.cfm" >
 </head>
@@ -28,24 +28,38 @@
 	<cfif len(trim(form.page)) GT 0>
 		<cfset stParameters.page = form.page>
 	</cfif>
+	<cfif len(trim(form.body)) GT 0>
+		<cfxml variable="sBody">
+			<cfoutput>#trim(form.body)#</cfoutput>
+		</cfxml>
+	</cfif>	
 
-		<!--- Build an API Call URL --->
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
-			sXeroAppType = sXeroAppType,
-			sConsumerKey = sConsumerKey, 
-			sConsumerSecret = sConsumerSecret,
-			sResourceEndpoint = sResourceEndpoint,
-			sRequestToken = sRequestToken,
-			sRequestTokenSecret= sRequestTokenSecret,
-			sPathToPrivateKey = pathToKey,
-			sPathToSSLCert = pathToSSLCert,
-			sPasswordToSSLCert = passwordToSSLCert,
-			stParameters = stParameters)>
+	<!--- Build an API Call URL --->
+	<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
+		sXeroAppType = sXeroAppType,
+		sConsumerKey = sConsumerKey, 
+		sConsumerSecret = sConsumerSecret,
+		sResourceEndpoint = sResourceEndpoint,
+		sRequestToken = sRequestToken,
+		sRequestTokenSecret= sRequestTokenSecret,
+		sPathToPrivateKey = pathToKey,
+		sPathToSSLCert = pathToSSLCert,
+		sPasswordToSSLCert = passwordToSSLCert,
+		stParameters = stParameters,
+		sAccept = form.accept,
+		sMethod = form.method,
+		sBody = sBody)>
 
 	<div class="container">
 		<div class="row">
 	  		<div class="col-md-6">
-				<cfdump var="#oRequestResult#" >
+				<cfif isStruct(oRequestResult.response)>
+					<cfdump var="#oRequestResult.response#" >
+				<cfelse>
+					<pre class="prettyprint">
+						<cfoutput>#oRequestResult.response#</cfoutput>
+					</pre>
+	  			</cfif>
 	  		</div>
 		</div>
 	</div>

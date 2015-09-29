@@ -5,7 +5,7 @@
 
 <html>
 <head>
-	<title>CFML Xero Private Application - Get</title>
+	<title>CFML Xero Private Application</title>
 	<cfinclude template="/common/header.cfm" >
 	<cfinclude template="config.cfm" >
 </head>
@@ -21,6 +21,11 @@
 	<cfif len(trim(form.page)) GT 0>
 		<cfset stParameters.page = form.page>
 	</cfif>
+	<cfif len(trim(form.body)) GT 0>
+		<cfxml variable="sBody">
+			<cfoutput>#trim(form.body)#</cfoutput>
+		</cfxml>
+	</cfif>	
 	
 	
 	<!--- Build and Call API, return new structure of XML results --->
@@ -34,13 +39,22 @@
 		sRequestToken = sRequestToken,
 		sResourceEndpoint = sResourceEndpoint,
 		sPathToPrivateKey = pathToKey,
-		stParameters = stParameters)>
+		stParameters = stParameters,
+		sAccept = form.accept,
+		sMethod = form.method,
+		sBody = sBody)>
 
 
 	<div class="container">
 		<div class="row">
 	  		<div class="col-md-6">
-				<cfdump var="#oRequestResult#" >
+				<cfif isStruct(oRequestResult.response)>
+					<cfdump var="#oRequestResult.response#" >
+				<cfelse>
+					<pre class="prettyprint">
+						<cfoutput>#oRequestResult.response#</cfoutput>
+					</pre>
+	  			</cfif>
 	  		</div>
 		</div>
 	</div>

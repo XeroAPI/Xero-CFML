@@ -10,6 +10,7 @@
 </head>
 <body>
 	<div class="container">
+
 	<!--- Build accessToken URL --->
 	<cfset oAccessResult = CreateObject("component", "cfc.xero").accessToken(
 		sXeroAppType = sXeroAppType,
