@@ -5,7 +5,11 @@ CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
 
 
 * [Things to note] (#things-to-note)
+<<<<<<< HEAD
 * [Select an Application Type] (#select-an-application-type)
+=======
+* [Selecting an Application Type] (#select-an-application-type)
+>>>>>>> SidneyAllen/master
 * [Getting Started] (#getting-started)
 * [To Do] (#to-do)
 * [Additional Reading] (#additional-reading)
@@ -107,7 +111,7 @@ Customize your callback URL to point to the location of example/partner/callback
 	<cfset sCallbackURL = "http://localhost:8500/Xero-CFML/example/partner/callback.cfm"> 
 
 #### Entrust SSL Certificate
-Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server.  To keep things simple, place the .p12 file in the /example/partner/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
+Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server.  To keep things simple, place the .p12 file in the /example/partner-applications/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
 
 	<cfset pathToSSLCert = GetDirectoryFromPath( GetCurrentTemplatePath()) & "certs/your-entrust-cert.p12" />   
 	<cfset passwordToSSLCert = "your-entrust-password" /> 
