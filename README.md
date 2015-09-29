@@ -5,11 +5,7 @@ CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
 
 
 * [Things to note] (#things-to-note)
-<<<<<<< HEAD
 * [Select an Application Type] (#select-an-application-type)
-=======
-* [Selecting an Application Type] (#select-an-application-type)
->>>>>>> SidneyAllen/master
 * [Getting Started] (#getting-started)
 * [To Do] (#to-do)
 * [Additional Reading] (#additional-reading)
