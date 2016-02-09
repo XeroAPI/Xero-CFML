@@ -12,7 +12,7 @@ Private Apps only use consumer key
 
 <cfset sConsumerKey = "__PASTE_YOUR_CONSUMER_KEY__"> 
 <cfset sConsumerSecret = "__PASTE_YOUR_CONSUMER_SECRET__"> 
-
+--->
 <!--- 
 URL Endpoints for token request, authorization, callback, and swapping accesstoken
 Required by Public & Partner Application Only

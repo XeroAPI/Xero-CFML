@@ -3,8 +3,9 @@ Xero-CFML
 
 CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
 
+
 * [Things to note] (#things-to-note)
-* [Selecting an Application Type] (#select-an-application-type)
+* [Select an Application Type] (#select-an-application-type)
 * [Getting Started] (#getting-started)
 * [To Do] (#to-do)
 * [Additional Reading] (#additional-reading)
@@ -13,6 +14,8 @@ CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
 
 ## Things to note
 * The library focuses on the authentication for Xero's API and provides a basis to be extended. There are examples of how to authenticate the different application types. These examples provide enough to get you going, but are not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
+* Partner Application will not work with Railo due to lack of support for clientCertificates.  SSL is required when making secure cfhttp calls to Xero's partner API.
+
 
 ## Select an application type
 Xero's API supports [3 application types] (http://developer.xero.com/documentation/getting-started/api-application-types/).  The three types are public, private and partner.  Each application type is supported by this library.  Please [review  each type] (http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
@@ -27,7 +30,7 @@ Xero's API supports [3 application types] (http://developer.xero.com/documentati
 You can [create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
 
 ### Install Xero-CFML Library
-Simply download this library and place it in your ColdFusion or Railo webroot. There is a single mapping of the cfc directory in the Application.cfc file.
+Simply download this library and place it in your webroot. There is a single mapping of the cfc directory in the Application.cfc file.
 
 	<cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" />
 

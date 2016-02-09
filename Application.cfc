@@ -9,14 +9,16 @@
     <cfset THIS.ApplicationTimeout = CreateTimeSpan( 0, 0, 3, 0 ) />
     <cfset THIS.SessionManagement = true />
     <cfset THIS.SetClientCookies = true />
+
     <cfset this.mappings = structNew() />
     <cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" />
+    <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" />
 
  
     <!--- Define the page request properties. --->
     <cfsetting
         requesttimeout="20"
-        showdebugoutput="false"
+        showdebugoutput="true"
         enablecfoutputonly="false"
         />
  
@@ -168,7 +170,8 @@
             required="false"
             default=""
             />
- 
+            
+            <cfdump var="#Exception#" >
         <!--- Return out. --->
         <cfreturn />
     </cffunction>

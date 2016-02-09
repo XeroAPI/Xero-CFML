@@ -2,17 +2,37 @@
 ----------------------------------------------------------------------------
 1) Hit some Xero endpoints and show the response
 --->
-<cfinclude template="header.cfm">
 
 <cfif NOT StructKeyExists(session, "stToken")>
 	<cflocation url="index.cfm">
 </cfif>
 
-<cfinclude template="resource.cfm">
+<html>
+<head>
+	<title>CFML Xero Partner Application</title>
+	<cfinclude template="/common/header.cfm" >
+	<cfinclude template="config.cfm" >
+</head>
+<body>
 
-<cfset sRequestToken = session.stToken["oauth_token"]> <!--- returned after an access token call --->
-<cfset sRequestTokenSecret = session.stToken["oauth_token_secret"]> <!--- returned after an access token call --->
-<cfset sResourceEndpoint = "#sApiEndpoint##form.endpoint#">
+	<cfinclude template="/common/resource.cfm">
+
+	<cfset sRequestToken = session.stToken["oauth_token"]> <!--- returned after an access token call --->
+	<cfset sRequestTokenSecret = session.stToken["oauth_token_secret"]> <!--- returned after an access token call --->
+	<cfset sResourceEndpoint = "#sApiEndpoint##form.endpoint#">
+
+	<cfset stParameters = structNew()>
+	<cfif len(trim(form.isCustomer)) GT 0>
+		<cfset stParameters.where = "(isCustomer=#form.isCustomer#)">
+	</cfif>
+	<cfif len(trim(form.page)) GT 0>
+		<cfset stParameters.page = form.page>
+	</cfif>
+	<cfif len(trim(form.body)) GT 0>
+		<cfxml variable="sBody">
+			<cfoutput>#trim(form.body)#</cfoutput>
+		</cfxml>
+	</cfif>	
 
 	<!--- Build an API Call URL --->
 	<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
@@ -24,16 +44,27 @@
 		sRequestTokenSecret= sRequestTokenSecret,
 		sPathToPrivateKey = pathToKey,
 		sPathToSSLCert = pathToSSLCert,
-		sPasswordToSSLCert = passwordToSSLCert)>
+		sPasswordToSSLCert = passwordToSSLCert,
+		stParameters = stParameters,
+		sAccept = form.accept,
+		sMethod = form.method,
+		sBody = sBody)>
 
-<div class="container">
-	<div class="row">
-  		<div class="col-md-6">
-			<cfdump var="#oRequestResult#" >
-  		</div>
+	<div class="container">
+		<div class="row">
+	  		<div class="col-md-6">
+				<cfif isStruct(oRequestResult.response)>
+					<cfdump var="#oRequestResult.response#" >
+				<cfelse>
+					<pre class="prettyprint">
+						<cfoutput>#oRequestResult.response#</cfoutput>
+					</pre>
+	  			</cfif>
+	  		</div>
+		</div>
 	</div>
-</div>
-
+</body>
+</html>
 
 
 

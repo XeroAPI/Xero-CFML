@@ -60,6 +60,7 @@ History:
 		<cfargument name="sPathToPrivateKey" required="false" type="string" default="">
 		<cfargument name="sPathToSSLCert" required="false" type="string" default="">
 		<cfargument name="sPasswordToSSLCert" required="false" type="string" default="">
+		<cfargument name="sMethod" required="false" type="string" default="GET">
 
 			<cfset var oResultRequest = StructNew()>
 
@@ -83,7 +84,7 @@ History:
 			<cfset oReq = CreateObject("component", "cfc.oauth.oauthrequest").fromConsumerAndToken(
 				oConsumer = oConsumer,
 				oToken = oToken,
-				sHttpMethod = "GET",
+				sHttpMethod = arguments.sMethod,
 				sHttpURL = arguments.sTokenEndpoint,
 				stParameters = stDefault)>
 			<cfset oReq.signRequest(
@@ -98,7 +99,7 @@ History:
 				<cfhttp url="#oREQ.getString()#" 
 					clientCert="#sPathToSSLCert#" 
 					clientCertPassword="#sPasswordToSSLCert#" 
-					method="get" result="tokenResponse"/>
+					method="GET" result="tokenResponse"/>
 			</cfif>
 
 			<!--- was an oauth_token returned in the response if its there--->
@@ -139,6 +140,8 @@ History:
 			<cfset sClientToken = session.stToken["oauth_token"]>
 			<cfset sClientTokenSecret = session.stToken["oauth_token_secret"]>
 
+
+
 			<!--- you can add some additional parameters to the callback --->
 			<cfset sCallbackURL = arguments.sCallbackURL & "?" &
 				"key=" & arguments.sConsumerKey &
@@ -164,15 +167,17 @@ History:
 		<cfargument name="sPathToPrivateKey" required="false" type="string" default="">
 		<cfargument name="sPathToSSLCert" required="false" type="string" default="">
 		<cfargument name="sPasswordToSSLCert" required="false" type="string" default="">
+		<cfargument name="sMethod" required="false" type="string" default="">
 
 			<cfset var stResult = StructNew()>
 			<cfset var stCallbackResult = StructNew()>
 			<cfset var oResultRequest = StructNew()>
 
 			<!--- set up the parameters --->
-			<cfloop list="#aCallbackParams#" index="elem" delimiters="&">  
+			<cfloop list="#arguments.aCallbackParams#" index="elem" delimiters="&">  
 				<cfset session.stCallbackResult[#listFirst(elem,"=")#] = #listLast(elem,"=")#>	
 			</cfloop>  
+
 			<cfset var oauthToken = session.stCallbackResult.oauth_token>
 			<cfset var sVerifier =  session.stCallbackResult.oauth_verifier>
 
@@ -213,12 +218,12 @@ History:
 
 			<!--- make requestToken call to Xero  --->
 			<cfif arguments.sXeroAppType EQ "PUBLIC" OR arguments.sXeroAppType EQ "PRIVATE">
-				<cfhttp url="#oREQ.getString()#" method="get" result="tokenResponse"/>
+				<cfhttp url="#oREQ.getString()#" method="GET" result="tokenResponse"/>
 			<cfelse>
 				<cfhttp url="#oREQ.getString()#" 
 					clientCert="#sPathToSSLCert#" 
 					clientCertPassword="#sPasswordToSSLCert#" 
-					method="get" result="tokenResponse"/>
+					method="GET" result="tokenResponse"/>
 			</cfif>
 
 			<!--- was an oauth_token returned in the response if its there save the new access token --->
@@ -249,6 +254,12 @@ History:
 		<cfargument name="sPathToPrivateKey" required="false" type="string" default="">
 		<cfargument name="sPathToSSLCert" required="false" type="string" default="">
 		<cfargument name="sPasswordToSSLCert" required="false" type="string" default="">
+		<cfargument name="stParameters" required="false" type="struct" default="">
+		<cfargument name="sAccept" required="false" type="string" default="application/xml">
+		<cfargument name="sMethod" required="false" type="string" default="GET">
+		<cfargument name="sBody" required="false" type="string" default="">
+		<cfargument name="contentType" required="false" type="string" default="">
+		<cfargument name="debug" required="false" type="boolean" default="false">
 
 			<cfset var oResultRequest = StructNew()>
 
@@ -271,24 +282,46 @@ History:
 			<cfset oReq = CreateObject("component", "cfc.oauth.oauthrequest").fromConsumerAndToken(
 				oConsumer = oConsumer,
 				oToken = oToken,
-				sHttpMethod = "GET",
-				sHttpURL = arguments.sResourceEndpoint)>
+				sHttpMethod = arguments.sMethod,
+				sHttpURL = arguments.sResourceEndpoint,
+				stparameters= arguments.stParameters )>
 				
 			<cfset oReq.signRequest(
 				oSignatureMethod = oReqSigMethodSHA,
 				oConsumer = oConsumer,
 				oToken = oToken)>
 
-			<cfif arguments.sXeroAppType EQ "PUBLIC" OR arguments.sXeroAppType EQ "PRIVATE">	
-				<cfhttp url="#oREQ.getString()#" method="get" result="tokenResponse" />
+			<cfif arguments.sXeroAppType EQ "PUBLIC" OR arguments.sXeroAppType EQ "PRIVATE">
+				<cfhttp 
+					url="#oREQ.getString()#" 
+					method= "#arguments.sMethod#" 
+					result="tokenResponse" >
+					<cfhttpparam type="header" name="accept" value="#arguments.sAccept#">
+					<cfif len(arguments.sBody)>
+						<cfhttpparam type="body" value="#trim(arguments.sBody)#">
+					</cfif>
+				</cfhttp>
 			<cfelse>
-				<cfhttp url="#oREQ.getString()#" method="get" 
+				<cfhttp 
+					url="#oREQ.getString()#" 
+					method = "#arguments.sMethod#"
 					clientCert="#sPathToSSLCert#" 
 					clientCertPassword="#sPasswordToSSLCert#" 
-					result="tokenResponse"/>
+					result="tokenResponse">
+					<cfhttpparam type="header" name="accept" value="#arguments.sAccept#">
+					<cfif len(arguments.sBody)>
+						<cfhttpparam type="body" value="#trim(arguments.sBody)#">
+					</cfif>
+				</cfhttp>
 			</cfif>
 
-		<cfreturn ConvertXmlToStruct(tokenResponse.Filecontent,structNew())>
+		<cfset stReturn = structNew()>
+		<cfif isXML(tokenResponse.Filecontent)>
+			<cfset stReturn.response = ConvertXmlToStruct(tokenResponse.Filecontent,structNew())>
+		<cfelse>
+			<cfset stReturn.response = tokenResponse.Filecontent>
+		</cfif>
+		<cfreturn stReturn>
 	</cffunction>
 
 	<cffunction name="ConvertXmlToStruct" access="private" returntype="struct" output="true"

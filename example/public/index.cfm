@@ -1,7 +1,7 @@
 <html>
 <head>
-<title>CFML Xero Public Application</title>
-<cfinclude template="header.cfm">
+	<title>CFML Xero Public Application</title>
+	<cfinclude template="/common/header.cfm" >
 </head>
 <body>
 <div class="container">
