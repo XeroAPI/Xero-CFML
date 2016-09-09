@@ -1,0 +1,147 @@
+<!---
+Description:
+============
+	Xero oAuth Config
+
+License:
+============
+This software is published under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
+
+Copyright (c) 2014 Xero Limited
+
+Permission is hereby granted, free of charge, to any person
+obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use,
+copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+History:
+============
+10/15/14 - Sid Maestre - created
+--->
+
+<cfcomponent displayname="config">
+
+	<cfset this.AppType = "">
+	<cfset this.UserAgent = "">
+	<cfset this.Accept = "">
+	<cfset this.SignatureMethod = "">
+	<cfset this.ConsumerKey = "">
+	<cfset this.ConsumerSecret = "">
+	<cfset this.ApiBaseUrl = "">
+	<cfset this.ApiEndpointPath = "">
+	<cfset this.RequestTokenPath = "">
+	<cfset this.AuthenticateUrl = "">
+	<cfset this.AccessTokenPath = "">
+	<cfset this.CallbackBaseUrl = "">
+	<cfset this.CallbackPath = "">
+	<cfset this.PrivateKeyCert = "">
+	<cfset this.PrivateKeyPassword = "">
+	<cfset this.EntrustCert = "">
+	<cfset this.EntrustCertPassword = "">
+
+	<cfset this.CallbackUrl = "">
+	<cfset this.PathToPrivateKey = "">
+	<cfset this.PathToEntrustCert = "">
+	<cfset this.RequestTokenUrl = "">
+	<cfset this.AccessTokenUrl = "">
+
+	<cffunction name="init" returntype="config">
+		<cfargument name="pathToConfigJSON" default="" displayname="path to config.json file" type="string">
+
+		<cffile action="read" file="#pathToConfigJSON#" variable="json">
+		<cfset this.json =  DeserializeJSON(json)>
+		<cfset this.json["pathToConfigJSON"] = pathToConfigJSON>
+		<cfset var pathToConfig = #GetDirectoryFromPath(this.json["pathToConfigJSON"])#>
+
+		<cfif structKeyExists(this.json, "AppType")>
+			<cfset this.AppType = this.json["AppType"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "UserAgent")>
+			<cfset this.UserAgent = this.json["UserAgent"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "Accept")>
+			<cfset this.Accept = this.json["Accept"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "SignatureMethod")>
+			<cfset this.SignatureMethod = this.json["SignatureMethod"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "ConsumerKey")>
+			<cfset this.ConsumerKey = this.json["ConsumerKey"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "ConsumerSecret")>
+			<cfset this.ConsumerSecret = this.json["ConsumerSecret"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "ApiBaseUrl")>
+			<cfset this.ApiBaseUrl = this.json["ApiBaseUrl"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "ApiEndpointPath")>
+			<cfset this.ApiEndpointPath = this.json["ApiEndpointPath"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "RequestTokenPath")>
+			<cfset this.RequestTokenPath = this.json["RequestTokenPath"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "AuthenticateUrl")>
+			<cfset this.AuthenticateUrl = this.json["AuthenticateUrl"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "AccessTokenPath")>
+			<cfset this.AccessTokenPath = this.json["AccessTokenPath"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "CallbackBaseUrl")>
+			<cfset this.CallbackBaseUrl = this.json["CallbackBaseUrl"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "CallbackPath")>
+			<cfset this.CallbackPath = this.json["CallbackPath"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "PrivateKeyCert")>
+			<cfset this.PrivateKeyCert = this.json["PrivateKeyCert"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "PrivateKeyPassword")>
+			<cfset this.PrivateKeyPassword = this.json["PrivateKeyPassword"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "EntrustCert")>
+			<cfset this.EntrustCert = this.json["EntrustCert"]>
+		</cfif>
+		<cfif structKeyExists(this.json, "EntrustCertPassword")>
+			<cfset this.EntrustCertPassword = this.json["EntrustCertPassword"]>
+		</cfif>
+
+		<cfif structKeyExists(this.json, "CallbackBaseUrl")>
+			<cfset this.CallbackUrl = this.json["CallbackBaseUrl"] & this.json["CallbackPath"]>
+		</cfif>
+
+		<cfif structKeyExists(this.json, "PrivateKeyCert")>
+			<cfset this.PathToPrivateKey = pathToConfig & this.json["PrivateKeyCert"]>
+		</cfif>
+
+		<cfif structKeyExists(this.json, "EntrustCert")>
+			<cfset this.PathToEntrustCert = pathToConfig & this.json["EntrustCert"]>
+		</cfif>
+
+		<cfif structKeyExists(this.json, "RequestTokenPath")>
+			<cfset this.RequestTokenUrl = this.json["ApiBaseUrl"] & this.json["RequestTokenPath"]>
+		</cfif>
+
+		<cfif structKeyExists(this.json, "AccessTokenPath")>
+			<cfset this.AccessTokenUrl = this.json["ApiBaseUrl"] & this.json["AccessTokenPath"]>
+		</cfif>
+
+		<cfreturn this>
+	</cffunction>
+
+</cfcomponent>

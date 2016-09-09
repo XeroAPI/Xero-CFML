@@ -7,11 +7,14 @@
 <body>
 <h1>Xero CFML Wrapper</h1>
 
-
+<cfoutput>
+<h3>Currently Configured at #application.config["AppType"]# Application. </h3> 
+</cfoutput>
+<p>
+Go to /resources/config.json to modify application.
+</p>
 <ul>
-	<li><a href="example/public/">Public Application</a></li>
-	<li><a href="example/private/">Private Application</a></li>
-	<li><a href="example/partner/">Partner Application</a></li>
+	<li><a href="example/">Explore Application</a></li>
 </ul>
 </body>
 </html>

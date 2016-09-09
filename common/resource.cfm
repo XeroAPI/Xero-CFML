@@ -1,5 +1,4 @@
 <cfparam name="form.endpoint" default="">
-<cfparam name="form.isCustomer" default="">
 <cfparam name="form.page" default="">
 <cfparam name="form.method" default="GET">
 <cfparam name="form.accept" default="json/xml">
@@ -28,8 +27,6 @@
 				<div class="form-group" id="method-group">
 					<select name="method" id="method" class="form-control">
 					  <option value="GET" <cfif form.method eq "GET">selected</cfif>>GET</option>
-					  <option value="POST" <cfif form.method eq "POST">selected</cfif>>POST</option>
-					  <option value="PUT" <cfif form.method eq "PUT">selected</cfif>>PUT</option>
 					</select>
 		      	</div>
 
@@ -46,14 +43,7 @@
 				</div>
 	      	</div>
 
-			<div class="form-group" id="iscustomer-group">
-		      	<label>Is Customer</label>
-				<select name="isCustomer" class="form-control">
-				  <option value="">---</option>
-				  <option <cfif form.isCustomer EQ "true">selected</cfif> value="true">Yes</option>
-				  <option <cfif form.isCustomer EQ "false">selected</cfif> value="false">No</option>
-				</select>
-			</div>
+
 			<div class="form-group" id="page-group">
 		      	<label>Paging</label>
 				<select name="page" class="form-control">
@@ -68,19 +58,7 @@
 				  <option value="4">4</option>
 				</select>
 			</div>
-
-	      	<div class="form-group" id="body-group">
-				<label>Body</label>
-				<textarea name="body" class="form-control" rows="5">
-<Contacts>
-	<Contact>
-		<Name>Sid Maestre</Name>
-	</Contact>
-</Contacts>
-				</textarea>
-	      	</div>
-
-	     
+	      	
 			<input type="hidden" name="api" value="accounting">
 			</form>
   		</div>

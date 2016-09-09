@@ -1,7 +1,7 @@
 Xero-CFML
 =========
 
-CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
+CFML wrapper for Xero API - use with CFML application servers.
 
 
 * [Things to note] (#things-to-note)
@@ -15,6 +15,7 @@ CFML wrapper for Xero API - use with ColdFusion and Railo application servers.
 ## Things to note
 * The library focuses on the authentication for Xero's API and provides a basis to be extended. There are examples of how to authenticate the different application types. These examples provide enough to get you going, but are not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
 * Partner Application will not work with Railo due to lack of support for clientCertificates.  SSL is required when making secure cfhttp calls to Xero's partner API.
+* Not tested on Lucee, but may have similar Partner App limitations from lack of support for clientCertificates. 
 
 
 ## Select an application type

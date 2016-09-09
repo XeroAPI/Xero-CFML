@@ -13,7 +13,7 @@
     <cfset this.mappings = structNew() />
     <cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" />
     <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" />
-
+    <cfset this.mappings["/resources"] = getDirectoryFromPath(getCurrentTemplatePath()) & "resources/" />
  
     <!--- Define the page request properties. --->
     <cfsetting
@@ -21,7 +21,6 @@
         showdebugoutput="true"
         enablecfoutputonly="false"
         />
- 
  
     <cffunction
         name="OnApplicationStart"
@@ -31,6 +30,10 @@
         hint="Fires when the application is first created.">
         
         <cfset application.basePath = GetBaseTemplatePath() />
+
+        <cfset pathToConfigJSON = getDirectoryFromPath(getCurrentTemplatePath()) & "resources/config.json">
+        <cfset application.config = CreateObject("component", "cfc.config").init(pathToConfigJSON)>
+
         <!--- Return out. --->
         <cfreturn true />
     </cffunction>
@@ -43,7 +46,6 @@
         output="false"
         hint="Fires when the session is first created.">
 
- 
         <!--- Return out. --->
         <cfreturn />
     </cffunction>
@@ -56,13 +58,14 @@
         output="false"
         hint="Fires at first part of page processing.">
  
+
+
         <!--- Define arguments. --->
         <cfargument
             name="TargetPage"
             type="string"
             required="true"
             />
-
 
         <!--- Return out. --->
         <cfreturn true />
@@ -82,10 +85,13 @@
             type="string"
             required="true"
             />
-               
+        
  
         <!--- Include the requested page. --->
         <cfinclude template="#ARGUMENTS.TargetPage#" />
+
+
+       
  
         <!--- Return out. --->
         <cfreturn />

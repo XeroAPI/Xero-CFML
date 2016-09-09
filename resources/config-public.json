@@ -1,0 +1,15 @@
+{ 
+	"AppType" : "PUBLIC",
+	"UserAgent" : "Xero-CFML-Public",
+	"Accept" : "application/json", 
+	"SignatureMethod" : "HMAC",
+	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
+	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
+	"ApiBaseUrl" : "https://api.xero.com",
+	"ApiEndpointPath" : "/api.xro/2.0/",
+	"RequestTokenPath": "/oauth/RequestToken",
+	"AuthenticateUrl" : "https://api.xero.com/oauth/Authorize",
+	"AccessTokenPath"  : "/oauth/AccessToken",
+	"CallbackBaseUrl" : "http://localhost:8500",
+	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm"
+}

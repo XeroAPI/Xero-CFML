@@ -6,20 +6,15 @@
 <head>
 	<title>CFML Xero Public Application - Callback</title>
 	<cfinclude template="/common/header.cfm" >
-	<cfinclude template="config.cfm" >
 </head>
 <body>
 	<div class="container">
 
 	<!--- Build accessToken URL --->
-	<cfset oAccessResult = CreateObject("component", "cfc.xero").accessToken(
-		sXeroAppType = sXeroAppType,
-		aCallbackParams = cgi.query_string,
-		sConsumerKey = sConsumerKey, 
-		sConsumerSecret = sConsumerSecret,
-		sAccessTokenEndpoint = sAccessTokenEndpoint)>
+	<cfset oAccessResult = CreateObject("component", "cfc.xero").accessToken(aCallbackParams = cgi.query_string)>
 
 	<cfif oAccessResult["content"] EQ "success">
+		<!---cflocation url="get.cfm" addtoken="false"--->
 		<cfinclude template="/common/resource.cfm">
 	<cfelse>
 		<cfoutput>#oAccessResult["content"]#</cfoutput>
