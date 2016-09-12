@@ -6,6 +6,7 @@ The only .json file used by this library is config.json.  Depending on the type 
 
 ###Private Xero Applications
 
+```json
 { 
 	"AppType" : "PRIVATE",
 	"UserAgent" : "Xero-CFML-Private",
@@ -17,10 +18,11 @@ The only .json file used by this library is config.json.  Depending on the type 
 	"ApiEndpointPath" : "/api.xro/2.0/",
 	"PrivateKeyCert" :  "certs/privatekey.pk8"
 }
-
+```
 
 ###Public Xero Applications
 
+```json
 { 
 	"AppType" : "PUBLIC",
 	"UserAgent" : "Xero-CFML-Public",
@@ -36,9 +38,11 @@ The only .json file used by this library is config.json.  Depending on the type 
 	"CallbackBaseUrl" : "http://localhost:8500",
 	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm"
 }
+```
 
 ###Partner Xero Applications
 
+```json
 { 
 	"AppType" : "PARTNER",
 	"UserAgent" : "Xero-CFML-Partner",
@@ -56,3 +60,4 @@ The only .json file used by this library is config.json.  Depending on the type 
 	"EntrustCert" : "certs/xero-entrust-20170513.p12",
 	"EntrustCertPassword" : "123456"
 }
+```
