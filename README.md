@@ -12,8 +12,8 @@ CFML wrapper for Xero API - use with CFML application servers.
 * [License] (#license)
 
 ## Things to note
-* The library focuses on the authentication for Xero's API and provides a basis to be extended.  You can configure this library to use  different Xero application types (see below). Once you've connected to Xero's API, you can read different types of data. This example code enough to get you going, but is not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
-* Partner Application will not work with Railo due to lack of support for clientCertificates on CFHTTP.  SSL is required when making secure cfhttp calls to Xero's partner API.
+* The library focuses on the authentication for Xero's API and provides a basis to be extended.  You can configure this library to use  different Xero application types (see below). Once you've connected to Xero's API, you can read different types of data. This example code is enough to get you going, but is not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
+* Partner Application will not work with Railo due to lack of support for clientCertificates attribute on CFHTTP.  SSL is required when making secure cfhttp calls to Xero's partner API.
 * Not tested on Lucee, but may have similar Partner App limitations from lack of support for clientCertificates attribute. 
 
 
@@ -30,22 +30,22 @@ Xero's API supports [3 application types] (http://developer.xero.com/documentati
 You can [create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
 
 ### Install Xero-CFML Library
-Download this library and place it in your webroot. There two directory maps in the Application.cfc file.
+Download this library and place it in your webroot. There are two directory maps in the Application.cfc file.
 
 	<cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" /> 
     <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" /> 
 
-Follow the configuration steps based on your type of Xero application.
 
+## Configuration of API Keys and Certificates
 ### Securing your resources directory
-In a production environment, you will move the resources directory outside the webroot for security reasons.  Once you've done that, make sure you update the *pathToConfigJSON* variable in your Application.cfc.  
+All configuration files and certificates are located in the resources directory.  In a production environment, you will move this directory outside the webroot for security reasons.  Once you've done that, make sure you update the *pathToConfigJSON* variable in your Application.cfc.  
 
 <cfset pathToConfigJSON = getDirectoryFromPath(getCurrentTemplatePath()) & "resources/config.json"> 
 
-### Config.js
-Inside the resources directory, you'll find 4 files.  *the ONLY file used is config.js*.  The other 3 files show required values based on the type of Xero Application.  For example, if you are building a Xero Public App, you can open *config-public.json* and save it as *config.json*, then follow the steps below to set the values for your App.
+### Config.json
+Inside the resources directory, you'll find 4 files.  *the ONLY file used is config.json*.  The other 3 files show required values based on the type of Xero Application.  For example, if you are building a Xero Public App, you can open *config-public.json* and save it as *config.json*, then follow the steps below to set the values for your App.
 
-* config.js
+* config.json
 * config-partner.json
 * config-private.json
 * config-public.json
@@ -54,12 +54,12 @@ Inside the resources directory, you'll find 4 files.  *the ONLY file used is con
 #### Configure Xero Application
 Create a [Xero Public application](https://api.xero.com/Application). Enter a callback domain i.e. localhost.
 
-Open *config.js* file located in the resources directory.  Copy and paste your consumer key and secret.
+Open *config.json* file located in the resources directory.  Copy and paste your consumer key and secret.
 
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
 
-Customize your callback base URL and callback path to point to the location of example/callback.cfm.  For example ...
+Customize your callback base URL and callback path to point to the location of example/callback.cfm. 
 
 	"CallbackBaseUrl" : "http://localhost:8500",
 	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm"
@@ -68,7 +68,7 @@ Point your browser to example/index.cfm and click "Connect to Xero" to begin the
 
 ### Private Application
 #### Generate Public/Private Key
-A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key in the /resources/cert directory. 
+A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key in the /resources/certs directory. 
 
 The basic command line steps to generate a public and private key using OpenSSL are as follows:
 
@@ -84,7 +84,7 @@ For this wrapper, you will need to run one additional command to create a .pk8 f
 Create a [Xero Private application](https://api.xero.com/Application). Select which Xero organization you are connecting to. Upload the *publickey.cer* created as part of the public/private key pair. 
 
 
-Open *config-private.json* located in the *resources* directory and save it as *config.json*, Open *config.js* then copy and paste the consumer key.
+Open *config-private.json* located in the *resources* directory and save it as *config.json*, Open *config.json* then copy and paste the consumer key.
 
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 
@@ -98,7 +98,7 @@ After you've applied to join the Partner Program and validated your integration 
 Once your integration is complete, schedule a time with Xero Developer Relations to review your integration and upgrade your Public application to a Partner Application.
 
 #### Generate Public/Private Key
-A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key on your server.  To keep things simple, place the private key in the /example/partner/cert directory.  In a production environment, you will store this key outside the webroot for security reasons.
+A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key  in the /resources/certs directory.
 
 The basic command line steps to generate a public and private key using OpenSSL are as follows:
 
@@ -113,18 +113,18 @@ For this wrapper, you will need to run one additional command to create a .pk8 f
 #### Configure Xero Application
 Go to your upgraded [Xero Partner application](https://api.xero.com/Application). Enter a callback domain i.e. localhost.
 
-Open *config-partner.json* located in the resources directory and save it as *config.json*, Open *config.js* then copy and paste the consumer key and secret.
+Open *config-partner.json* located in the resources directory and save it as *config.json*, Open *config.json* then copy and paste the consumer key and secret.
 
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
 
-Customize your callback base URL and callback path to point to the location of example/callback.cfm.  For example ...
+Customize your callback base URL and callback path to point to the location of example/callback.cfm. 
 
 	"CallbackBaseUrl" : "http://localhost:8500",
 	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm"
 
 #### Entrust SSL Certificate
-Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server.  To keep things simple, place the .p12 file in the /resources/cert directory.  In a production environment, you will move the resources directory outside the webroot for security reasons.
+Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server and follow the directions to create a .p12 file, then place it in the /resources/certs directory.  
 
 	"EntrustCert" : "certs/xero-entrust-20170513.p12",
 	"EntrustCertPassword" : "123456"
