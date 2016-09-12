@@ -124,7 +124,7 @@ Customize your callback base URL and callback path to point to the location of e
 	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm"
 
 #### Entrust SSL Certificate
-Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server and follow the directions to create a .p12 file, then place it in the /resources/certs directory.  
+Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server and [follow the directions](https://developer.xero.com/documentation/getting-started/partner-applications/#title7) to get you .p12 file, then place it in the /resources/certs directory.  
 
 	"EntrustCert" : "certs/xero-entrust-20170513.p12",
 	"EntrustCertPassword" : "123456"
