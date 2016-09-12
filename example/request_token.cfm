@@ -4,24 +4,20 @@
 2) add your consumerkey & secret and set callback URL to the config.cfm file
 3) save and run
 --->
+<cfif application.config["AppType"] EQ "PRIVATE">
+    <cflocation url="get.cfm" addtoken="false">
+</cfif>
 <html>
 <head>
 	<title>CFML Xero Public Application - Request Token</title>
 	<cfinclude template="/common/header.cfm" >
-	<cfinclude template="config.cfm" >
-
 </head>
 <body>
 	<!--- Make requestToken Call and build & return authorization URL --->
-	<cfset oRequestResult = CreateObject("component", "cfc.xero").requestToken(
-		sXeroAppType = sXeroAppType,
-		sConsumerKey = sConsumerKey, 
-		sConsumerSecret = sConsumerSecret,
-		sCallbackURL = sCallbackURL,
-		sTokenEndpoint = sTokenEndpoint,
-		sAuthorizationEndpoint = sAuthorizationEndpoint)>
+	<cfset oRequestResult = CreateObject("component", "cfc.xero").requestToken()>
 
 	<!--- Redirect user to Xero to login and authorize --->
 	<cflocation url="#oRequestResult["url"]#">
+	
 </body>
 </html>

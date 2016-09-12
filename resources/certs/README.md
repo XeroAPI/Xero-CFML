@@ -1,7 +1,12 @@
 Xero-CFML
 =========
 
-###Partner Xero Application
+###Private Xero Applications
+
+Place the privatekey.pk8 file in the "certs" directory.
+
+
+###Partner Xero Applications
 
 Place the privatekey.pk8 file in the "certs" directory.
 
