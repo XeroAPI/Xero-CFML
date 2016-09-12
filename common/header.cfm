@@ -3,7 +3,6 @@
 <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
-<script src="../../common/resource.js"></script>
 
 <style type="text/css">
 body {padding:20px;}

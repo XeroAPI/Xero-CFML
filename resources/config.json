@@ -1,0 +1,10 @@
+{ 
+	"AppType" : "PRIVATE",
+	"UserAgent" : "Xero-CFML-Private",
+	"Accept" : "application/json", 
+	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
+	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
+	"ApiBaseUrl" : "https://api.xero.com",
+	"ApiEndpointPath" : "/api.xro/2.0/",
+	"PrivateKeyCert" :  "certs/privatekey.pk8"
+}
