@@ -40,7 +40,6 @@ History:
 	<cfset this.AppType = "">
 	<cfset this.UserAgent = "">
 	<cfset this.Accept = "">
-	<cfset this.SignatureMethod = "">
 	<cfset this.ConsumerKey = "">
 	<cfset this.ConsumerSecret = "">
 	<cfset this.ApiBaseUrl = "">
@@ -51,7 +50,6 @@ History:
 	<cfset this.CallbackBaseUrl = "">
 	<cfset this.CallbackPath = "">
 	<cfset this.PrivateKeyCert = "">
-	<cfset this.PrivateKeyPassword = "">
 	<cfset this.EntrustCert = "">
 	<cfset this.EntrustCertPassword = "">
 
@@ -77,9 +75,6 @@ History:
 		</cfif>
 		<cfif structKeyExists(this.json, "Accept")>
 			<cfset this.Accept = this.json["Accept"]>
-		</cfif>
-		<cfif structKeyExists(this.json, "SignatureMethod")>
-			<cfset this.SignatureMethod = this.json["SignatureMethod"]>
 		</cfif>
 		<cfif structKeyExists(this.json, "ConsumerKey")>
 			<cfset this.ConsumerKey = this.json["ConsumerKey"]>
@@ -110,9 +105,6 @@ History:
 		</cfif>
 		<cfif structKeyExists(this.json, "PrivateKeyCert")>
 			<cfset this.PrivateKeyCert = this.json["PrivateKeyCert"]>
-		</cfif>
-		<cfif structKeyExists(this.json, "PrivateKeyPassword")>
-			<cfset this.PrivateKeyPassword = this.json["PrivateKeyPassword"]>
 		</cfif>
 		<cfif structKeyExists(this.json, "EntrustCert")>
 			<cfset this.EntrustCert = this.json["EntrustCert"]>

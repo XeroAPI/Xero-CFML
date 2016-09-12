@@ -2,7 +2,6 @@
 	"AppType" : "PARTNER",
 	"UserAgent" : "Xero-CFML-Partner",
 	"Accept" : "application/json", 
-	"SignatureMethod" : "RSA-SHA1",
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
 	"ApiBaseUrl" : "https://api-partner.network.xero.com",
@@ -13,7 +12,6 @@
 	"CallbackBaseUrl" : "http://localhost:8500",
 	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm",
 	"PrivateKeyCert" :  "certs/privatekey.pk8",
-	"PrivateKeyPassword" :  "1234",
 	"EntrustCert" : "certs/xero-entrust-20170513.p12",
 	"EntrustCertPassword" : "123456"
 }

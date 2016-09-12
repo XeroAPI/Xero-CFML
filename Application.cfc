@@ -13,7 +13,6 @@
     <cfset this.mappings = structNew() />
     <cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" />
     <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" />
-    <cfset this.mappings["/resources"] = getDirectoryFromPath(getCurrentTemplatePath()) & "resources/" />
  
     <!--- Define the page request properties. --->
     <cfsetting

@@ -2,7 +2,6 @@
 	"AppType" : "PUBLIC",
 	"UserAgent" : "Xero-CFML-Public",
 	"Accept" : "application/json", 
-	"SignatureMethod" : "HMAC",
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
 	"ApiBaseUrl" : "https://api.xero.com",

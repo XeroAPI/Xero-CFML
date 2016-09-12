@@ -2,11 +2,9 @@
 	"AppType" : "PRIVATE",
 	"UserAgent" : "Xero-CFML-Private",
 	"Accept" : "application/json", 
-	"SignatureMethod" : "RSA-SHA1",
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
 	"ApiBaseUrl" : "https://api.xero.com",
 	"ApiEndpointPath" : "/api.xro/2.0/",
-	"PrivateKeyCert" :  "certs/privatekey.pk8",
-	"PrivateKeyPassword" :  "1234"
+	"PrivateKeyCert" :  "certs/privatekey.pk8"
 }
