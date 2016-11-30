@@ -8,7 +8,7 @@
 <h1>Xero CFML Wrapper</h1>
 
 <cfoutput>
-<h3>Currently Configured at #application.config["AppType"]# Application. </h3> 
+<h3>Currently Configured as #application.config["AppType"]# Application. </h3> 
 </cfoutput>
 <p>
 Go to /resources/config.json to modify application.

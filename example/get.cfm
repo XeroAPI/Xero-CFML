@@ -30,6 +30,19 @@
 	
 	<cfset stParameters = structNew()>
 	<cfset sBody = "">
+	<cfset ifModifiedSince = "">
+
+
+	<!---  sample ORDER clause
+	<cfset stParameters["order"] = 'EmailAddress DESC'>
+	--->
+	<!---  sample WHERE clause
+	<cfset stParameters["where"] = 'Status=="PAID"'>
+	--->
+	<!---  sample modified date/time 
+	<cfset dateTime24hoursAgo = DateAdd("d", -1, now())> 
+	<cfset ifModifiedSince = DateConvert("local2utc", dateTime24hoursAgo)> 
+	--->
 
 	<!--- Build and Call API, return new structure of XML results --->
 	<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
@@ -39,6 +52,7 @@
 		stParameters = stParameters,
 		sAccept = form.accept,
 		sMethod = form.method,
+		sIfModifiedSince = ifModifiedSince,
 		sBody = sBody)>
 
 	<div class="container">

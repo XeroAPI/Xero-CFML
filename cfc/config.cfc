@@ -78,9 +78,17 @@ History:
 		</cfif>
 		<cfif structKeyExists(this.json, "ConsumerKey")>
 			<cfset this.ConsumerKey = this.json["ConsumerKey"]>
+			<cfif this.ConsumerKey EQ "__YOUR_CONSUMER_KEY__">
+				<cfoutput>Looks like your Consumer Key has not been set - look at /resource/config.json and README - Be sure to retart your CFML engine to reload this configuration cfc</cfoutput>
+				<cfabort>
+			</cfif>
 		</cfif>
 		<cfif structKeyExists(this.json, "ConsumerSecret")>
 			<cfset this.ConsumerSecret = this.json["ConsumerSecret"]>
+			<cfif this.ConsumerSecret EQ "__YOUR_CONSUMER_KEY_SECRET__">
+				<cfoutput>Looks like your Consumer Secret has not been set - look at /resource/config.json and README - Be sure to retart your CFML engine to reload this configuration cfc</cfoutput>
+				<cfabort>
+			</cfif>
 		</cfif>
 		<cfif structKeyExists(this.json, "ApiBaseUrl")>
 			<cfset this.ApiBaseUrl = this.json["ApiBaseUrl"]>
@@ -119,6 +127,10 @@ History:
 
 		<cfif structKeyExists(this.json, "PrivateKeyCert")>
 			<cfset this.PathToPrivateKey = pathToConfig & this.json["PrivateKeyCert"]>
+			<cfif NOT FileExists(this.PathToPrivateKey)>
+				<cfoutput>No Private Key File Found	- Check the path set in /resource/config.json - #this.PathToPrivateKey#</cfoutput>
+				<cfabort>
+			</cfif>
 		</cfif>
 
 		<cfif structKeyExists(this.json, "EntrustCert")>

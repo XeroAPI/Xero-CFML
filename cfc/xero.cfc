@@ -87,17 +87,9 @@ History:
 				oToken = oToken)>
 
 			<!--- make requestToken call to Xero  --->
-			<cfif config.AppType EQ "PUBLIC" OR config.AppType EQ "PRIVATE" >
-				<cfhttp url="#oREQ.getString()#" 
+			<cfhttp url="#oREQ.getString()#" 
 					method="GET" 
 					result="tokenResponse"/>
-			<cfelse>
-				<cfhttp url="#oREQ.getString()#" 
-					clientCert="#config.PathToEntrustCert#" 
-					clientCertPassword="#config.EntrustCertPassword#" 
-					method="GET" 
-					result="tokenResponse"/>
-			</cfif>
 
 			<!--- was an oauth_token returned in the response if its there--->
 			<cfif findNoCase("oauth_token",tokenresponse.filecontent)>
@@ -200,15 +192,10 @@ History:
 				oConsumer = oConsumer,
 				oToken = oToken)>
 
-			<!--- make requestToken call to Xero  --->
-			<cfif config.AppType EQ "PUBLIC" OR config.AppType EQ "PRIVATE">
-				<cfhttp url="#oREQ.getString()#" method="GET" result="tokenResponse"/>
-			<cfelse>
-				<cfhttp url="#oREQ.getString()#" 
-					clientCert="#config.PathToEntrustCert#" 
-					clientCertPassword="#config.EntrustCertPassword#" 
-					method="GET" result="tokenResponse"/>
-			</cfif>
+			<!--- make AccessToken call to Xero  --->
+			<cfhttp url="#oREQ.getString()#" 
+				method="GET" 
+				result="tokenResponse"/>
 
 			<!--- was an oauth_token returned in the response if its there save the new access token --->
 			<cfif findNoCase("oauth_token",tokenresponse.filecontent)>
@@ -234,6 +221,7 @@ History:
 		<cfargument name="sOAuthTokenSecret" required="false" type="string" default="">
 		<cfargument name="stParameters" required="false" type="struct" default="">
 		<cfargument name="sAccept" required="false" type="string" default="#application.config.json["Accept"]#">
+		<cfargument name="sIfModifiedSince" required="false" type="string" default="">
 		<cfargument name="sMethod" required="false" type="string" default="GET">
 		<cfargument name="sBody" required="false" type="string" default="">
 		<cfargument name="contentType" required="false" type="string" default="application/json">
@@ -280,29 +268,19 @@ History:
 				oConsumer = oConsumer,
 				oToken = oToken)>
 
-			<cfif config.AppType EQ "PUBLIC" OR config.AppType EQ "PRIVATE">
-				<cfhttp 
-					url="#oREQ.getString()#" 
-					method= "#arguments.sMethod#" 
-					result="tokenResponse" >
-					<cfhttpparam type="header" name="accept" value="#arguments.sAccept#">
-					<cfif len(arguments.sBody)>
-						<cfhttpparam type="body" value="#trim(arguments.sBody)#">
-					</cfif>
-				</cfhttp>
-			<cfelse>
-				<cfhttp 
-					url="#oREQ.getString()#" 
-					method = "#arguments.sMethod#"
-					clientCert="#config.PathToEntrustCert#" 
-					clientCertPassword="#config.EntrustCertPassword#" 
-					result="tokenResponse">
-					<cfhttpparam type="header" name="accept" value="#arguments.sAccept#">
-					<cfif len(arguments.sBody)>
-						<cfhttpparam type="body" value="#trim(arguments.sBody)#">
-					</cfif>
-				</cfhttp>
-			</cfif>
+			<!--- Request data from Xero API --->
+			<cfhttp 
+				url="#oREQ.getString()#" 
+				method= "#arguments.sMethod#" 
+				result="tokenResponse" >
+				<cfhttpparam type="header" name="accept" value="#arguments.sAccept#">
+				<cfif len(arguments.sIfModifiedSince)>
+					<cfhttpparam type="header" name="If-Modified-Since" value="#DateFormat(arguments.sIfModifiedSince," YYY-MM-DD")#T#TimeFormat(arguments.sIfModifiedSince,"HH:MM:SS")#">
+				</cfif>
+				<cfif len(arguments.sBody)>
+					<cfhttpparam type="body" value="#trim(arguments.sBody)#">
+				</cfif>
+			</cfhttp>
 
 		<cfset stReturn = structNew()>
 		<cfif isXML(tokenResponse.Filecontent)>
