@@ -2,7 +2,13 @@ Xero-CFML
 =========
 
 ##Config.json
-The only .json file used by this library is config.json.  Depending on the type of Xero Application you are building, you should open the corresponding one and save it as config.json - and overwrite the file.  For example, if you are building a private Xero app, open config-private.json and save it as config.json.  Then update the appropriate values.
+The only .json file used by this library is config.json.  Depending on the type of Xero Application you are building, you should open the corresponding one and save it as config.json - and overwrite the file.  For example, if you are building a private Xero app, open config-private.json and save it as config.json.  Then update the appropriate values.  
+
+Go to app.xero.com to create your Xero app and get your Consumer Key and Secret.
+
+Looking to generate a private key - review these docs - https://developer.xero.com/documentation/advanced-docs/public-private-keypair/
+
+You'll upload the public key at app.xero.com
 
 ###Private Xero Applications
 
