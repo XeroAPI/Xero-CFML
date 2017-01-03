@@ -13,16 +13,15 @@ CFML wrapper for Xero API - use with CFML application servers.
 
 ## Things to note
 * The library focuses on the authentication for Xero's API and provides a basis to be extended.  You can configure this library to use  different Xero application types (see below). Once you've connected to Xero's API, you can read different types of data. This example code is enough to get you going, but is not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
-* Partner Application will not work with Railo due to lack of support for clientCertificates attribute on CFHTTP.  SSL is required when making secure cfhttp calls to Xero's partner API.
-* Not tested on Lucee, but may have similar Partner App limitations from lack of support for clientCertificates attribute. 
+* Not tested on Lucee, please submit issues if you encounter any.
 
 
 ## Select an application type
 Xero's API supports [3 application types] (http://developer.xero.com/documentation/getting-started/api-application-types/).  The three types are public, private and partner.  Each application type is supported by this library.  Please [review  each type] (http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
 
-* [Public] (http://developer.xero.com/documentation/getting-started/public-applications/)
-* [Private] (http://developer.xero.com/documentation/getting-started/private-applications/)
-* [Partner] (http://developer.xero.com/documentation/getting-started/partner-applications/)
+* [Public] (http://developer.xero.com/documentation/auth-and-limits/public-applications/)
+* [Private] (http://developer.xero.com/documentation/auth-and-limits/private-applications/)
+* [Partner] (http://developer.xero.com/documentation/auth-and-limits/partner-applications/)
 
 
 ## Getting Started
@@ -52,7 +51,7 @@ Inside the resources directory, you'll find 4 files.  *the ONLY file used is con
 
 ### Public Application
 #### Configure Xero Application
-Create a [Xero Public application](https://api.xero.com/Application). Enter a callback domain i.e. localhost.
+Create a [Xero Public application](https://app.xero.com/Application). Enter a callback domain i.e. localhost.
 
 Open *config.json* file located in the resources directory.  Copy and paste your consumer key and secret.
 
@@ -68,7 +67,7 @@ Point your browser to example/index.cfm and click "Connect to Xero" to begin the
 
 ### Private Application
 #### Generate Public/Private Key
-A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key in the /resources/certs directory. 
+A [public/private key pair](http://developer.xero.com/documentation/api-guides/create-publicprivate-key/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key in the /resources/certs/ directory. 
 
 The basic command line steps to generate a public and private key using OpenSSL are as follows:
 
@@ -81,7 +80,7 @@ For this wrapper, you will need to run one additional command to create a .pk8 f
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
 #### Configure Xero Application
-Create a [Xero Private application](https://api.xero.com/Application). Select which Xero organization you are connecting to. Upload the *publickey.cer* created as part of the public/private key pair. 
+Create a [Xero Private application](https://app.xero.com/Application). Select which Xero organization you are connecting to. Upload the *publickey.cer* created as part of the public/private key pair. 
 
 
 Open *config-private.json* located in the *resources* directory and save it as *config.json*, Open *config.json* then copy and paste the consumer key.
@@ -93,12 +92,12 @@ Point your browser to example/index.cfm and click "Connect to Xero" to begin acc
 ### Partner Application
 Partner applications are only available to those joining [Xero's Add-on Partner Program](http://developer.xero.com/partner/).
 
-After you've applied to join the Partner Program and validated your integration with Xero Developer Relations, build your integration as a Public Application.  Public and Partner applications share all the same data endpoints. Public and Partner application access tokens both expire after 30 minutes, but Partner applications can refresh access tokens when they expire.
+After you've applied to join the Partner Program and validated your integration with Xero Developer Evangelist team, build your integration as a Public Application.  Public and Partner applications share all the same data endpoints. Public and Partner application access tokens both expire after 30 minutes, but Partner applications can refresh access tokens when they expire.
 
-Once your integration is complete, schedule a time with Xero Developer Relations to review your integration and upgrade your Public application to a Partner Application.
+Once your integration is complete, contact Xero Developer Evangelist team to review your integration and upgrade from Public to Partner Application.
 
 #### Generate Public/Private Key
-A [public/private key pair](http://developer.xero.com/documentation/advanced-docs/public-private-keypair/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key  in the /resources/certs directory.
+A [public/private key pair](http://developer.xero.com/documentation/api-guides/create-publicprivate-key/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key  in the /resources/certs directory.
 
 The basic command line steps to generate a public and private key using OpenSSL are as follows:
 
@@ -111,7 +110,7 @@ For this wrapper, you will need to run one additional command to create a .pk8 f
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
 #### Configure Xero Application
-Go to your upgraded [Xero Partner application](https://api.xero.com/Application). Enter a callback domain i.e. localhost.
+Go to your upgraded [Xero Partner application](https://app.xero.com/Application). Enter a callback domain i.e. localhost.
 
 Open *config-partner.json* located in the resources directory and save it as *config.json*, Open *config.json* then copy and paste the consumer key and secret.
 
@@ -123,11 +122,6 @@ Customize your callback base URL and callback path to point to the location of e
 	"CallbackBaseUrl" : "http://localhost:8500",
 	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm"
 
-#### Entrust SSL Certificate
-Xero will issue you SSL certificates for accessing the Partner API.  Download and store the SSL certificate on your server and [follow the directions](https://developer.xero.com/documentation/getting-started/partner-applications/#title7) to get you .p12 file, then place it in the /resources/certs directory.  
-
-	"EntrustCert" : "certs/xero-entrust-20170513.p12",
-	"EntrustCertPassword" : "123456"
 
 Point your browser to example/index.cfm and click "Connect to Xero" to begin the authentication flow. 
 
