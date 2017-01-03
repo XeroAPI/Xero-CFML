@@ -6,7 +6,7 @@ The only .json file used by this library is config.json.  Depending on the type 
 
 Go to app.xero.com to create your Xero app and get your Consumer Key and Secret.
 
-Looking to generate a private key - review these docs - https://developer.xero.com/documentation/advanced-docs/public-private-keypair/
+Looking to generate a private key - review these docs - http://developer.xero.com/documentation/api-guides/create-publicprivate-key/
 
 You'll upload the public key at app.xero.com
 
@@ -17,7 +17,6 @@ You'll upload the public key at app.xero.com
 	"AppType" : "PRIVATE",
 	"UserAgent" : "Xero-CFML-Private",
 	"Accept" : "application/json", 
-	"SignatureMethod" : "RSA-SHA1",
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
 	"ApiBaseUrl" : "https://api.xero.com",
@@ -33,7 +32,6 @@ You'll upload the public key at app.xero.com
 	"AppType" : "PUBLIC",
 	"UserAgent" : "Xero-CFML-Public",
 	"Accept" : "application/json", 
-	"SignatureMethod" : "HMAC",
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
 	"ApiBaseUrl" : "https://api.xero.com",
@@ -55,15 +53,13 @@ You'll upload the public key at app.xero.com
 	"Accept" : "application/json", 
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
-	"ApiBaseUrl" : "https://api-partner.network.xero.com",
+	"ApiBaseUrl" : "https://api.xero.com",
 	"ApiEndpointPath" : "/api.xro/2.0/",
 	"RequestTokenPath": "/oauth/RequestToken",
 	"AuthenticateUrl" : "https://api.xero.com/oauth/Authorize",
 	"AccessTokenPath"  : "/oauth/AccessToken",
 	"CallbackBaseUrl" : "http://localhost:8500",
 	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm",
-	"PrivateKeyCert" :  "certs/privatekey.pk8",
-	"EntrustCert" : "certs/xero-entrust-20170513.p12",
-	"EntrustCertPassword" : "123456"
+	"PrivateKeyCert" :  "certs/privatekey.pk8"
 }
 ```
