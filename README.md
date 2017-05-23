@@ -3,13 +3,13 @@ Xero-CFML
 
 CFML wrapper for Xero API - use with CFML application servers.
 
-* [Things to note] (#things-to-note)
-* [Select an Application Type] (#select-an-application-type)
-* [Getting Started] (#getting-started)
-* [To Do] (#to-do)
-* [Additional Reading] (#additional-reading)
-* [Acknowledgements] (#acknowledgements)
-* [License] (#license)
+* [Things to note](#things-to-note)
+* [Select an Application Type](#select-an-application-type)
+* [Getting Started](#getting-started)
+* [To Do](#to-do)
+* [Additional Reading](#additional-reading)
+* [Acknowledgements](#acknowledgements)
+* [License](#license)
 
 ## Things to note
 * The library focuses on the authentication for Xero's API and provides a basis to be extended.  You can configure this library to use  different Xero application types (see below). Once you've connected to Xero's API, you can read different types of data. This example code is enough to get you going, but is not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
@@ -17,11 +17,11 @@ CFML wrapper for Xero API - use with CFML application servers.
 
 
 ## Select an application type
-Xero's API supports [3 application types] (http://developer.xero.com/documentation/getting-started/api-application-types/).  The three types are public, private and partner.  Each application type is supported by this library.  Please [review  each type] (http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
+Xero's API supports [3 application types](http://developer.xero.com/documentation/getting-started/api-application-types/).  The three types are public, private and partner.  Each application type is supported by this library.  Please [review  each type](http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
 
-* [Public] (http://developer.xero.com/documentation/auth-and-limits/public-applications/)
-* [Private] (http://developer.xero.com/documentation/auth-and-limits/private-applications/)
-* [Partner] (http://developer.xero.com/documentation/auth-and-limits/partner-applications/)
+* [Public](http://developer.xero.com/documentation/auth-and-limits/public-applications/)
+* [Private](http://developer.xero.com/documentation/auth-and-limits/private-applications/)
+* [Partner](http://developer.xero.com/documentation/auth-and-limits/partner-applications/)
 
 
 ## Getting Started
@@ -32,7 +32,7 @@ You can [create a Xero user account](https://www.xero.com/signup) for free.  Xer
 Download this library and place it in your webroot. There are two directory maps in the Application.cfc file.
 
 	<cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" /> 
-    <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" /> 
+	<cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" /> 
 
 
 ## Configuration of API Keys and Certificates
