@@ -181,9 +181,9 @@
 	writeOutput("ARCHIVED - ID: " & contact.getContactID() & "<br>");
 
 	writeOutput("<hr>");
-*/
 
-// CONTACTS ----------------------------------------------
+
+// CONTACT GROUP ----------------------------------------------
 	writeOutput("<strong>CONTACTGROUP</strong><br>");
 	contactgroup=createObject("component","cfc.model.ContactGroup").init(); 
 
@@ -201,7 +201,6 @@
 	contactgroup.update();
 	writeOutput("Update - ID: " & contactgroup.getContactGroupID() & "<br>");
 
-
 	// Get All
 	contactgroup.getAll();
 	writeOutput("Get ALL - count: " & ArrayLen(contactgroup.getList()) & "<br>");
@@ -213,20 +212,216 @@
 
 	// Add Contacts to Group
 	cgContact = createObject("component","cfc.model.Contact").init().getByID("e2b13deb-6213-43ef-9308-7c2389e47f53");
-
 	aContact = ArrayNew(1);
-	aContact.append(cgContact.toStructOfId());
+	aContact.append(cgContact.toStruct(Only="id"));
 	contactgroup.setContacts(aContact);
-	
 	contactgroup.addContacts();
 	writeOutput("Add Contacts - Name: " & contactgroup.getName() & "<br>");
 
-	// DELETE ALL CONTACTS
+	// Delete a Single Contacts from Group
+	contactgroup.removeContact("e2b13deb-6213-43ef-9308-7c2389e47f53");
+	writeOutput("Remove Contact from Group Name: " & contactgroup.getName() & "<br>");
+
+	// Delete ALL Contacts from Group
 	contactgroup.getObject(2);
 	writeOutput("DELETING All Contacts for: " & contactgroup.getName() & "<br>");
 	contactgroup.deleteContacts();
-
 	writeOutput("<hr>");
+
+
+// CREDIT NOTE ----------------------------------------------
+	writeOutput("<strong>CREDIT NOTE</strong><br>");
+	creditnote=createObject("component","cfc.model.CreditNote").init(); 
+
+	cnContact = createObject("component","cfc.model.Contact").init().getByID("e2b13deb-6213-43ef-9308-7c2389e47f53");
+	lineitem=createObject("component","cfc.model.LineItem").init(); 
+	lineitem.setDescription("consulting");
+	lineitem.setQuantity("2");
+	lineitem.setUnitAmount("100");
+	lineitem.setAccountCode("400");
+	aLineItem = ArrayNew(1);
+	aLineItem.append(lineitem.toStruct());
+
+	// Create
+	creditnote.setType("ACCPAYCREDIT");
+	creditnote.setContact(cnContact.toStruct(Only="id"));
+	creditnote.setLineitems(aLineItem);
+	creditnote.setStatus("DRAFT");
+	creditnote.create();
+	writeOutput("Create - ID: " & creditnote.getCreditNoteID() & "<br>");
+
+	// Get By ID
+	creditnote.getById(creditnote.getCreditNoteID());
+	writeOutput("Get By - ID: " & creditnote.getCreditNoteID() & "<br>");
+
+	// Update
+	creditnote.setCreditNoteNumber(RandRange(1, 1000, "SHA1PRNG"));
+	creditnote.update();
+	writeOutput("Update - ID: " & creditnote.getCreditNoteID() & "<br>");
+
+	// Get All
+	creditnote.getAll();
+	writeOutput("Get ALL - count: " & ArrayLen(creditnote.getList()) & "<br>");
+
+	// Get Object by Array Position
+	creditnote.getObject(1);
+	writeOutput("Get an Item from List -ID: " & creditnote.getCreditNoteID() & "<br>");
+
+
+// CURRENCIES ----------------------------------------------
+	writeOutput("<strong>CURRENCY</strong><br>");
+	currency=createObject("component","cfc.model.Currency").init(); 
+
+	// Get All
+	currency.getAll();
+	writeOutput("Get ALL - count: " & ArrayLen(currency.getList()) & "<br>");
+
+	// Get Object by Array Position
+	currency.getObject(1);
+	writeOutput("Get an Item from List -desc: " & currency.getDescription() & "<br>");
+	
+	// Create
+	currency.setDescription("Aussie Dollar");
+	currency.setCode("AUD");
+	currency.create();
+	writeOutput("Create - Code: " & currency.getCode() & "<br>");
+
+	// Get By ID
+	currency.getById(currency.getCode());
+	writeOutput("Get By - Code: " & currency.getCode() & "<br>");
+
+
+// EMPLOYEES ----------------------------------------------
+	writeOutput("<strong>EMPLOYEES</strong><br>");
+	employee=createObject("component","cfc.model.Employee").init(); 
+
+	// Create
+	employee.setFirstName("Joe " & RandRange(1, 100000, "SHA1PRNG"));
+	employee.setLastName("Montana");
+	employee.create();
+	writeOutput("Create - ID: " & employee.getEmployeeID() & "<br>");
+	writeOutput("Create - First Name: " & employee.getFirstName() & "<br>");
+
+	// Get By ID
+	employee.getById(employee.getEmployeeID());
+	writeOutput("Get By - ID: " & employee.getEmployeeID() & "<br>");
+	
+	// Update
+	employee.setFirstName("Sid " & RandRange(1, 100000, "SHA1PRNG"));
+	employee.update();
+	writeOutput("Update - ID: " & employee.getEmployeeID() & "<br>");
+	writeOutput("Update - First Name: " & employee.getFirstName() & "<br>");
+	
+	// Get All
+	employee.getAll();
+	writeOutput("Get ALL - count: " & ArrayLen(employee.getList()) & "<br>");
+
+	// Get Object by Array Position
+	employee.getObject(2);
+	writeOutput("Get an Item by Position -ID: " & employee.getEmployeeID() & "<br>");
+
+
+
+// INVOICES ----------------------------------------------
+	writeOutput("<strong>INVOICES</strong><br>");
+	invoice=createObject("component","cfc.model.Invoice").init(); 
+	invContact = createObject("component","cfc.model.Contact").init().getByID("e2b13deb-6213-43ef-9308-7c2389e47f53");
+	lineitem=createObject("component","cfc.model.LineItem").init(); 
+	lineitem.setDescription("consulting");
+	lineitem.setQuantity("2");
+	lineitem.setUnitAmount("100");
+	lineitem.setAccountCode("400");
+	aLineItem = ArrayNew(1);
+	aLineItem.append(lineitem.toStruct());
+	
+	// Create
+	invoice.setType("ACCPAY");
+	invoice.setContact(invContact.toStruct(Only="id"));
+	invoice.setLineitems(aLineItem);
+	invoice.setStatus("DRAFT");
+	invoice.setDueDate("2018-5-5");
+	invoice.create();
+	writeOutput("Create - ID: " & invoice.getInvoiceID() & "<br>");
+
+	// Get By ID
+	invoice.getById(invoice.getInvoiceID());
+	writeOutput("Get By - ID: " & invoice.getInvoiceID() & "<br>");
+
+	// Update
+	invoice.setReference("Hello World");
+	invoice.update();
+	writeOutput("Update - ID: " & invoice.getInvoiceID() & "<br>");
+
+	// VOID
+	//invoice.void();
+	//writeOutput("VOIDED - ID: " & invoice.getInvoiceID() & "<br>");
+
+	// DELETE
+	invoice.delete();
+	writeOutput("Deleted - ID: " & invoice.getInvoiceID() & "<br>");
+
+	// Get All
+	invoice.getAll();
+	writeOutput("Get ALL - count: " & ArrayLen(invoice.getList()) & "<br>");
+
+	// Get Object by Array Position
+	invoice.getObject(3);
+	writeOutput("Get 3rd Item -ID: " & invoice.getInvoiceID() & "<br>");
+	writeOutput("<hr>");
+
+// INVOICE REMINDERS ----------------------------------------------
+	writeOutput("<strong>INVOICE REMINDERS</strong><br>");
+	invoicereminder=createObject("component","cfc.model.InvoiceReminder").init(); 
+
+	// Get All
+	invoicereminder.getAll();
+	writeOutput("Get ALL - Enabled?: " & invoicereminder.getEnabled() & "<br>");
+
+// ITEMS ----------------------------------------------
+	writeOutput("<strong>ITEMS</strong><br>");
+	item=createObject("component","cfc.model.Item").init(); 
+
+	// Create
+	item.setCode(RandRange(1, 100000, "SHA1PRNG"));
+	item.setName("Sid Group " & RandRange(1, 100000, "SHA1PRNG"));
+	item.setDescription("My description");
+	item.create();
+	writeOutput("Create - ID: " & item.getCode() & "<br>");
+
+	// Get By ID
+	item.getById(item.getCode());
+	writeOutput("Get By - ID: " & item.getCode() & "<br>");
+
+	// Update
+	item.setName("Sid Updated Group " &RandRange(1, 100000, "SHA1PRNG"));
+	item.update();
+	writeOutput("Update - ID: " & item.getName() & "<br>");
+
+	// Get All
+	item.getAll();
+	writeOutput("Get ALL - count: " & ArrayLen(item.getList()) & "<br>");
+
+	// Get Object by Array Position
+	item.getObject(1);
+	writeOutput("Get an Item from List -ID: " & item.getItemID() & "<br>");
+	
+	// DELETED
+	item.delete();
+	writeOutput("DELETED - Desc: " & item.getDescription() & "<br>");
+	writeOutput("<hr>");
+
+// JOURNALS ----------------------------------------------
+	writeOutput("<strong>JOURNALS</strong><br>");
+	journal=createObject("component","cfc.model.Journal").init(); 
+
+	// Get All
+	journal.getAll();
+	writeOutput("Get ALL - count: " & ArrayLen(journal.getList()) & "<br>");
+
+	// Get Object by Array Position
+	journal.getObject(1);
+	writeOutput("Get an Item from List -ID: " & journal.getJournalID() & "<br>");
+*/
 
 
 </cfscript>
@@ -243,7 +438,7 @@
 <cfoutput>
 	<table border="1" cellpadding="4" cellspacing="4">
 	<tr>
-		<th>ID</th>
+JOURNALS		<th>ID</th>
 		<th>Name</th>
 		<th>City</th>
 	</tr>		
