@@ -16,8 +16,12 @@
 	<!--- Make requestToken Call and build & return authorization URL --->
 	<cfset oRequestResult = CreateObject("component", "cfc.xero").requestToken()>
 
-	<!--- Redirect user to Xero to login and authorize --->
-	<cflocation url="#oRequestResult["url"]#">
-	
+
+	<cfif structKeyExists(oRequestResult, "url")>
+		<!--- Redirect user to Xero to login and authorize --->
+		<cflocation url="#oRequestResult["url"]#">
+	<cfelse>
+		<cfdump var="#oRequestResult#" abort>
+	</cfif>
 </body>
 </html>

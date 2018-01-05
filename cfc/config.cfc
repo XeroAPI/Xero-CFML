@@ -39,7 +39,7 @@ History:
 
 	<cfset this.AppType = "">
 	<cfset this.UserAgent = "">
-	<cfset this.Accept = "">
+	<cfset this.Accept = "application/json">
 	<cfset this.ConsumerKey = "">
 	<cfset this.ConsumerSecret = "">
 	<cfset this.ApiBaseUrl = "">
@@ -71,7 +71,7 @@ History:
 			<cfset this.AppType = this.json["AppType"]>
 		</cfif>
 		<cfif structKeyExists(this.json, "UserAgent")>
-			<cfset this.UserAgent = this.json["UserAgent"]>
+			<cfset this.UserAgent = this.json["UserAgent"] & "-CFML-[0.1.0] ">
 		</cfif>
 		<cfif structKeyExists(this.json, "Accept")>
 			<cfset this.Accept = this.json["Accept"]>

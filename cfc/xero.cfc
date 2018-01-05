@@ -7,7 +7,7 @@ License:
 ============
 This software is published under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 
-Copyright (c) 2014 Xero Limited
+Copyright (c) 2014-2018 Xero Limited
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -35,7 +35,7 @@ History:
 10/15/14 - Sid Maestre - created
 --->
 
-<cfcomponent displayname="xero">
+<cfcomponent displayname="xero" output="true">
 
 	<cffunction name="init" returntype="xero" output="true">
 		<cfreturn this>
@@ -268,6 +268,7 @@ History:
 				oConsumer = oConsumer,
 				oToken = oToken)>
 
+
 			<!--- Request data from Xero API --->
 			<cfhttp 
 				url="#oREQ.getString()#" 
@@ -288,6 +289,8 @@ History:
 		<cfelse>
 			<cfset stReturn.response = tokenResponse.Filecontent>
 		</cfif>
+
+
 		<cfreturn stReturn>
 	</cffunction>
 
