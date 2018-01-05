@@ -19,11 +19,11 @@
   <cfproperty name="DeliveryInstructions" type="String" default="" />
   <cfproperty name="ExpectedArrivalDate" type="String" default="" />
   <cfproperty name="PurchaseOrderID" type="String" default="" />
-  <cfproperty name="CurrencyRate" type="BigDecimal" default="" />
-  <cfproperty name="SubTotal" type="BigDecimal" default="" />
-  <cfproperty name="TotalTax" type="BigDecimal" default="" />
-  <cfproperty name="Total" type="BigDecimal" default="" />
-  <cfproperty name="TotalDiscount" type="BigDecimal" default="" />
+  <cfproperty name="CurrencyRate" type="String" default="" />
+  <cfproperty name="SubTotal" type="String" default="" />
+  <cfproperty name="TotalTax" type="String" default="" />
+  <cfproperty name="Total" type="String" default="" />
+  <cfproperty name="TotalDiscount" type="String" default="" />
   <cfproperty name="HasAttachments" type="Boolean" default="" />
   <cfproperty name="UpdatedDateUTC" type="String" default="" />
 
@@ -599,7 +599,7 @@
   </cffunction>
 
   <cffunction name="setCurrencyRate" access="public"  output="false" hint="I set the CurrencyRate into the variables.instance scope.">
-    <cfargument name="CurrencyRate" type="BigDecimal" hint="I am the CurrencyRate." />
+    <cfargument name="CurrencyRate" type="String" hint="I am the CurrencyRate." />
       <cfset variables.instance.CurrencyRate = arguments.CurrencyRate />
   </cffunction>
 
@@ -612,7 +612,7 @@
   </cffunction>
 
   <cffunction name="setSubTotal" access="public"  output="false" hint="I set the SubTotal into the variables.instance scope.">
-    <cfargument name="SubTotal" type="BigDecimal" hint="I am the SubTotal." />
+    <cfargument name="SubTotal" type="String" hint="I am the SubTotal." />
       <cfset variables.instance.SubTotal = arguments.SubTotal />
   </cffunction>
 
@@ -625,7 +625,7 @@
   </cffunction>
 
   <cffunction name="setTotalTax" access="public"  output="false" hint="I set the TotalTax into the variables.instance scope.">
-    <cfargument name="TotalTax" type="BigDecimal" hint="I am the TotalTax." />
+    <cfargument name="TotalTax" type="String" hint="I am the TotalTax." />
       <cfset variables.instance.TotalTax = arguments.TotalTax />
   </cffunction>
 
@@ -638,7 +638,7 @@
   </cffunction>
 
   <cffunction name="setTotal" access="public"  output="false" hint="I set the Total into the variables.instance scope.">
-    <cfargument name="Total" type="BigDecimal" hint="I am the Total." />
+    <cfargument name="Total" type="String" hint="I am the Total." />
       <cfset variables.instance.Total = arguments.Total />
   </cffunction>
 
@@ -651,7 +651,7 @@
   </cffunction>
 
   <cffunction name="setTotalDiscount" access="public"  output="false" hint="I set the TotalDiscount into the variables.instance scope.">
-    <cfargument name="TotalDiscount" type="BigDecimal" hint="I am the TotalDiscount." />
+    <cfargument name="TotalDiscount" type="String" hint="I am the TotalDiscount." />
       <cfset variables.instance.TotalDiscount = arguments.TotalDiscount />
   </cffunction>
 

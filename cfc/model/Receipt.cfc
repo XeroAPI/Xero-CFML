@@ -7,9 +7,9 @@
   <cfproperty name="Lineitems" type="List[LineItem]" default="" />
   <cfproperty name="Reference" type="String" default="" />
   <cfproperty name="LineAmountTypes" type="String" default="" />
-  <cfproperty name="SubTotal" type="BigDecimal" default="" />
-  <cfproperty name="TotalTax" type="BigDecimal" default="" />
-  <cfproperty name="Total" type="BigDecimal" default="" />
+  <cfproperty name="SubTotal" type="String" default="" />
+  <cfproperty name="TotalTax" type="String" default="" />
+  <cfproperty name="Total" type="String" default="" />
   <cfproperty name="ReceiptID" type="String" default="" />
   <cfproperty name="Status" type="String" default="" />
   <cfproperty name="ReceiptNumber" type="String" default="" />
@@ -333,7 +333,7 @@
   </cffunction>
 
   <cffunction name="setSubTotal" access="public"  output="false" hint="I set the SubTotal into the variables.instance scope.">
-    <cfargument name="SubTotal" type="BigDecimal" hint="I am the SubTotal." />
+    <cfargument name="SubTotal" type="String" hint="I am the SubTotal." />
       <cfset variables.instance.SubTotal = arguments.SubTotal />
   </cffunction>
 
@@ -346,7 +346,7 @@
   </cffunction>
 
   <cffunction name="setTotalTax" access="public"  output="false" hint="I set the TotalTax into the variables.instance scope.">
-    <cfargument name="TotalTax" type="BigDecimal" hint="I am the TotalTax." />
+    <cfargument name="TotalTax" type="String" hint="I am the TotalTax." />
       <cfset variables.instance.TotalTax = arguments.TotalTax />
   </cffunction>
 
@@ -359,7 +359,7 @@
   </cffunction>
 
   <cffunction name="setTotal" access="public"  output="false" hint="I set the Total into the variables.instance scope.">
-    <cfargument name="Total" type="BigDecimal" hint="I am the Total." />
+    <cfargument name="Total" type="String" hint="I am the Total." />
       <cfset variables.instance.Total = arguments.Total />
   </cffunction>
 

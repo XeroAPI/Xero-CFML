@@ -4,35 +4,36 @@
 <!--- PROPERTIES --->
 
   <cfproperty name="Type" type="String" default="" />
-  <cfproperty name="LineItems" type="List[LineItem]" default="" />
+  <cfproperty name="Contact" type="Struct" default="" />
+  <cfproperty name="LineItems" type="array" default="" />
   <cfproperty name="Date" type="String" default="" />
   <cfproperty name="DueDate" type="String" default="" />
-  <cfproperty name="LineAmountTypes" type="LineAmountTypesEnum" default="" />
+  <cfproperty name="LineAmountTypes" type="String" default="" />
   <cfproperty name="InvoiceNumber" type="String" default="" />
   <cfproperty name="Reference" type="String" default="" />
   <cfproperty name="BrandingThemeID" type="String" default="" />
   <cfproperty name="Url" type="String" default="" />
   <cfproperty name="CurrencyCode" type="String" default="" />
-  <cfproperty name="CurrencyRate" type="BigDecimal" default="" />
-  <cfproperty name="Status" type="StatusEnum" default="" />
+  <cfproperty name="CurrencyRate" type="String" default="" />
+  <cfproperty name="Status" type="String" default="" />
   <cfproperty name="SentToContact" type="Boolean" default="" />
   <cfproperty name="ExpectedPaymentDate" type="String" default="" />
   <cfproperty name="PlannedPaymentDate" type="String" default="" />
-  <cfproperty name="SubTotal" type="BigDecimal" default="" />
-  <cfproperty name="TotalTax" type="BigDecimal" default="" />
-  <cfproperty name="Total" type="BigDecimal" default="" />
-  <cfproperty name="TotalDiscount" type="BigDecimal" default="" />
+  <cfproperty name="SubTotal" type="String" default="" />
+  <cfproperty name="TotalTax" type="String" default="" />
+  <cfproperty name="Total" type="String" default="" />
+  <cfproperty name="TotalDiscount" type="String" default="" />
   <cfproperty name="InvoiceID" type="String" default="" />
   <cfproperty name="HasAttachments" type="Boolean" default="" />
-  <cfproperty name="Payments" type="List[Payment]" default="" />
-  <cfproperty name="Prepayments" type="List[Prepayment]" default="" />
-  <cfproperty name="Overpayments" type="List[Overpayment]" default="" />
-  <cfproperty name="AmountDue" type="BigDecimal" default="" />
-  <cfproperty name="AmountPaid" type="BigDecimal" default="" />
+  <cfproperty name="Payments" type="array" default="" />
+  <cfproperty name="Prepayments" type="array" default="" />
+  <cfproperty name="Overpayments" type="array" default="" />
+  <cfproperty name="AmountDue" type="String" default="" />
+  <cfproperty name="AmountPaid" type="String" default="" />
   <cfproperty name="FullyPaidOnDate" type="String" default="" />
-  <cfproperty name="AmountCredited" type="BigDecimal" default="" />
+  <cfproperty name="AmountCredited" type="String" default="" />
   <cfproperty name="UpdatedDateUTC" type="String" default="" />
-  <cfproperty name="CreditNotes" type="List[CreditNote]" default="" />
+  <cfproperty name="CreditNotes" type="array" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -57,12 +58,19 @@
         </cfscript>
      </cfif>
   </cffunction>
-  
+
   <cffunction name="toStruct" access="public" output="false">
-        <cfscript>
-          myStruct=StructNew();
-          myStruct=this.toJSON(returnType="struct");
-        </cfscript>
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
     <cfreturn myStruct />
   </cffunction>
 
@@ -81,6 +89,11 @@
             if (structKeyExists(variables.instance,"Type")) {
               if (NOT listFindNoCase(arguments.exclude, "Type")) {
                 myStruct.Type=getType();
+              }
+            }
+            if (structKeyExists(variables.instance,"Contact")) {
+              if (NOT listFindNoCase(arguments.exclude, "Contact")) {
+                myStruct.Contact=getContact();
               }
             }
             if (structKeyExists(variables.instance,"LineItems")) {
@@ -115,12 +128,16 @@
             }
             if (structKeyExists(variables.instance,"BrandingThemeID")) {
               if (NOT listFindNoCase(arguments.exclude, "BrandingThemeID")) {
-                myStruct.BrandingThemeID=getBrandingThemeID();
+                if(len(variables.instance.BrandingThemeID) GT 0) {
+                  myStruct.BrandingThemeID=getBrandingThemeID();
+                }
               }
             }
             if (structKeyExists(variables.instance,"Url")) {
               if (NOT listFindNoCase(arguments.exclude, "Url")) {
-                myStruct.Url=getUrl();
+                 if(len(variables.instance.Url) GT 0) {
+                   myStruct.Url=getUrl();
+                }
               }
             }
             if (structKeyExists(variables.instance,"CurrencyCode")) {
@@ -250,10 +267,15 @@
         } else {
           setType("");
         }
+        if (structKeyExists(obj,"Contact")) {
+          setContact(obj.Contact);
+        } else {
+          setContact(StructNew());
+        }
         if (structKeyExists(obj,"LineItems")) {
           setLineItems(obj.LineItems);
         } else {
-          setLineItems("");
+          setLineItems(ArrayNew(1));
         }
         if (structKeyExists(obj,"Date")) {
           setDate(obj.Date);
@@ -308,7 +330,7 @@
         if (structKeyExists(obj,"SentToContact")) {
           setSentToContact(obj.SentToContact);
         } else {
-          setSentToContact("");
+          setSentToContact(false);
         }
         if (structKeyExists(obj,"ExpectedPaymentDate")) {
           setExpectedPaymentDate(obj.ExpectedPaymentDate);
@@ -348,22 +370,22 @@
         if (structKeyExists(obj,"HasAttachments")) {
           setHasAttachments(obj.HasAttachments);
         } else {
-          setHasAttachments("");
+          setHasAttachments(false);
         }
         if (structKeyExists(obj,"Payments")) {
           setPayments(obj.Payments);
         } else {
-          setPayments("");
+          setPayments(ArrayNew(1));
         }
         if (structKeyExists(obj,"Prepayments")) {
           setPrepayments(obj.Prepayments);
         } else {
-          setPrepayments("");
+          setPrepayments(ArrayNew(1));
         }
         if (structKeyExists(obj,"Overpayments")) {
           setOverpayments(obj.Overpayments);
         } else {
-          setOverpayments("");
+          setOverpayments(ArrayNew(1));
         }
         if (structKeyExists(obj,"AmountDue")) {
           setAmountDue(obj.AmountDue);
@@ -393,7 +415,7 @@
         if (structKeyExists(obj,"CreditNotes")) {
           setCreditNotes(obj.CreditNotes);
         } else {
-          setCreditNotes("");
+          setCreditNotes(ArrayNew(1));
         }
       </cfscript>
       
@@ -437,7 +459,8 @@
     <cfreturn this />
   </cffunction>
 
-  <cffunction name="archive" access="public" output="false">
+  <cffunction name="void" access="public" output="false">
+    <cfset this.setStatus("VOIDED")>
     <cfset variables.result = Super.post(endpoint="Invoices",body=this.toJSON(archive=true),id=this.getInvoiceID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
@@ -448,7 +471,8 @@
   </cffunction>
 
   <cffunction name="delete" access="public" output="false">
-    <cfset variables.result = Super.delete(endpoint="Invoices",body=this.toJSON(),id=this.getInvoiceID())>
+    <cfset this.setStatus("DELETED")>
+    <cfset variables.result = Super.post(endpoint="Invoices",body=this.toJSON(),id=this.getInvoiceID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -490,6 +514,19 @@
   </cffunction>
 
   <!---
+   * See Contact
+   * @return Contact
+  --->
+  <cffunction name="getContact" access="public" output="false" hint="I return the Contact">
+    <cfreturn variables.instance.Contact />
+  </cffunction>
+
+  <cffunction name="setContact" access="public"  output="false" hint="I set the Contact into the variables.instance scope.">
+    <cfargument name="Contact" type="Struct" hint="I am the Contact." />
+      <cfset variables.instance.Contact = arguments.Contact />
+  </cffunction>
+
+  <!---
    * See LineItems
    * @return LineItems
   --->
@@ -498,8 +535,16 @@
   </cffunction>
 
   <cffunction name="setLineItems" access="public"  output="false" hint="I set the LineItems into the variables.instance scope.">
-    <cfargument name="LineItems" type="List[LineItem]" hint="I am the LineItems." />
-      <cfset variables.instance.LineItems = arguments.LineItems />
+    <cfargument name="LineItems" type="array" hint="I am the LineItems." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.LineItems);i=i+1) {
+		          var item=createObject("component","cfc.model.LineItem").init().populate(arguments.LineItems[i]); 
+		          ArrayAppend(arr,item.toStruct());
+		        }
+		      </cfscript>
+		      <cfset variables.instance.LineItems = arr />
+		
   </cffunction>
 
   <!---
@@ -537,7 +582,7 @@
   </cffunction>
 
   <cffunction name="setLineAmountTypes" access="public"  output="false" hint="I set the LineAmountTypes into the variables.instance scope.">
-    <cfargument name="LineAmountTypes" type="LineAmountTypesEnum" hint="I am the LineAmountTypes." />
+    <cfargument name="LineAmountTypes" type="String" hint="I am the LineAmountTypes." />
       <cfset variables.instance.LineAmountTypes = arguments.LineAmountTypes />
   </cffunction>
 
@@ -615,7 +660,7 @@
   </cffunction>
 
   <cffunction name="setCurrencyRate" access="public"  output="false" hint="I set the CurrencyRate into the variables.instance scope.">
-    <cfargument name="CurrencyRate" type="BigDecimal" hint="I am the CurrencyRate." />
+    <cfargument name="CurrencyRate" type="String" hint="I am the CurrencyRate." />
       <cfset variables.instance.CurrencyRate = arguments.CurrencyRate />
   </cffunction>
 
@@ -628,7 +673,7 @@
   </cffunction>
 
   <cffunction name="setStatus" access="public"  output="false" hint="I set the Status into the variables.instance scope.">
-    <cfargument name="Status" type="StatusEnum" hint="I am the Status." />
+    <cfargument name="Status" type="String" hint="I am the Status." />
       <cfset variables.instance.Status = arguments.Status />
   </cffunction>
 
@@ -680,7 +725,7 @@
   </cffunction>
 
   <cffunction name="setSubTotal" access="public"  output="false" hint="I set the SubTotal into the variables.instance scope.">
-    <cfargument name="SubTotal" type="BigDecimal" hint="I am the SubTotal." />
+    <cfargument name="SubTotal" type="String" hint="I am the SubTotal." />
       <cfset variables.instance.SubTotal = arguments.SubTotal />
   </cffunction>
 
@@ -693,7 +738,7 @@
   </cffunction>
 
   <cffunction name="setTotalTax" access="public"  output="false" hint="I set the TotalTax into the variables.instance scope.">
-    <cfargument name="TotalTax" type="BigDecimal" hint="I am the TotalTax." />
+    <cfargument name="TotalTax" type="String" hint="I am the TotalTax." />
       <cfset variables.instance.TotalTax = arguments.TotalTax />
   </cffunction>
 
@@ -706,7 +751,7 @@
   </cffunction>
 
   <cffunction name="setTotal" access="public"  output="false" hint="I set the Total into the variables.instance scope.">
-    <cfargument name="Total" type="BigDecimal" hint="I am the Total." />
+    <cfargument name="Total" type="String" hint="I am the Total." />
       <cfset variables.instance.Total = arguments.Total />
   </cffunction>
 
@@ -719,7 +764,7 @@
   </cffunction>
 
   <cffunction name="setTotalDiscount" access="public"  output="false" hint="I set the TotalDiscount into the variables.instance scope.">
-    <cfargument name="TotalDiscount" type="BigDecimal" hint="I am the TotalDiscount." />
+    <cfargument name="TotalDiscount" type="String" hint="I am the TotalDiscount." />
       <cfset variables.instance.TotalDiscount = arguments.TotalDiscount />
   </cffunction>
 
@@ -758,8 +803,16 @@
   </cffunction>
 
   <cffunction name="setPayments" access="public"  output="false" hint="I set the Payments into the variables.instance scope.">
-    <cfargument name="Payments" type="List[Payment]" hint="I am the Payments." />
-      <cfset variables.instance.Payments = arguments.Payments />
+    <cfargument name="Payments" type="array" hint="I am the Payments." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.Payments);i=i+1) {
+		          var item=createObject("component","cfc.model.Payment").init().populate(arguments.Payments[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.Payments = arr />
+		
   </cffunction>
 
   <!---
@@ -771,8 +824,16 @@
   </cffunction>
 
   <cffunction name="setPrepayments" access="public"  output="false" hint="I set the Prepayments into the variables.instance scope.">
-    <cfargument name="Prepayments" type="List[Prepayment]" hint="I am the Prepayments." />
-      <cfset variables.instance.Prepayments = arguments.Prepayments />
+    <cfargument name="Prepayments" type="array" hint="I am the Prepayments." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.Prepayments);i=i+1) {
+		          var item=createObject("component","cfc.model.Prepayment").init().populate(arguments.Prepayments[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.Prepayments = arr />
+		
   </cffunction>
 
   <!---
@@ -784,8 +845,16 @@
   </cffunction>
 
   <cffunction name="setOverpayments" access="public"  output="false" hint="I set the Overpayments into the variables.instance scope.">
-    <cfargument name="Overpayments" type="List[Overpayment]" hint="I am the Overpayments." />
-      <cfset variables.instance.Overpayments = arguments.Overpayments />
+    <cfargument name="Overpayments" type="array" hint="I am the Overpayments." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.Overpayments);i=i+1) {
+		          var item=createObject("component","cfc.model.Overpayment").init().populate(arguments.Overpayments[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.Overpayments = arr />
+		
   </cffunction>
 
   <!---
@@ -797,7 +866,7 @@
   </cffunction>
 
   <cffunction name="setAmountDue" access="public"  output="false" hint="I set the AmountDue into the variables.instance scope.">
-    <cfargument name="AmountDue" type="BigDecimal" hint="I am the AmountDue." />
+    <cfargument name="AmountDue" type="String" hint="I am the AmountDue." />
       <cfset variables.instance.AmountDue = arguments.AmountDue />
   </cffunction>
 
@@ -810,7 +879,7 @@
   </cffunction>
 
   <cffunction name="setAmountPaid" access="public"  output="false" hint="I set the AmountPaid into the variables.instance scope.">
-    <cfargument name="AmountPaid" type="BigDecimal" hint="I am the AmountPaid." />
+    <cfargument name="AmountPaid" type="String" hint="I am the AmountPaid." />
       <cfset variables.instance.AmountPaid = arguments.AmountPaid />
   </cffunction>
 
@@ -836,7 +905,7 @@
   </cffunction>
 
   <cffunction name="setAmountCredited" access="public"  output="false" hint="I set the AmountCredited into the variables.instance scope.">
-    <cfargument name="AmountCredited" type="BigDecimal" hint="I am the AmountCredited." />
+    <cfargument name="AmountCredited" type="String" hint="I am the AmountCredited." />
       <cfset variables.instance.AmountCredited = arguments.AmountCredited />
   </cffunction>
 
@@ -862,8 +931,16 @@
   </cffunction>
 
   <cffunction name="setCreditNotes" access="public"  output="false" hint="I set the CreditNotes into the variables.instance scope.">
-    <cfargument name="CreditNotes" type="List[CreditNote]" hint="I am the CreditNotes." />
-      <cfset variables.instance.CreditNotes = arguments.CreditNotes />
+    <cfargument name="CreditNotes" type="array" hint="I am the CreditNotes." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.CreditNotes);i=i+1) {
+		          var item=createObject("component","cfc.model.CreditNote").init().populate(arguments.CreditNotes[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.CreditNotes = arr />
+		
   </cffunction>
 
 
@@ -875,3 +952,4 @@
 </cffunction>
 
 </cfcomponent>   
+

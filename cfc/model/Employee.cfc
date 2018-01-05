@@ -7,6 +7,7 @@
   <cfproperty name="Status" type="String" default="" />
   <cfproperty name="FirstName" type="String" default="" />
   <cfproperty name="LastName" type="String" default="" />
+  <cfproperty name="ExternalLink" type="array" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -31,12 +32,19 @@
         </cfscript>
      </cfif>
   </cffunction>
-  
+
   <cffunction name="toStruct" access="public" output="false">
-        <cfscript>
-          myStruct=StructNew();
-          myStruct=this.toJSON(returnType="struct");
-        </cfscript>
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
     <cfreturn myStruct />
   </cffunction>
 
@@ -70,6 +78,13 @@
             if (structKeyExists(variables.instance,"LastName")) {
               if (NOT listFindNoCase(arguments.exclude, "LastName")) {
                 myStruct.LastName=getLastName();
+              }
+            }
+            if (structKeyExists(variables.instance,"ExternalLink")) {
+              if (NOT listFindNoCase(arguments.exclude, "ExternalLink")) {
+                if (NOT structIsEmpty(getExternalLink())){
+                  myStruct.ExternalLink=getExternalLink();
+                }
               }
             }
           }
@@ -108,6 +123,11 @@
           setLastName(obj.LastName);
         } else {
           setLastName("");
+        }
+        if (structKeyExists(obj,"ExternalLink")) {
+          setExternalLink(obj.ExternalLink);
+        } else {
+          setExternalLink(StructNew());
         }
       </cfscript>
       
@@ -242,6 +262,19 @@
       <cfset variables.instance.LastName = arguments.LastName />
   </cffunction>
 
+  <!---
+   * See ExternalLink
+   * @return ExternalLink
+  --->
+  <cffunction name="getExternalLink" access="public" output="false" hint="I return the ExternalLink">
+    <cfreturn variables.instance.ExternalLink />
+  </cffunction>
+
+  <cffunction name="setExternalLink" access="public"  output="false" hint="I set the ExternalLink into the variables.instance scope.">
+    <cfargument name="ExternalLink" type="Struct" hint="I am the ExternalLink." />
+      <cfset variables.instance.ExternalLink = arguments.ExternalLink />
+  </cffunction>
+
 
 
 <cffunction name="getMemento" access="public"
@@ -251,3 +284,5 @@
 </cffunction>
 
 </cfcomponent>   
+
+

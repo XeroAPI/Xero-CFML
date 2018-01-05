@@ -158,11 +158,23 @@
 
   <cffunction name="addContacts" access="public" output="false">
     <cfset variables.result = Super.put(endpoint="ContactGroups",body=this.getContactsAsJSON(),id=this.getContactGroupID(),child="Contacts")>
-
+<!---
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
     </cfloop>
+--->
+    <cfreturn this />
+  </cffunction>
 
+  <cffunction name="removeContact" access="public" output="false">
+    <cfargument name="id" required="true" type="String" default="" hint="I am a ID of the Contact to Remove from the Contact Group." />
+
+    <cfset variables.result = Super.delete(endpoint="ContactGroups",body=this.getContactsAsJSON(),id=this.getContactGroupID(),child="Contacts",childId=arguments.id)>
+<!---
+    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
+      <cfset temp = this.populate(variables.result[i])>
+    </cfloop>
+--->
     <cfreturn this />
   </cffunction>
 

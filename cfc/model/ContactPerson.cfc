@@ -2,7 +2,6 @@
   hint="I am the ContactPerson Class.">
 
 <!--- PROPERTIES --->
-
   <cfproperty name="FirstName" type="String" default="" />
   <cfproperty name="LastName" type="String" default="" />
   <cfproperty name="EmailAddress" type="String" default="" />
@@ -107,7 +106,7 @@
         if (structKeyExists(obj,"IncludeInEmails")) {
           setIncludeInEmails(obj.IncludeInEmails);
         } else {
-          setIncludeInEmails("");
+          setIncludeInEmails(false);
         }
       </cfscript>
       
@@ -251,3 +250,6 @@
 </cffunction>
 
 </cfcomponent>   
+
+
+

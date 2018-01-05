@@ -7,8 +7,8 @@
   <cfproperty name="Name" type="String" default="" />
   <cfproperty name="LegalName" type="String" default="" />
   <cfproperty name="PaysTax" type="Boolean" default="" />
-  <cfproperty name="Version" type="VersionEnum" default="" />
-  <cfproperty name="OrganisationType" type="OrganisationTypeEnum" default="" />
+  <cfproperty name="Version" type="String" default="" />
+  <cfproperty name="OrganisationType" type="String" default="" />
   <cfproperty name="BaseCurrency" type="String" default="" />
   <cfproperty name="CountryCode" type="String" default="" />
   <cfproperty name="IsDemoCompany" type="Boolean" default="" />
@@ -25,12 +25,13 @@
   <cfproperty name="EndOfYearLockDate" type="String" default="" />
   <cfproperty name="CreatedDateUTC" type="String" default="" />
   <cfproperty name="Timezone" type="String" default="" />
-  <cfproperty name="OrganisationEntityType" type="OrganisationEntityTypeEnum" default="" />
+  <cfproperty name="OrganisationEntityType" type="String" default="" />
   <cfproperty name="ShortCode" type="String" default="" />
   <cfproperty name="LineOfBusiness" type="String" default="" />
-  <cfproperty name="Addresses" type="List[Address]" default="" />
-  <cfproperty name="Phones" type="List[Phone]" default="" />
-  <cfproperty name="ExternalLinks" type="List[ExternalLink]" default="" />
+  <cfproperty name="Addresses" type="array" default="" />
+  <cfproperty name="Phones" type="array" default="" />
+  <cfproperty name="ExternalLinks" type="array" default="" />
+  <cfproperty name="PaymentTerms" type="array" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -56,158 +57,187 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.OrganisationID=getOrganisationID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"APIKey")) {
-            if (NOT listFindNoCase(arguments.exclude, "APIKey")) {
-              myStruct.APIKey=getAPIKey();
+            if (structKeyExists(variables.instance,"APIKey")) {
+              if (NOT listFindNoCase(arguments.exclude, "APIKey")) {
+                myStruct.APIKey=getAPIKey();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Name")) {
-            if (NOT listFindNoCase(arguments.exclude, "Name")) {
-              myStruct.Name=getName();
+            if (structKeyExists(variables.instance,"Name")) {
+              if (NOT listFindNoCase(arguments.exclude, "Name")) {
+                myStruct.Name=getName();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"LegalName")) {
-            if (NOT listFindNoCase(arguments.exclude, "LegalName")) {
-              myStruct.LegalName=getLegalName();
+            if (structKeyExists(variables.instance,"LegalName")) {
+              if (NOT listFindNoCase(arguments.exclude, "LegalName")) {
+                myStruct.LegalName=getLegalName();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"PaysTax")) {
-            if (NOT listFindNoCase(arguments.exclude, "PaysTax")) {
-              myStruct.PaysTax=getPaysTax();
+            if (structKeyExists(variables.instance,"PaysTax")) {
+              if (NOT listFindNoCase(arguments.exclude, "PaysTax")) {
+                myStruct.PaysTax=getPaysTax();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Version")) {
-            if (NOT listFindNoCase(arguments.exclude, "Version")) {
-              myStruct.Version=getVersion();
+            if (structKeyExists(variables.instance,"Version")) {
+              if (NOT listFindNoCase(arguments.exclude, "Version")) {
+                myStruct.Version=getVersion();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"OrganisationType")) {
-            if (NOT listFindNoCase(arguments.exclude, "OrganisationType")) {
-              myStruct.OrganisationType=getOrganisationType();
+            if (structKeyExists(variables.instance,"OrganisationType")) {
+              if (NOT listFindNoCase(arguments.exclude, "OrganisationType")) {
+                myStruct.OrganisationType=getOrganisationType();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"BaseCurrency")) {
-            if (NOT listFindNoCase(arguments.exclude, "BaseCurrency")) {
-              myStruct.BaseCurrency=getBaseCurrency();
+            if (structKeyExists(variables.instance,"BaseCurrency")) {
+              if (NOT listFindNoCase(arguments.exclude, "BaseCurrency")) {
+                myStruct.BaseCurrency=getBaseCurrency();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CountryCode")) {
-            if (NOT listFindNoCase(arguments.exclude, "CountryCode")) {
-              myStruct.CountryCode=getCountryCode();
+            if (structKeyExists(variables.instance,"CountryCode")) {
+              if (NOT listFindNoCase(arguments.exclude, "CountryCode")) {
+                myStruct.CountryCode=getCountryCode();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"IsDemoCompany")) {
-            if (NOT listFindNoCase(arguments.exclude, "IsDemoCompany")) {
-              myStruct.IsDemoCompany=getIsDemoCompany();
+            if (structKeyExists(variables.instance,"IsDemoCompany")) {
+              if (NOT listFindNoCase(arguments.exclude, "IsDemoCompany")) {
+                myStruct.IsDemoCompany=getIsDemoCompany();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"OrganisationStatus")) {
-            if (NOT listFindNoCase(arguments.exclude, "OrganisationStatus")) {
-              myStruct.OrganisationStatus=getOrganisationStatus();
+            if (structKeyExists(variables.instance,"OrganisationStatus")) {
+              if (NOT listFindNoCase(arguments.exclude, "OrganisationStatus")) {
+                myStruct.OrganisationStatus=getOrganisationStatus();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"RegistrationNumber")) {
-            if (NOT listFindNoCase(arguments.exclude, "RegistrationNumber")) {
-              myStruct.RegistrationNumber=getRegistrationNumber();
+            if (structKeyExists(variables.instance,"RegistrationNumber")) {
+              if (NOT listFindNoCase(arguments.exclude, "RegistrationNumber")) {
+                myStruct.RegistrationNumber=getRegistrationNumber();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TaxNumber")) {
-            if (NOT listFindNoCase(arguments.exclude, "TaxNumber")) {
-              myStruct.TaxNumber=getTaxNumber();
+            if (structKeyExists(variables.instance,"TaxNumber")) {
+              if (NOT listFindNoCase(arguments.exclude, "TaxNumber")) {
+                myStruct.TaxNumber=getTaxNumber();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"FinancialYearEndDay")) {
-            if (NOT listFindNoCase(arguments.exclude, "FinancialYearEndDay")) {
-              myStruct.FinancialYearEndDay=getFinancialYearEndDay();
+            if (structKeyExists(variables.instance,"FinancialYearEndDay")) {
+              if (NOT listFindNoCase(arguments.exclude, "FinancialYearEndDay")) {
+                myStruct.FinancialYearEndDay=getFinancialYearEndDay();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"FinancialYearEndMonth")) {
-            if (NOT listFindNoCase(arguments.exclude, "FinancialYearEndMonth")) {
-              myStruct.FinancialYearEndMonth=getFinancialYearEndMonth();
+            if (structKeyExists(variables.instance,"FinancialYearEndMonth")) {
+              if (NOT listFindNoCase(arguments.exclude, "FinancialYearEndMonth")) {
+                myStruct.FinancialYearEndMonth=getFinancialYearEndMonth();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"SalesTaxBasis")) {
-            if (NOT listFindNoCase(arguments.exclude, "SalesTaxBasis")) {
-              myStruct.SalesTaxBasis=getSalesTaxBasis();
+            if (structKeyExists(variables.instance,"SalesTaxBasis")) {
+              if (NOT listFindNoCase(arguments.exclude, "SalesTaxBasis")) {
+                myStruct.SalesTaxBasis=getSalesTaxBasis();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"SalesTaxPeriod")) {
-            if (NOT listFindNoCase(arguments.exclude, "SalesTaxPeriod")) {
-              myStruct.SalesTaxPeriod=getSalesTaxPeriod();
+            if (structKeyExists(variables.instance,"SalesTaxPeriod")) {
+              if (NOT listFindNoCase(arguments.exclude, "SalesTaxPeriod")) {
+                myStruct.SalesTaxPeriod=getSalesTaxPeriod();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"DefaultSalesTax")) {
-            if (NOT listFindNoCase(arguments.exclude, "DefaultSalesTax")) {
-              myStruct.DefaultSalesTax=getDefaultSalesTax();
+            if (structKeyExists(variables.instance,"DefaultSalesTax")) {
+              if (NOT listFindNoCase(arguments.exclude, "DefaultSalesTax")) {
+                myStruct.DefaultSalesTax=getDefaultSalesTax();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"DefaultPurchasesTax")) {
-            if (NOT listFindNoCase(arguments.exclude, "DefaultPurchasesTax")) {
-              myStruct.DefaultPurchasesTax=getDefaultPurchasesTax();
+            if (structKeyExists(variables.instance,"DefaultPurchasesTax")) {
+              if (NOT listFindNoCase(arguments.exclude, "DefaultPurchasesTax")) {
+                myStruct.DefaultPurchasesTax=getDefaultPurchasesTax();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"PeriodLockDate")) {
-            if (NOT listFindNoCase(arguments.exclude, "PeriodLockDate")) {
-              myStruct.PeriodLockDate=getPeriodLockDate();
+            if (structKeyExists(variables.instance,"PeriodLockDate")) {
+              if (NOT listFindNoCase(arguments.exclude, "PeriodLockDate")) {
+                myStruct.PeriodLockDate=getPeriodLockDate();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"EndOfYearLockDate")) {
-            if (NOT listFindNoCase(arguments.exclude, "EndOfYearLockDate")) {
-              myStruct.EndOfYearLockDate=getEndOfYearLockDate();
+            if (structKeyExists(variables.instance,"EndOfYearLockDate")) {
+              if (NOT listFindNoCase(arguments.exclude, "EndOfYearLockDate")) {
+                myStruct.EndOfYearLockDate=getEndOfYearLockDate();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CreatedDateUTC")) {
-            if (NOT listFindNoCase(arguments.exclude, "CreatedDateUTC")) {
-              myStruct.CreatedDateUTC=getCreatedDateUTC();
+            if (structKeyExists(variables.instance,"CreatedDateUTC")) {
+              if (NOT listFindNoCase(arguments.exclude, "CreatedDateUTC")) {
+                myStruct.CreatedDateUTC=getCreatedDateUTC();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Timezone")) {
-            if (NOT listFindNoCase(arguments.exclude, "Timezone")) {
-              myStruct.Timezone=getTimezone();
+            if (structKeyExists(variables.instance,"Timezone")) {
+              if (NOT listFindNoCase(arguments.exclude, "Timezone")) {
+                myStruct.Timezone=getTimezone();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"OrganisationEntityType")) {
-            if (NOT listFindNoCase(arguments.exclude, "OrganisationEntityType")) {
-              myStruct.OrganisationEntityType=getOrganisationEntityType();
+            if (structKeyExists(variables.instance,"OrganisationEntityType")) {
+              if (NOT listFindNoCase(arguments.exclude, "OrganisationEntityType")) {
+                myStruct.OrganisationEntityType=getOrganisationEntityType();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"ShortCode")) {
-            if (NOT listFindNoCase(arguments.exclude, "ShortCode")) {
-              myStruct.ShortCode=getShortCode();
+            if (structKeyExists(variables.instance,"ShortCode")) {
+              if (NOT listFindNoCase(arguments.exclude, "ShortCode")) {
+                myStruct.ShortCode=getShortCode();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"LineOfBusiness")) {
-            if (NOT listFindNoCase(arguments.exclude, "LineOfBusiness")) {
-              myStruct.LineOfBusiness=getLineOfBusiness();
+            if (structKeyExists(variables.instance,"LineOfBusiness")) {
+              if (NOT listFindNoCase(arguments.exclude, "LineOfBusiness")) {
+                myStruct.LineOfBusiness=getLineOfBusiness();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Addresses")) {
-            if (NOT listFindNoCase(arguments.exclude, "Addresses")) {
-              myStruct.Addresses=getAddresses();
+            if (structKeyExists(variables.instance,"Addresses")) {
+              if (NOT listFindNoCase(arguments.exclude, "Addresses")) {
+                myStruct.Addresses=getAddresses();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Phones")) {
-            if (NOT listFindNoCase(arguments.exclude, "Phones")) {
-              myStruct.Phones=getPhones();
+            if (structKeyExists(variables.instance,"Phones")) {
+              if (NOT listFindNoCase(arguments.exclude, "Phones")) {
+                myStruct.Phones=getPhones();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"ExternalLinks")) {
-            if (NOT listFindNoCase(arguments.exclude, "ExternalLinks")) {
-              myStruct.ExternalLinks=getExternalLinks();
+            if (structKeyExists(variables.instance,"ExternalLinks")) {
+              if (NOT listFindNoCase(arguments.exclude, "ExternalLinks")) {
+                myStruct.ExternalLinks=getExternalLinks();
+              }
+            }
+            if (structKeyExists(variables.instance,"PaymentTerms")) {
+              if (NOT listFindNoCase(arguments.exclude, "PaymentTerms")) {
+                myStruct.PaymentTerms=getPaymentTerms();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -344,17 +374,22 @@
         if (structKeyExists(obj,"Addresses")) {
           setAddresses(obj.Addresses);
         } else {
-          setAddresses("");
+          setAddresses(ArrayNew(1));
         }
         if (structKeyExists(obj,"Phones")) {
           setPhones(obj.Phones);
         } else {
-          setPhones("");
+          setPhones(ArrayNew(1));
         }
         if (structKeyExists(obj,"ExternalLinks")) {
           setExternalLinks(obj.ExternalLinks);
         } else {
-          setExternalLinks("");
+          setExternalLinks(ArrayNew(1));
+        }
+        if (structKeyExists(obj,"PaymentTerms")) {
+          setPaymentTerms(obj.PaymentTerms);
+        } else {
+          setPaymentTerms("");
         }
       </cfscript>
       
@@ -399,7 +434,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Organisations",body=this.toJSON(),id=this.getOrganisationID())>
+    <cfset variables.result = Super.post(endpoint="Organisations",body=this.toJSON(archive=true),id=this.getOrganisationID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -498,7 +533,7 @@
   </cffunction>
 
   <cffunction name="setVersion" access="public"  output="false" hint="I set the Version into the variables.instance scope.">
-    <cfargument name="Version" type="VersionEnum" hint="I am the Version." />
+    <cfargument name="Version" type="String" hint="I am the Version." />
       <cfset variables.instance.Version = arguments.Version />
   </cffunction>
 
@@ -511,7 +546,7 @@
   </cffunction>
 
   <cffunction name="setOrganisationType" access="public"  output="false" hint="I set the OrganisationType into the variables.instance scope.">
-    <cfargument name="OrganisationType" type="OrganisationTypeEnum" hint="I am the OrganisationType." />
+    <cfargument name="OrganisationType" type="String" hint="I am the OrganisationType." />
       <cfset variables.instance.OrganisationType = arguments.OrganisationType />
   </cffunction>
 
@@ -732,7 +767,7 @@
   </cffunction>
 
   <cffunction name="setOrganisationEntityType" access="public"  output="false" hint="I set the OrganisationEntityType into the variables.instance scope.">
-    <cfargument name="OrganisationEntityType" type="OrganisationEntityTypeEnum" hint="I am the OrganisationEntityType." />
+    <cfargument name="OrganisationEntityType" type="String" hint="I am the OrganisationEntityType." />
       <cfset variables.instance.OrganisationEntityType = arguments.OrganisationEntityType />
   </cffunction>
 
@@ -771,8 +806,16 @@
   </cffunction>
 
   <cffunction name="setAddresses" access="public"  output="false" hint="I set the Addresses into the variables.instance scope.">
-    <cfargument name="Addresses" type="List[Address]" hint="I am the Addresses." />
-      <cfset variables.instance.Addresses = arguments.Addresses />
+    <cfargument name="Addresses" type="array" hint="I am the Addresses." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.Addresses);i=i+1) {
+		          var item=createObject("component","cfc.model.Address").init().populate(arguments.Addresses[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.Addresses = arr />
+		
   </cffunction>
 
   <!---
@@ -784,8 +827,16 @@
   </cffunction>
 
   <cffunction name="setPhones" access="public"  output="false" hint="I set the Phones into the variables.instance scope.">
-    <cfargument name="Phones" type="List[Phone]" hint="I am the Phones." />
-      <cfset variables.instance.Phones = arguments.Phones />
+    <cfargument name="Phones" type="array" hint="I am the Phones." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.Phones);i=i+1) {
+		          var item=createObject("component","cfc.model.Phone").init().populate(arguments.Phones[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.Phones = arr />
+		
   </cffunction>
 
   <!---
@@ -797,8 +848,29 @@
   </cffunction>
 
   <cffunction name="setExternalLinks" access="public"  output="false" hint="I set the ExternalLinks into the variables.instance scope.">
-    <cfargument name="ExternalLinks" type="List[ExternalLink]" hint="I am the ExternalLinks." />
-      <cfset variables.instance.ExternalLinks = arguments.ExternalLinks />
+    <cfargument name="ExternalLinks" type="array" hint="I am the ExternalLinks." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.ExternalLinks);i=i+1) {
+		          var item=createObject("component","cfc.model.ExternalLink").init().populate(arguments.ExternalLinks[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.ExternalLinks = arr />
+		
+  </cffunction>
+
+  <!---
+   * See PaymentTerms
+   * @return PaymentTerms
+  --->
+  <cffunction name="getPaymentTerms" access="public" output="false" hint="I return the PaymentTerms">
+    <cfreturn variables.instance.PaymentTerms />
+  </cffunction>
+
+  <cffunction name="setPaymentTerms" access="public"  output="false" hint="I set the PaymentTerms into the variables.instance scope.">
+    <cfargument name="PaymentTerms" type="array" hint="I am the PaymentTerms." />
+      <cfset variables.instance.PaymentTerms = arguments.PaymentTerms />
   </cffunction>
 
 
@@ -810,3 +882,4 @@
 </cffunction>
 
 </cfcomponent>   
+

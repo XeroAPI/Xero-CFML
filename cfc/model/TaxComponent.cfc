@@ -4,8 +4,8 @@
 <!--- PROPERTIES --->
 
   <cfproperty name="Name" type="String" default="" />
-  <cfproperty name="Rate" type="BigDecimal" default="" />
-  <cfproperty name="IsCompound" type="BigDecimal" default="" />
+  <cfproperty name="Rate" type="String" default="" />
+  <cfproperty name="IsCompound" type="String" default="" />
   <cfproperty name="TaxType" type="String" default="" />
 
 <!--- INIT --->
@@ -195,7 +195,7 @@
   </cffunction>
 
   <cffunction name="setRate" access="public"  output="false" hint="I set the Rate into the variables.instance scope.">
-    <cfargument name="Rate" type="BigDecimal" hint="I am the Rate." />
+    <cfargument name="Rate" type="String" hint="I am the Rate." />
       <cfset variables.instance.Rate = arguments.Rate />
   </cffunction>
 
@@ -208,7 +208,7 @@
   </cffunction>
 
   <cffunction name="setIsCompound" access="public"  output="false" hint="I set the IsCompound into the variables.instance scope.">
-    <cfargument name="IsCompound" type="BigDecimal" hint="I am the IsCompound." />
+    <cfargument name="IsCompound" type="String" hint="I am the IsCompound." />
       <cfset variables.instance.IsCompound = arguments.IsCompound />
   </cffunction>
 

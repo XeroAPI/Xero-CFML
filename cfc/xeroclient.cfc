@@ -47,12 +47,23 @@
 		<cfargument name="ifModifiedSince"  type="string" default="">
 		<cfargument name="accept"  type="string" default="application/json">
 		<cfargument name="id"  type="string" default="">
-		
+		<cfargument name="child"  type="string" default="">
+		<cfargument name="childId"  type="string" default="">
 		<cfif len(arguments.id) GT 0> 
 			<cfset resource = arguments.endpoint & "/" & arguments.id>
 		<cfelse>
 			<cfset resource = arguments.endpoint>
 		</cfif>
+
+		<cfset child = arguments.child>
+		<cfset childId = arguments.childId>
+		
+		<cfif len(child) GT 0>
+			<cfset resource = resource & "/" & child>
+			<cfif len(childId) GT 0>
+				<cfset resource = resource & "/" & childId>
+			</cfif>
+		</cfif>s
 		
 		<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
@@ -63,6 +74,11 @@
 			sMethod = "GET",
 			sIfModifiedSince = arguments.ifModifiedSince)>
 
+		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
+
+		<cfif structKeyExists(rawResult,"ErrorNumber")>
+			<cfdump var='#rawResult#' abort>
+		</cfif>
 
 		<cfset variables.ArrayResult = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
 
@@ -100,6 +116,11 @@
 			sAccept = arguments.accept,
 			sMethod = "PUT",
 			sBody = arguments.body)>
+		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
+
+		<cfif structKeyExists(rawResult,"ErrorNumber")>
+			<cfdump var='#rawResult#' abort>
+		</cfif>
 
 		<cfif len(child) GT 0>
 			<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.child]>	
@@ -125,6 +146,12 @@
 			sAccept = arguments.accept,
 			sMethod = "POST",
 			sBody = arguments.body)>
+
+		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
+
+		<cfif structKeyExists(rawResult,"ErrorNumber")>
+			<cfdump var='#rawResult#' abort>
+		</cfif>
 
 		<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
 		<cfreturn variables.result>
@@ -157,11 +184,20 @@
 			sAccept = arguments.accept,
 			sMethod = "DELETE",
 			sBody = arguments.body)>
+		
+		<cfif len(oRequestResult["RESPONSE"]) GT 0 >
+			<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
+			<cfif structKeyExists(rawResult,"ErrorNumber")>
+				<cfdump var='#rawResult#' abort>
+			</cfif>
 
-		<cfif isJSON(variables.oRequestResult["RESPONSE"])>
-			<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
+			<cfif isJSON(variables.oRequestResult["RESPONSE"])>
+				<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
+			<cfelse>
+				<cfset variables.result = this.toJSON()>
+			</cfif>
 		<cfelse>
-			<cfset variables.result = this.toJSON()>
+			<cfset variables.result = this.toStruct()>
 		</cfif>
 		<cfreturn variables.result>
 	</cffunction>

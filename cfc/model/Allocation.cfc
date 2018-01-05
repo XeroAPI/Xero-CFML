@@ -3,7 +3,7 @@
 
 <!--- PROPERTIES --->
 
-  <cfproperty name="AppliedAmount" type="BigDecimal" default="" />
+  <cfproperty name="AppliedAmount" type="String" default="" />
   <cfproperty name="Date" type="String" default="" />
 
 <!--- INIT --->
@@ -166,7 +166,7 @@
   </cffunction>
 
   <cffunction name="setAppliedAmount" access="public"  output="false" hint="I set the AppliedAmount into the variables.instance scope.">
-    <cfargument name="AppliedAmount" type="BigDecimal" hint="I am the AppliedAmount." />
+    <cfargument name="AppliedAmount" type="String" hint="I am the AppliedAmount." />
       <cfset variables.instance.AppliedAmount = arguments.AppliedAmount />
   </cffunction>
 

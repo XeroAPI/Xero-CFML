@@ -7,8 +7,8 @@
   <cfproperty name="AccountCode" type="String" default="" />
   <cfproperty name="Description" type="String" default="" />
   <cfproperty name="TaxType" type="String" default="" />
-  <cfproperty name="Tracking" type="List[TrackingCategory]" default="" />
-  <cfproperty name="TaxAmount" type="BigDecimal" default="" />
+  <cfproperty name="Tracking" type="array" default="" />
+  <cfproperty name="TaxAmount" type="String" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -107,7 +107,7 @@
         if (structKeyExists(obj,"Tracking")) {
           setTracking(obj.Tracking);
         } else {
-          setTracking("");
+          setTracking(ArrayNew(1));
         }
         if (structKeyExists(obj,"TaxAmount")) {
           setTaxAmount(obj.TaxAmount);
@@ -256,7 +256,7 @@
   </cffunction>
 
   <cffunction name="setTracking" access="public"  output="false" hint="I set the Tracking into the variables.instance scope.">
-    <cfargument name="Tracking" type="List[TrackingCategory]" hint="I am the Tracking." />
+    <cfargument name="Tracking" type="array" hint="I am the Tracking." />
       <cfset variables.instance.Tracking = arguments.Tracking />
   </cffunction>
 
@@ -269,7 +269,7 @@
   </cffunction>
 
   <cffunction name="setTaxAmount" access="public"  output="false" hint="I set the TaxAmount into the variables.instance scope.">
-    <cfargument name="TaxAmount" type="BigDecimal" hint="I am the TaxAmount." />
+    <cfargument name="TaxAmount" type="String" hint="I am the TaxAmount." />
       <cfset variables.instance.TaxAmount = arguments.TaxAmount />
   </cffunction>
 
@@ -282,3 +282,4 @@
 </cffunction>
 
 </cfcomponent>   
+

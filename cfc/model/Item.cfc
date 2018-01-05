@@ -10,8 +10,8 @@
   <cfproperty name="IsPurchased" type="Boolean" default="" />
   <cfproperty name="Description" type="String" default="" />
   <cfproperty name="PurchaseDescription" type="String" default="" />
-  <cfproperty name="PurchaseDetails" type="List[Purchase]" default="" />
-  <cfproperty name="SalesDetails" type="String" default="" />
+  <cfproperty name="PurchaseDetails" type="Struct" default="" />
+  <cfproperty name="SalesDetails" type="Struct" default="" />
   <cfproperty name="IsTrackedAsInventory" type="Boolean" default="" />
   <cfproperty name="TotalCostPool" type="String" default="" />
   <cfproperty name="QuantityOnHand" type="String" default="" />
@@ -167,12 +167,12 @@
         if (structKeyExists(obj,"IsSold")) {
           setIsSold(obj.IsSold);
         } else {
-          setIsSold("");
+          setIsSold(false);
         }
         if (structKeyExists(obj,"IsPurchased")) {
           setIsPurchased(obj.IsPurchased);
         } else {
-          setIsPurchased("");
+          setIsPurchased(false);
         }
         if (structKeyExists(obj,"Description")) {
           setDescription(obj.Description);
@@ -187,17 +187,17 @@
         if (structKeyExists(obj,"PurchaseDetails")) {
           setPurchaseDetails(obj.PurchaseDetails);
         } else {
-          setPurchaseDetails("");
+          setPurchaseDetails(StructNew());
         }
         if (structKeyExists(obj,"SalesDetails")) {
           setSalesDetails(obj.SalesDetails);
         } else {
-          setSalesDetails("");
+          setSalesDetails(StructNew());
         }
         if (structKeyExists(obj,"IsTrackedAsInventory")) {
           setIsTrackedAsInventory(obj.IsTrackedAsInventory);
         } else {
-          setIsTrackedAsInventory("");
+          setIsTrackedAsInventory(false);
         }
         if (structKeyExists(obj,"TotalCostPool")) {
           setTotalCostPool(obj.TotalCostPool);
@@ -274,10 +274,7 @@
   <cffunction name="delete" access="public" output="false">
     <cfset variables.result = Super.delete(endpoint="Items",body=this.toJSON(),id=this.getItemID())>
     
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
-
+      <cfset temp = this.populate(variables.result)>
     <cfreturn this />
   </cffunction>
 
@@ -400,7 +397,7 @@
   </cffunction>
 
   <cffunction name="setPurchaseDetails" access="public"  output="false" hint="I set the PurchaseDetails into the variables.instance scope.">
-    <cfargument name="PurchaseDetails" type="List[Purchase]" hint="I am the PurchaseDetails." />
+    <cfargument name="PurchaseDetails" type="Struct" hint="I am the PurchaseDetails." />
       <cfset variables.instance.PurchaseDetails = arguments.PurchaseDetails />
   </cffunction>
 
@@ -413,7 +410,7 @@
   </cffunction>
 
   <cffunction name="setSalesDetails" access="public"  output="false" hint="I set the SalesDetails into the variables.instance scope.">
-    <cfargument name="SalesDetails" type="String" hint="I am the SalesDetails." />
+    <cfargument name="SalesDetails" type="Struct" hint="I am the SalesDetails." />
       <cfset variables.instance.SalesDetails = arguments.SalesDetails />
   </cffunction>
 
@@ -491,3 +488,5 @@
 </cffunction>
 
 </cfcomponent>   
+
+

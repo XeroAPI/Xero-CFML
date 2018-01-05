@@ -169,7 +169,7 @@
         if (structKeyExists(obj,"Tracking")) {
           setTracking(obj.Tracking);
         } else {
-          setTracking("");
+          setTracking(ArrayNew(1));
         }
         if (structKeyExists(obj,"DiscountRate")) {
           setDiscountRate(obj.DiscountRate);
@@ -414,4 +414,5 @@
 </cffunction>
 
 </cfcomponent>   
+
 

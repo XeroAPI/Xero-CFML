@@ -94,14 +94,14 @@
 
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
-      <cfset this.setList(this.get(endpoint="Currencys"))>
+      <cfset this.setList(this.get(endpoint="Currencies"))>
     <cfreturn this>
   </cffunction>
 
   <cffunction name="getById" access="public" returntype="any">
     <cfargument name="id"  type="string" default="">
     
-    <cfset var ArrayResult = this.get(endpoint="Currencys",id=id)>
+    <cfset var ArrayResult = this.get(endpoint="Currencies",id=id)>
     <cfscript>
       this.populate(ArrayResult[1]);
     </cfscript>
@@ -110,37 +110,7 @@
   </cffunction>
 
   <cffunction name="create" access="public" output="false">
-    <cfset variables.result = Super.put(endpoint="Currencys",body=this.toJSON())>
-    
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
-
-    <cfreturn this />
-  </cffunction>
-
-  <cffunction name="update" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Currencys",body=this.toJSON(),id=this.getCurrencyID())>
-    
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
-
-    <cfreturn this />
-  </cffunction>
-
-  <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Currencys",body=this.toJSON(archive=true),id=this.getCurrencyID())>
-    
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
-
-    <cfreturn this />
-  </cffunction>
-
-  <cffunction name="delete" access="public" output="false">
-    <cfset variables.result = Super.delete(endpoint="Currencys",body=this.toJSON(),id=this.getCurrencyID())>
+    <cfset variables.result = Super.put(endpoint="Currencies",body=this.toJSON())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -157,12 +127,12 @@
     <cfreturn this>
   </cffunction>
 
-  <cffunction name="setList" access="public"  output="false" hint="I set the array of Currencys">
+  <cffunction name="setList" access="public"  output="false" hint="I set the array of Currencies">
     <cfargument name="list" type="Array" hint="I am the list." />
       <cfset this.list = arguments.list />
   </cffunction>
 
-  <cffunction name="getList" access="public" output="false" hint="I return the array of Currencys">
+  <cffunction name="getList" access="public" output="false" hint="I return the array of Currencies">
     <cfreturn this.list />
   </cffunction>
 
@@ -203,3 +173,6 @@
 </cffunction>
 
 </cfcomponent>   
+
+
+

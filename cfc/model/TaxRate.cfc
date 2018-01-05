@@ -8,13 +8,13 @@
   <cfproperty name="TaxComponents" type="List[TaxComponent]" default="" />
   <cfproperty name="Status" type="StatusEnum" default="" />
   <cfproperty name="ReportTaxType" type="String" default="" />
-  <cfproperty name="CanApplyToAssets" type="BigDecimal" default="" />
-  <cfproperty name="CanApplyToEquity" type="BigDecimal" default="" />
-  <cfproperty name="CanApplyToExpenses" type="BigDecimal" default="" />
-  <cfproperty name="CanApplyToLiabilities" type="BigDecimal" default="" />
-  <cfproperty name="CanApplyToRevenue" type="BigDecimal" default="" />
-  <cfproperty name="DisplayTaxRate" type="BigDecimal" default="" />
-  <cfproperty name="EffectiveRate" type="BigDecimal" default="" />
+  <cfproperty name="CanApplyToAssets" type="String" default="" />
+  <cfproperty name="CanApplyToEquity" type="String" default="" />
+  <cfproperty name="CanApplyToExpenses" type="String" default="" />
+  <cfproperty name="CanApplyToLiabilities" type="String" default="" />
+  <cfproperty name="CanApplyToRevenue" type="String" default="" />
+  <cfproperty name="DisplayTaxRate" type="String" default="" />
+  <cfproperty name="EffectiveRate" type="String" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -335,7 +335,7 @@
   </cffunction>
 
   <cffunction name="setCanApplyToAssets" access="public"  output="false" hint="I set the CanApplyToAssets into the variables.instance scope.">
-    <cfargument name="CanApplyToAssets" type="BigDecimal" hint="I am the CanApplyToAssets." />
+    <cfargument name="CanApplyToAssets" type="String" hint="I am the CanApplyToAssets." />
       <cfset variables.instance.CanApplyToAssets = arguments.CanApplyToAssets />
   </cffunction>
 
@@ -348,7 +348,7 @@
   </cffunction>
 
   <cffunction name="setCanApplyToEquity" access="public"  output="false" hint="I set the CanApplyToEquity into the variables.instance scope.">
-    <cfargument name="CanApplyToEquity" type="BigDecimal" hint="I am the CanApplyToEquity." />
+    <cfargument name="CanApplyToEquity" type="String" hint="I am the CanApplyToEquity." />
       <cfset variables.instance.CanApplyToEquity = arguments.CanApplyToEquity />
   </cffunction>
 
@@ -361,7 +361,7 @@
   </cffunction>
 
   <cffunction name="setCanApplyToExpenses" access="public"  output="false" hint="I set the CanApplyToExpenses into the variables.instance scope.">
-    <cfargument name="CanApplyToExpenses" type="BigDecimal" hint="I am the CanApplyToExpenses." />
+    <cfargument name="CanApplyToExpenses" type="String" hint="I am the CanApplyToExpenses." />
       <cfset variables.instance.CanApplyToExpenses = arguments.CanApplyToExpenses />
   </cffunction>
 
@@ -374,7 +374,7 @@
   </cffunction>
 
   <cffunction name="setCanApplyToLiabilities" access="public"  output="false" hint="I set the CanApplyToLiabilities into the variables.instance scope.">
-    <cfargument name="CanApplyToLiabilities" type="BigDecimal" hint="I am the CanApplyToLiabilities." />
+    <cfargument name="CanApplyToLiabilities" type="String" hint="I am the CanApplyToLiabilities." />
       <cfset variables.instance.CanApplyToLiabilities = arguments.CanApplyToLiabilities />
   </cffunction>
 
@@ -387,7 +387,7 @@
   </cffunction>
 
   <cffunction name="setCanApplyToRevenue" access="public"  output="false" hint="I set the CanApplyToRevenue into the variables.instance scope.">
-    <cfargument name="CanApplyToRevenue" type="BigDecimal" hint="I am the CanApplyToRevenue." />
+    <cfargument name="CanApplyToRevenue" type="String" hint="I am the CanApplyToRevenue." />
       <cfset variables.instance.CanApplyToRevenue = arguments.CanApplyToRevenue />
   </cffunction>
 
@@ -400,7 +400,7 @@
   </cffunction>
 
   <cffunction name="setDisplayTaxRate" access="public"  output="false" hint="I set the DisplayTaxRate into the variables.instance scope.">
-    <cfargument name="DisplayTaxRate" type="BigDecimal" hint="I am the DisplayTaxRate." />
+    <cfargument name="DisplayTaxRate" type="String" hint="I am the DisplayTaxRate." />
       <cfset variables.instance.DisplayTaxRate = arguments.DisplayTaxRate />
   </cffunction>
 
@@ -413,7 +413,7 @@
   </cffunction>
 
   <cffunction name="setEffectiveRate" access="public"  output="false" hint="I set the EffectiveRate into the variables.instance scope.">
-    <cfargument name="EffectiveRate" type="BigDecimal" hint="I am the EffectiveRate." />
+    <cfargument name="EffectiveRate" type="String" hint="I am the EffectiveRate." />
       <cfset variables.instance.EffectiveRate = arguments.EffectiveRate />
   </cffunction>
 

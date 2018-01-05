@@ -3,7 +3,7 @@
 
 <!--- PROPERTIES --->
 
-  <cfproperty name="UnitPrice" type="BigDecimal" default="" />
+  <cfproperty name="UnitPrice" type="String" default="" />
   <cfproperty name="AccountCode" type="String" default="" />
   <cfproperty name="COGSAccountCode" type="String" default="" />
   <cfproperty name="TaxType" type="String" default="" />
@@ -182,7 +182,7 @@
   </cffunction>
 
   <cffunction name="setUnitPrice" access="public"  output="false" hint="I set the UnitPrice into the variables.instance scope.">
-    <cfargument name="UnitPrice" type="BigDecimal" hint="I am the UnitPrice." />
+    <cfargument name="UnitPrice" type="String" hint="I am the UnitPrice." />
       <cfset variables.instance.UnitPrice = arguments.UnitPrice />
   </cffunction>
 

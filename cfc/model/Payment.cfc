@@ -7,8 +7,8 @@
   <cfproperty name="CreditNoteNumber" type="String" default="" />
   <cfproperty name="Code" type="String" default="" />
   <cfproperty name="Date" type="String" default="" />
-  <cfproperty name="CurrencyRate" type="BigDecimal" default="" />
-  <cfproperty name="Amount" type="BigDecimal" default="" />
+  <cfproperty name="CurrencyRate" type="String" default="" />
+  <cfproperty name="Amount" type="String" default="" />
   <cfproperty name="Reference" type="String" default="" />
   <cfproperty name="IsReconciled" type="String" default="" />
   <cfproperty name="Status" type="StatusEnum" default="" />
@@ -322,7 +322,7 @@
   </cffunction>
 
   <cffunction name="setCurrencyRate" access="public"  output="false" hint="I set the CurrencyRate into the variables.instance scope.">
-    <cfargument name="CurrencyRate" type="BigDecimal" hint="I am the CurrencyRate." />
+    <cfargument name="CurrencyRate" type="String" hint="I am the CurrencyRate." />
       <cfset variables.instance.CurrencyRate = arguments.CurrencyRate />
   </cffunction>
 
@@ -335,7 +335,7 @@
   </cffunction>
 
   <cffunction name="setAmount" access="public"  output="false" hint="I set the Amount into the variables.instance scope.">
-    <cfargument name="Amount" type="BigDecimal" hint="I am the Amount." />
+    <cfargument name="Amount" type="String" hint="I am the Amount." />
       <cfset variables.instance.Amount = arguments.Amount />
   </cffunction>
 

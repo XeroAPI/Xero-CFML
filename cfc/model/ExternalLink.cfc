@@ -3,7 +3,7 @@
 
 <!--- PROPERTIES --->
 
-  <cfproperty name="LinkType" type="LinkTypeEnum" default="" />
+  <cfproperty name="LinkType" type="String" default="" />
   <cfproperty name="Url" type="String" default="" />
 
 <!--- INIT --->
@@ -177,7 +177,7 @@
   </cffunction>
 
   <cffunction name="setLinkType" access="public"  output="false" hint="I set the LinkType into the variables.instance scope.">
-    <cfargument name="LinkType" type="LinkTypeEnum" hint="I am the LinkType." />
+    <cfargument name="LinkType" type="String" hint="I am the LinkType." />
       <cfset variables.instance.LinkType = arguments.LinkType />
   </cffunction>
 
@@ -203,3 +203,5 @@
 </cffunction>
 
 </cfcomponent>   
+
+

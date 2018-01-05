@@ -62,27 +62,29 @@
   </cffunction>
   
   <cffunction name="toStruct" access="public" output="false">
-        <cfscript>
-          myStruct=StructNew();
-          myStruct=this.toJSON(returnType="struct");
-        </cfscript>
-    <cfreturn myStruct />
-  </cffunction>
+    <cfargument name="Only" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+      <cfif len(arguments.exclude) GT 0>
+        <cfset exclude = arguments.exclude>
+      <cfelse>
+        <cfset exclude = "">
+      </cfif>
 
-   <cffunction name="toStructOfId" access="public" output="false">
+      <cfif Only EQ "id">
+        <cfset exclude = "ContactStatus,ContactNumber,AccountNumber,Name,FirstName,LastName,EmailAddress,SkypeUserName,ContactPersons,BankAccountDetails,TaxNumber,AccountsReceivableTaxType,AccountsPayableTaxType,Addresses,Phones,IsSupplier,IsCustomer,DefaultCurrency,XeroNetworkKey,SalesDefaultAccountCode,PurchasesDefaultAccountCode,SalesTrackingCategories,PurchasesTrackingCategories,TrackingCategoryName,TrackingCategoryOption,UpdatedDateUTC,ContactGroups,Website,BatchPayments,Discount,Balances,HasAttachments">
+      </cfif>
         <cfscript>
           myStruct=StructNew();
-          myStruct.ContactID=getContactID();
+          myStruct=this.toJSON(exclude=exclude,returnType="struct");
         </cfscript>
     <cfreturn myStruct />
   </cffunction>
 
   <cffunction name="toJSON" access="public" output="false">
-     <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
-      <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfargument name="archive" type="boolean" default="false" hint="Return only the req. fields as JSON for archiving an object" />
+    <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
     
-     
         <cfscript>
           myStruct=StructNew();
           if (archive) {
@@ -719,14 +721,13 @@
   <cffunction name="setAddresses" access="public"  output="false" hint="I set the Addresses into the variables.instance scope.">
     <cfargument name="Addresses" type="array" hint="I am the Addresses." />
 			<cfscript>
-		        var arr = ArrayNew(1);
-		        for (var i=1;i LTE ArrayLen(arguments.Addresses);i=i+1) {
-		          var item=createObject("component","cfc.model.Address").init().populate(arguments.Addresses[i]); 
-		          ArrayAppend(arr,item);
-		        }
-		      </cfscript>
-		      <cfset variables.instance.Addresses = arr />
-		
+        var arr = ArrayNew(1);
+        for (var i=1;i LTE ArrayLen(arguments.Addresses);i=i+1) {
+          var item=createObject("component","cfc.model.Address").init().populate(arguments.Addresses[i]); 
+          ArrayAppend(arr,item);
+        }
+      </cfscript>
+      <cfset variables.instance.Addresses = arr />
   </cffunction>
 
   <!---

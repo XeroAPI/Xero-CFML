@@ -8,9 +8,9 @@
   <cfproperty name="Payments" type="List[Payment]" default="" />
   <cfproperty name="Status" type="String" default="" />
   <cfproperty name="UpdatedDateUTC" type="String" default="" />
-  <cfproperty name="Total" type="BigDecimal" default="" />
-  <cfproperty name="AmountDue" type="BigDecimal" default="" />
-  <cfproperty name="AmountPaid" type="BigDecimal" default="" />
+  <cfproperty name="Total" type="String" default="" />
+  <cfproperty name="AmountDue" type="String" default="" />
+  <cfproperty name="AmountPaid" type="String" default="" />
   <cfproperty name="PaymentDueDate" type="String" default="" />
   <cfproperty name="ReportingDate" type="String" default="" />
   <cfproperty name="ReceiptID" type="String" default="" />
@@ -341,7 +341,7 @@
   </cffunction>
 
   <cffunction name="setTotal" access="public"  output="false" hint="I set the Total into the variables.instance scope.">
-    <cfargument name="Total" type="BigDecimal" hint="I am the Total." />
+    <cfargument name="Total" type="String" hint="I am the Total." />
       <cfset variables.instance.Total = arguments.Total />
   </cffunction>
 
@@ -354,7 +354,7 @@
   </cffunction>
 
   <cffunction name="setAmountDue" access="public"  output="false" hint="I set the AmountDue into the variables.instance scope.">
-    <cfargument name="AmountDue" type="BigDecimal" hint="I am the AmountDue." />
+    <cfargument name="AmountDue" type="String" hint="I am the AmountDue." />
       <cfset variables.instance.AmountDue = arguments.AmountDue />
   </cffunction>
 
@@ -367,7 +367,7 @@
   </cffunction>
 
   <cffunction name="setAmountPaid" access="public"  output="false" hint="I set the AmountPaid into the variables.instance scope.">
-    <cfargument name="AmountPaid" type="BigDecimal" hint="I am the AmountPaid." />
+    <cfargument name="AmountPaid" type="String" hint="I am the AmountPaid." />
       <cfset variables.instance.AmountPaid = arguments.AmountPaid />
   </cffunction>
 

@@ -4,7 +4,7 @@
 <!--- PROPERTIES --->
 
   <cfproperty name="Narration" type="String" default="" />
-  <cfproperty name="JournalLines" type="List[JournalLine]" default="" />
+  <cfproperty name="JournalLines" type="array" default="" />
   <cfproperty name="Date" type="String" default="" />
   <cfproperty name="LineAmountTypes" type="String" default="" />
   <cfproperty name="Status" type="String" default="" />
@@ -116,7 +116,7 @@
         if (structKeyExists(obj,"JournalLines")) {
           setJournalLines(obj.JournalLines);
         } else {
-          setJournalLines("");
+          setJournalLines(ArrayNew(1));
         }
         if (structKeyExists(obj,"Date")) {
           setDate(obj.Date);
@@ -146,7 +146,7 @@
         if (structKeyExists(obj,"HasAttachments")) {
           setHasAttachments(obj.HasAttachments);
         } else {
-          setHasAttachments("");
+          setHasAttachments(false);
         }
         if (structKeyExists(obj,"UpdatedDateUTC")) {
           setUpdatedDateUTC(obj.UpdatedDateUTC);
@@ -261,8 +261,16 @@
   </cffunction>
 
   <cffunction name="setJournalLines" access="public"  output="false" hint="I set the JournalLines into the variables.instance scope.">
-    <cfargument name="JournalLines" type="List[JournalLine]" hint="I am the JournalLines." />
-      <cfset variables.instance.JournalLines = arguments.JournalLines />
+    <cfargument name="JournalLines" type="array" hint="I am the JournalLines." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.JournalLines);i=i+1) {
+		          var item=createObject("component","cfc.model.JournalLine").init().populate(arguments.JournalLines[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.JournalLines = arr />
+		
   </cffunction>
 
   <!---
@@ -378,3 +386,4 @@
 </cffunction>
 
 </cfcomponent>   
+
