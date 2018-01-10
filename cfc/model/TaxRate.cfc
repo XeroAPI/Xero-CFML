@@ -5,8 +5,8 @@
 
   <cfproperty name="Name" type="String" default="" />
   <cfproperty name="TaxType" type="String" default="" />
-  <cfproperty name="TaxComponents" type="List[TaxComponent]" default="" />
-  <cfproperty name="Status" type="StatusEnum" default="" />
+  <cfproperty name="TaxComponents" type="array" default="" />
+  <cfproperty name="Status" type="String" default="" />
   <cfproperty name="ReportTaxType" type="String" default="" />
   <cfproperty name="CanApplyToAssets" type="String" default="" />
   <cfproperty name="CanApplyToEquity" type="String" default="" />
@@ -40,78 +40,102 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.Name=getName();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"Name")) {
-            if (NOT listFindNoCase(arguments.exclude, "Name")) {
-              myStruct.Name=getName();
+            if (structKeyExists(variables.instance,"Name")) {
+              if (NOT listFindNoCase(arguments.exclude, "Name")) {
+                myStruct.Name=getName();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TaxType")) {
-            if (NOT listFindNoCase(arguments.exclude, "TaxType")) {
-              myStruct.TaxType=getTaxType();
+            if (structKeyExists(variables.instance,"TaxType")) {
+              if (NOT listFindNoCase(arguments.exclude, "TaxType")) {
+                myStruct.TaxType=getTaxType();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TaxComponents")) {
-            if (NOT listFindNoCase(arguments.exclude, "TaxComponents")) {
-              myStruct.TaxComponents=getTaxComponents();
+            if (structKeyExists(variables.instance,"TaxComponents")) {
+              if (NOT listFindNoCase(arguments.exclude, "TaxComponents")) {
+                myStruct.TaxComponents=getTaxComponents();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Status")) {
-            if (NOT listFindNoCase(arguments.exclude, "Status")) {
-              myStruct.Status=getStatus();
+            if (structKeyExists(variables.instance,"Status")) {
+              if (NOT listFindNoCase(arguments.exclude, "Status")) {
+                myStruct.Status=getStatus();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"ReportTaxType")) {
-            if (NOT listFindNoCase(arguments.exclude, "ReportTaxType")) {
-              myStruct.ReportTaxType=getReportTaxType();
+            if (structKeyExists(variables.instance,"ReportTaxType")) {
+              if (NOT listFindNoCase(arguments.exclude, "ReportTaxType")) {
+                myStruct.ReportTaxType=getReportTaxType();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CanApplyToAssets")) {
-            if (NOT listFindNoCase(arguments.exclude, "CanApplyToAssets")) {
-              myStruct.CanApplyToAssets=getCanApplyToAssets();
+            if (structKeyExists(variables.instance,"CanApplyToAssets")) {
+              if (NOT listFindNoCase(arguments.exclude, "CanApplyToAssets")) {
+                myStruct.CanApplyToAssets=getCanApplyToAssets();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CanApplyToEquity")) {
-            if (NOT listFindNoCase(arguments.exclude, "CanApplyToEquity")) {
-              myStruct.CanApplyToEquity=getCanApplyToEquity();
+            if (structKeyExists(variables.instance,"CanApplyToEquity")) {
+              if (NOT listFindNoCase(arguments.exclude, "CanApplyToEquity")) {
+                myStruct.CanApplyToEquity=getCanApplyToEquity();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CanApplyToExpenses")) {
-            if (NOT listFindNoCase(arguments.exclude, "CanApplyToExpenses")) {
-              myStruct.CanApplyToExpenses=getCanApplyToExpenses();
+            if (structKeyExists(variables.instance,"CanApplyToExpenses")) {
+              if (NOT listFindNoCase(arguments.exclude, "CanApplyToExpenses")) {
+                myStruct.CanApplyToExpenses=getCanApplyToExpenses();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CanApplyToLiabilities")) {
-            if (NOT listFindNoCase(arguments.exclude, "CanApplyToLiabilities")) {
-              myStruct.CanApplyToLiabilities=getCanApplyToLiabilities();
+            if (structKeyExists(variables.instance,"CanApplyToLiabilities")) {
+              if (NOT listFindNoCase(arguments.exclude, "CanApplyToLiabilities")) {
+                myStruct.CanApplyToLiabilities=getCanApplyToLiabilities();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CanApplyToRevenue")) {
-            if (NOT listFindNoCase(arguments.exclude, "CanApplyToRevenue")) {
-              myStruct.CanApplyToRevenue=getCanApplyToRevenue();
+            if (structKeyExists(variables.instance,"CanApplyToRevenue")) {
+              if (NOT listFindNoCase(arguments.exclude, "CanApplyToRevenue")) {
+                myStruct.CanApplyToRevenue=getCanApplyToRevenue();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"DisplayTaxRate")) {
-            if (NOT listFindNoCase(arguments.exclude, "DisplayTaxRate")) {
-              myStruct.DisplayTaxRate=getDisplayTaxRate();
+            if (structKeyExists(variables.instance,"DisplayTaxRate")) {
+              if (NOT listFindNoCase(arguments.exclude, "DisplayTaxRate")) {
+                myStruct.DisplayTaxRate=getDisplayTaxRate();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"EffectiveRate")) {
-            if (NOT listFindNoCase(arguments.exclude, "EffectiveRate")) {
-              myStruct.EffectiveRate=getEffectiveRate();
+            if (structKeyExists(variables.instance,"EffectiveRate")) {
+              if (NOT listFindNoCase(arguments.exclude, "EffectiveRate")) {
+                myStruct.EffectiveRate=getEffectiveRate();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -133,7 +157,7 @@
         if (structKeyExists(obj,"TaxComponents")) {
           setTaxComponents(obj.TaxComponents);
         } else {
-          setTaxComponents("");
+          setTaxComponents(ArrayNew(1));
         }
         if (structKeyExists(obj,"Status")) {
           setStatus(obj.Status);
@@ -148,27 +172,27 @@
         if (structKeyExists(obj,"CanApplyToAssets")) {
           setCanApplyToAssets(obj.CanApplyToAssets);
         } else {
-          setCanApplyToAssets("");
+          setCanApplyToAssets("YES");
         }
         if (structKeyExists(obj,"CanApplyToEquity")) {
           setCanApplyToEquity(obj.CanApplyToEquity);
         } else {
-          setCanApplyToEquity("");
+          setCanApplyToEquity("YES");
         }
         if (structKeyExists(obj,"CanApplyToExpenses")) {
           setCanApplyToExpenses(obj.CanApplyToExpenses);
         } else {
-          setCanApplyToExpenses("");
+          setCanApplyToExpenses("YES");
         }
         if (structKeyExists(obj,"CanApplyToLiabilities")) {
           setCanApplyToLiabilities(obj.CanApplyToLiabilities);
         } else {
-          setCanApplyToLiabilities("");
+          setCanApplyToLiabilities("YES");
         }
         if (structKeyExists(obj,"CanApplyToRevenue")) {
           setCanApplyToRevenue(obj.CanApplyToRevenue);
         } else {
-          setCanApplyToRevenue("");
+          setCanApplyToRevenue("YES");
         }
         if (structKeyExists(obj,"DisplayTaxRate")) {
           setDisplayTaxRate(obj.DisplayTaxRate);
@@ -188,6 +212,7 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="TaxRates"))>
+      <cfset temp = this.populate(StructNew())>
     <cfreturn this>
   </cffunction>
 
@@ -213,17 +238,7 @@
   </cffunction>
 
   <cffunction name="update" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="TaxRates",body=this.toJSON(),id=this.getTaxRateID())>
-    
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
-
-    <cfreturn this />
-  </cffunction>
-
-  <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="TaxRates",body=this.toJSON(),id=this.getTaxRateID())>
+    <cfset variables.result = Super.post(endpoint="TaxRates",body=this.toJSON())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -233,7 +248,8 @@
   </cffunction>
 
   <cffunction name="delete" access="public" output="false">
-    <cfset variables.result = Super.delete(endpoint="TaxRates",body=this.toJSON(),id=this.getTaxRateID())>
+    <cfset this.setStatus("DELETED")>
+    <cfset variables.result = Super.post(endpoint="TaxRates",body=this.toJSON(archive=true))>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -292,12 +308,27 @@
    * @return TaxComponents
   --->
   <cffunction name="getTaxComponents" access="public" output="false" hint="I return the TaxComponents">
-    <cfreturn variables.instance.TaxComponents />
+    <cfset var lines = variables.instance.TaxComponents>
+      <cfscript>
+          var arr = ArrayNew(1);
+          for (var i=1;i LTE ArrayLen(lines);i=i+1) {
+            ArrayAppend(arr,lines[i].toStruct());
+          }
+      </cfscript>
+    <cfreturn arr />
   </cffunction>
 
   <cffunction name="setTaxComponents" access="public"  output="false" hint="I set the TaxComponents into the variables.instance scope.">
-    <cfargument name="TaxComponents" type="List[TaxComponent]" hint="I am the TaxComponents." />
-      <cfset variables.instance.TaxComponents = arguments.TaxComponents />
+    <cfargument name="TaxComponents" type="array" hint="I am the TaxComponents." />
+			<cfscript>
+		        var arr = ArrayNew(1);
+		        for (var i=1;i LTE ArrayLen(arguments.TaxComponents);i=i+1) {
+		          var item=createObject("component","cfc.model.TaxComponent").init().populate(arguments.TaxComponents[i]); 
+		          ArrayAppend(arr,item);
+		        }
+		      </cfscript>
+		      <cfset variables.instance.TaxComponents = arr />
+		
   </cffunction>
 
   <!---
@@ -309,7 +340,7 @@
   </cffunction>
 
   <cffunction name="setStatus" access="public"  output="false" hint="I set the Status into the variables.instance scope.">
-    <cfargument name="Status" type="StatusEnum" hint="I am the Status." />
+    <cfargument name="Status" type="String" hint="I am the Status." />
       <cfset variables.instance.Status = arguments.Status />
   </cffunction>
 
@@ -426,3 +457,4 @@
 </cffunction>
 
 </cfcomponent>   
+

@@ -6,6 +6,7 @@
   <cfproperty name="Period" type="Double" default="" />
   <cfproperty name="Unit" type="String" default="" />
   <cfproperty name="DueDate" type="Double" default="" />
+  <cfproperty name="DueDateType" type="array" default="" />
   <cfproperty name="StartDate" type="String" default="" />
   <cfproperty name="NextScheduledDate" type="String" default="" />
   <cfproperty name="EndDate" type="String" default="" />
@@ -34,48 +35,77 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.ScheduleID=getScheduleID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"Period")) {
-            if (NOT listFindNoCase(arguments.exclude, "Period")) {
-              myStruct.Period=getPeriod();
+            if (structKeyExists(variables.instance,"Period")) {
+              if (NOT listFindNoCase(arguments.exclude, "Period")) {
+                myStruct.Period=getPeriod();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Unit")) {
-            if (NOT listFindNoCase(arguments.exclude, "Unit")) {
-              myStruct.Unit=getUnit();
+            if (structKeyExists(variables.instance,"Unit")) {
+              if (NOT listFindNoCase(arguments.exclude, "Unit")) {
+                myStruct.Unit=getUnit();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"DueDate")) {
-            if (NOT listFindNoCase(arguments.exclude, "DueDate")) {
-              myStruct.DueDate=getDueDate();
+            if (structKeyExists(variables.instance,"DueDate")) {
+              if (NOT listFindNoCase(arguments.exclude, "DueDate")) {
+                myStruct.DueDate=getDueDate();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"StartDate")) {
-            if (NOT listFindNoCase(arguments.exclude, "StartDate")) {
-              myStruct.StartDate=getStartDate();
+            if (structKeyExists(variables.instance,"DueDateType")) {
+              if (NOT listFindNoCase(arguments.exclude, "DueDateType")) {
+                myStruct.DueDateType=getDueDateType();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"NextScheduledDate")) {
-            if (NOT listFindNoCase(arguments.exclude, "NextScheduledDate")) {
-              myStruct.NextScheduledDate=getNextScheduledDate();
+            if (structKeyExists(variables.instance,"StartDate")) {
+              if (NOT listFindNoCase(arguments.exclude, "StartDate")) {
+                myStruct.StartDate=getStartDate();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"EndDate")) {
-            if (NOT listFindNoCase(arguments.exclude, "EndDate")) {
-              myStruct.EndDate=getEndDate();
+            if (structKeyExists(variables.instance,"NextScheduledDate")) {
+              if (NOT listFindNoCase(arguments.exclude, "NextScheduledDate")) {
+                myStruct.NextScheduledDate=getNextScheduledDate();
+              }
+            }
+            if (structKeyExists(variables.instance,"EndDate")) {
+              if (NOT listFindNoCase(arguments.exclude, "EndDate")) {
+                myStruct.EndDate=getEndDate();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -98,6 +128,11 @@
           setDueDate(obj.DueDate);
         } else {
           setDueDate("");
+        }
+        if (structKeyExists(obj,"DueDateType")) {
+          setDueDateType(obj.DueDateType);
+        } else {
+          setDueDateType("");
         }
         if (structKeyExists(obj,"StartDate")) {
           setStartDate(obj.StartDate);
@@ -122,6 +157,7 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="Schedules"))>
+      <cfset temp = this.populate(StructNew())>
     <cfreturn this>
   </cffunction>
 
@@ -157,7 +193,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Schedules",body=this.toJSON(),id=this.getScheduleID())>
+    <cfset variables.result = Super.post(endpoint="Schedules",body=this.toJSON(archive=true),id=this.getScheduleID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -235,6 +271,19 @@
   </cffunction>
 
   <!---
+   * See DueDateType
+   * @return DueDateType
+  --->
+  <cffunction name="getDueDateType" access="public" output="false" hint="I return the DueDateType">
+    <cfreturn variables.instance.DueDateType />
+  </cffunction>
+
+  <cffunction name="setDueDateType" access="public"  output="false" hint="I set the DueDateType into the variables.instance scope.">
+    <cfargument name="DueDateType" type="array" hint="I am the DueDateType." />
+      <cfset variables.instance.DueDateType = arguments.DueDateType />
+  </cffunction>
+
+  <!---
    * Date the first invoice of the current version of the repeating schedule was generated (changes when repeating invoice is edited)
    * @return StartDate
   --->
@@ -282,3 +331,4 @@
 </cffunction>
 
 </cfcomponent>   
+

@@ -5,8 +5,8 @@
 
   <cfproperty name="Name" type="String" default="" />
   <cfproperty name="Rate" type="String" default="" />
-  <cfproperty name="IsCompound" type="String" default="" />
-  <cfproperty name="TaxType" type="String" default="" />
+  <cfproperty name="IsCompound" type="Boolean" default="" />
+  <cfproperty name="IsNonRecoverable" type="Boolean" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -32,38 +32,62 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.TaxComponentID=getTaxComponentID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"Name")) {
-            if (NOT listFindNoCase(arguments.exclude, "Name")) {
-              myStruct.Name=getName();
+            if (structKeyExists(variables.instance,"Name")) {
+              if (NOT listFindNoCase(arguments.exclude, "Name")) {
+                myStruct.Name=getName();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Rate")) {
-            if (NOT listFindNoCase(arguments.exclude, "Rate")) {
-              myStruct.Rate=getRate();
+            if (structKeyExists(variables.instance,"Rate")) {
+              if (NOT listFindNoCase(arguments.exclude, "Rate")) {
+                myStruct.Rate=getRate();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"IsCompound")) {
-            if (NOT listFindNoCase(arguments.exclude, "IsCompound")) {
-              myStruct.IsCompound=getIsCompound();
+            if (structKeyExists(variables.instance,"IsCompound")) {
+              if (NOT listFindNoCase(arguments.exclude, "IsCompound")) {
+                myStruct.IsCompound=getIsCompound();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TaxType")) {
-            if (NOT listFindNoCase(arguments.exclude, "TaxType")) {
-              myStruct.TaxType=getTaxType();
+            if (structKeyExists(variables.instance,"IsNonRecoverable")) {
+              if (NOT listFindNoCase(arguments.exclude, "IsNonRecoverable")) {
+                myStruct.IsNonRecoverable=getIsNonRecoverable();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -85,12 +109,12 @@
         if (structKeyExists(obj,"IsCompound")) {
           setIsCompound(obj.IsCompound);
         } else {
-          setIsCompound("");
+          setIsCompound(false);
         }
-        if (structKeyExists(obj,"TaxType")) {
-          setTaxType(obj.TaxType);
+        if (structKeyExists(obj,"IsNonRecoverable")) {
+          setIsNonRecoverable(obj.IsNonRecoverable);
         } else {
-          setTaxType("");
+          setIsNonRecoverable(false);
         }
       </cfscript>
       
@@ -100,6 +124,7 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="TaxComponents"))>
+      <cfset temp = this.populate(StructNew())>
     <cfreturn this>
   </cffunction>
 
@@ -135,7 +160,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="TaxComponents",body=this.toJSON(),id=this.getTaxComponentID())>
+    <cfset variables.result = Super.post(endpoint="TaxComponents",body=this.toJSON(archive=true),id=this.getTaxComponentID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -208,21 +233,21 @@
   </cffunction>
 
   <cffunction name="setIsCompound" access="public"  output="false" hint="I set the IsCompound into the variables.instance scope.">
-    <cfargument name="IsCompound" type="String" hint="I am the IsCompound." />
+    <cfargument name="IsCompound" type="boolean" hint="I am the IsCompound." />
       <cfset variables.instance.IsCompound = arguments.IsCompound />
   </cffunction>
 
   <!---
    * Filter by a Tax Type
-   * @return TaxType
+   * @return IsNonRecoverable
   --->
-  <cffunction name="getTaxType" access="public" output="false" hint="I return the TaxType">
-    <cfreturn variables.instance.TaxType />
+  <cffunction name="getIsNonRecoverable" access="public" output="false" hint="I return the IsNonRecoverable">
+    <cfreturn variables.instance.IsNonRecoverable />
   </cffunction>
 
-  <cffunction name="setTaxType" access="public"  output="false" hint="I set the TaxType into the variables.instance scope.">
-    <cfargument name="TaxType" type="String" hint="I am the TaxType." />
-      <cfset variables.instance.TaxType = arguments.TaxType />
+  <cffunction name="setIsNonRecoverable" access="public"  output="false" hint="I set the IsNonRecoverable into the variables.instance scope.">
+    <cfargument name="IsNonRecoverable" type="boolean" hint="I am the IsNonRecoverable." />
+      <cfset variables.instance.IsNonRecoverable = arguments.IsNonRecoverable />
   </cffunction>
 
 
@@ -234,3 +259,4 @@
 </cffunction>
 
 </cfcomponent>   
+

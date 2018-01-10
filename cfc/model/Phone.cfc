@@ -31,33 +31,57 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.PhoneID=getPhoneID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"PhoneNumber")) {
-            if (NOT listFindNoCase(arguments.exclude, "PhoneNumber")) {
-              myStruct.PhoneNumber=getPhoneNumber();
+            if (structKeyExists(variables.instance,"PhoneNumber")) {
+              if (NOT listFindNoCase(arguments.exclude, "PhoneNumber")) {
+                myStruct.PhoneNumber=getPhoneNumber();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"PhoneAreaCode")) {
-            if (NOT listFindNoCase(arguments.exclude, "PhoneAreaCode")) {
-              myStruct.PhoneAreaCode=getPhoneAreaCode();
+            if (structKeyExists(variables.instance,"PhoneAreaCode")) {
+              if (NOT listFindNoCase(arguments.exclude, "PhoneAreaCode")) {
+                myStruct.PhoneAreaCode=getPhoneAreaCode();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"PhoneCountryCode")) {
-            if (NOT listFindNoCase(arguments.exclude, "PhoneCountryCode")) {
-              myStruct.PhoneCountryCode=getPhoneCountryCode();
+            if (structKeyExists(variables.instance,"PhoneCountryCode")) {
+              if (NOT listFindNoCase(arguments.exclude, "PhoneCountryCode")) {
+                myStruct.PhoneCountryCode=getPhoneCountryCode();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -89,6 +113,7 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="Phones"))>
+      <cfset temp = this.populate(StructNew())>
     <cfreturn this>
   </cffunction>
 
@@ -124,7 +149,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Phones",body=this.toJSON(),id=this.getPhoneID())>
+    <cfset variables.result = Super.post(endpoint="Phones",body=this.toJSON(archive=true),id=this.getPhoneID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -210,3 +235,4 @@
 </cffunction>
 
 </cfcomponent>   
+

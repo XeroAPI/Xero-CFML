@@ -32,38 +32,62 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.TrackingOptionID=getTrackingOptionID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"TrackingOptionID")) {
-            if (NOT listFindNoCase(arguments.exclude, "TrackingOptionID")) {
-              myStruct.TrackingOptionID=getTrackingOptionID();
+            if (structKeyExists(variables.instance,"TrackingOptionID")) {
+              if (NOT listFindNoCase(arguments.exclude, "TrackingOptionID")) {
+                myStruct.TrackingOptionID=getTrackingOptionID();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Name")) {
-            if (NOT listFindNoCase(arguments.exclude, "Name")) {
-              myStruct.Name=getName();
+            if (structKeyExists(variables.instance,"Name")) {
+              if (NOT listFindNoCase(arguments.exclude, "Name")) {
+                myStruct.Name=getName();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Status")) {
-            if (NOT listFindNoCase(arguments.exclude, "Status")) {
-              myStruct.Status=getStatus();
+            if (structKeyExists(variables.instance,"Status")) {
+              if (NOT listFindNoCase(arguments.exclude, "Status")) {
+                myStruct.Status=getStatus();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TrackingCategoryID")) {
-            if (NOT listFindNoCase(arguments.exclude, "TrackingCategoryID")) {
-              myStruct.TrackingCategoryID=getTrackingCategoryID();
+            if (structKeyExists(variables.instance,"TrackingCategoryID")) {
+              if (NOT listFindNoCase(arguments.exclude, "TrackingCategoryID")) {
+                myStruct.TrackingCategoryID=getTrackingCategoryID();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -100,6 +124,7 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="TrackingOptions"))>
+      <cfset temp = this.populate(StructNew())>
     <cfreturn this>
   </cffunction>
 
@@ -135,7 +160,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="TrackingOptions",body=this.toJSON(),id=this.getTrackingOptionID())>
+    <cfset variables.result = Super.post(endpoint="TrackingOptions",body=this.toJSON(archive=true),id=this.getTrackingOptionID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -234,3 +259,4 @@
 </cffunction>
 
 </cfcomponent>   
+

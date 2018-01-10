@@ -34,48 +34,74 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.JournalLineID=getJournalLineID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"LineAmount")) {
-            if (NOT listFindNoCase(arguments.exclude, "LineAmount")) {
-              myStruct.LineAmount=getLineAmount();
+            if (structKeyExists(variables.instance,"LineAmount")) {
+              if (NOT listFindNoCase(arguments.exclude, "LineAmount")) {
+                myStruct.LineAmount=getLineAmount();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"AccountCode")) {
-            if (NOT listFindNoCase(arguments.exclude, "AccountCode")) {
-              myStruct.AccountCode=getAccountCode();
+            if (structKeyExists(variables.instance,"AccountCode")) {
+              if (NOT listFindNoCase(arguments.exclude, "AccountCode")) {
+                myStruct.AccountCode=getAccountCode();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Description")) {
-            if (NOT listFindNoCase(arguments.exclude, "Description")) {
-              myStruct.Description=getDescription();
+            if (structKeyExists(variables.instance,"Description")) {
+              if (NOT listFindNoCase(arguments.exclude, "Description")) {
+                if(len(getDescription()) GT 0) {
+                  myStruct.Description=getDescription();
+                }
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TaxType")) {
-            if (NOT listFindNoCase(arguments.exclude, "TaxType")) {
-              myStruct.TaxType=getTaxType();
+            if (structKeyExists(variables.instance,"TaxType")) {
+              if (NOT listFindNoCase(arguments.exclude, "TaxType")) {
+                myStruct.TaxType=getTaxType();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Tracking")) {
-            if (NOT listFindNoCase(arguments.exclude, "Tracking")) {
-              myStruct.Tracking=getTracking();
+            if (structKeyExists(variables.instance,"Tracking")) {
+              if (NOT listFindNoCase(arguments.exclude, "Tracking")) {
+                myStruct.Tracking=getTracking();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TaxAmount")) {
-            if (NOT listFindNoCase(arguments.exclude, "TaxAmount")) {
-              myStruct.TaxAmount=getTaxAmount();
+            if (structKeyExists(variables.instance,"TaxAmount")) {
+              if (NOT listFindNoCase(arguments.exclude, "TaxAmount")) {
+                myStruct.TaxAmount=getTaxAmount();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -157,7 +183,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="JournalLines",body=this.toJSON(),id=this.getJournalLineID())>
+    <cfset variables.result = Super.post(endpoint="JournalLines",body=this.toJSON(archive=true),id=this.getJournalLineID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>

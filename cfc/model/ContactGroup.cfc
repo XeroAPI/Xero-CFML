@@ -158,11 +158,7 @@
 
   <cffunction name="addContacts" access="public" output="false">
     <cfset variables.result = Super.put(endpoint="ContactGroups",body=this.getContactsAsJSON(),id=this.getContactGroupID(),child="Contacts")>
-<!---
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
---->
+
     <cfreturn this />
   </cffunction>
 

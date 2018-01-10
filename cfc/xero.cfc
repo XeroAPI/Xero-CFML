@@ -275,6 +275,7 @@ History:
 				method= "#arguments.sMethod#" 
 				result="tokenResponse" >
 				<cfhttpparam type="header" name="accept" value="#arguments.sAccept#">
+				<cfhttpparam type="header" name="Content-Type" value="#arguments.sAccept#">
 				<cfif len(arguments.sIfModifiedSince)>
 					<cfhttpparam type="header" name="If-Modified-Since" value="#DateFormat(arguments.sIfModifiedSince," YYY-MM-DD")#T#TimeFormat(arguments.sIfModifiedSince,"HH:MM:SS")#">
 				</cfif>

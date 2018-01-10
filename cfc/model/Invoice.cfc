@@ -61,11 +61,17 @@
 
   <cffunction name="toStruct" access="public" output="false">
     <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
-    <cfif len(arguments.exclude) GT 0>
-      <cfset exclude = arguments.exclude>
-    <cfelse>
-      <cfset exclude = "">
-    </cfif>
+    <cfargument name="Only" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+     
+      <cfif len(arguments.exclude) GT 0>
+        <cfset exclude = arguments.exclude>
+      <cfelse>
+        <cfset exclude = "">
+      </cfif>
+
+       <cfif Only EQ "id">
+        <cfset exclude = "Type,Contact,Date,DueDate,Status,LineAmountTypes,LineItems,SubTotal,TotalTax,Total,TotalDiscount,UpdatedDateUTC,CurrencyCode,CurrencyRate,InvoiceNumber,Reference,BrandingThemeID,Url,SentToContact,ExpectedPaymentDate,PlannedPaymentDate,HasAttachments,AmountCredited,AmountDue,AmountPaid,CreditNotes,FullyPaidOnDate,Overpayments,Payments,Prepayments">
+      </cfif>
 
       <cfscript>
         myStruct=StructNew();
@@ -531,20 +537,31 @@
    * @return LineItems
   --->
   <cffunction name="getLineItems" access="public" output="false" hint="I return the LineItems">
+
+    <cfset var lines = variables.instance.Lineitems>
+    <cfscript>
+            var arr = ArrayNew(1);
+            for (var i=1;i LTE ArrayLen(lines);i=i+1) {
+              ArrayAppend(arr,lines[i].toStruct());
+            }
+    </cfscript>
+    <cfreturn arr />
+    <!--- OLD
     <cfreturn variables.instance.LineItems />
+  --->
   </cffunction>
 
   <cffunction name="setLineItems" access="public"  output="false" hint="I set the LineItems into the variables.instance scope.">
     <cfargument name="LineItems" type="array" hint="I am the LineItems." />
-			<cfscript>
-		        var arr = ArrayNew(1);
-		        for (var i=1;i LTE ArrayLen(arguments.LineItems);i=i+1) {
-		          var item=createObject("component","cfc.model.LineItem").init().populate(arguments.LineItems[i]); 
-		          ArrayAppend(arr,item.toStruct());
-		        }
-		      </cfscript>
-		      <cfset variables.instance.LineItems = arr />
-		
+		   <cfscript>
+            var arr = ArrayNew(1);
+            for (var i=1;i LTE ArrayLen(arguments.Lineitems);i=i+1) {
+              var item=createObject("component","cfc.model.Lineitem").init().populate(arguments.Lineitems[i]); 
+              ArrayAppend(arr,item);
+            }
+      </cfscript>
+      <cfset variables.instance.Lineitems = arr />
+
   </cffunction>
 
   <!---

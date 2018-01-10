@@ -40,9 +40,21 @@
   </cffunction>
 
   <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="Only" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+      <cfif len(arguments.exclude) GT 0>
+        <cfset exclude = arguments.exclude>
+      <cfelse>
+        <cfset exclude = "">
+      </cfif>
+
+      <cfif Only EQ "id">
+        <cfset exclude = "Description,Quantity,UnitAmount,ItemCode,AccountCode,TaxType,TaxAmount,LineAmount,Tracking,DiscountRate,RepeatingInvoiceID">
+      </cfif>
+
         <cfscript>
           myStruct=StructNew();
-          myStruct=this.toJSON(returnType="struct");
+          myStruct=this.toJSON(exclude=exclude,returnType="struct");
         </cfscript>
     <cfreturn myStruct />
   </cffunction>
@@ -414,5 +426,6 @@
 </cffunction>
 
 </cfcomponent>   
+
 
 

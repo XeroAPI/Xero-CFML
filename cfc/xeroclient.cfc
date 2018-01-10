@@ -1,5 +1,5 @@
 
-<cfcomponent displayname="xeroclient" output="true">
+<cfcomponent displayname="xeroclient">
 
 	<cffunction name="init" returntype="xeroclient" output="true">
 		<cfreturn this>
@@ -42,7 +42,7 @@
 		<cfset variables.parameters = arguments.parameters />
 	</cffunction>
 
-	<cffunction name="get" access="public" returntype="array">
+	<cffunction name="get" access="public" >
 		<cfargument name="endpoint"  type="string" default="">
 		<cfargument name="ifModifiedSince"  type="string" default="">
 		<cfargument name="accept"  type="string" default="application/json">
@@ -63,7 +63,7 @@
 			<cfif len(childId) GT 0>
 				<cfset resource = resource & "/" & childId>
 			</cfif>
-		</cfif>s
+		</cfif>
 		
 		<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
@@ -74,6 +74,10 @@
 			sMethod = "GET",
 			sIfModifiedSince = arguments.ifModifiedSince)>
 
+		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
+			<cfdump var='#oRequestResult["RESPONSE"]#' abort>
+		</cfif>
+
 		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
 
 		<cfif structKeyExists(rawResult,"ErrorNumber")>
@@ -83,6 +87,7 @@
 		<cfset variables.ArrayResult = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
 
 		<cfreturn variables.ArrayResult>
+	
 	</cffunction>
 
 	<cffunction name="put" access="public" returntype="array">
@@ -116,6 +121,7 @@
 			sAccept = arguments.accept,
 			sMethod = "PUT",
 			sBody = arguments.body)>
+
 		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
 
 		<cfif structKeyExists(rawResult,"ErrorNumber")>
@@ -184,7 +190,7 @@
 			sAccept = arguments.accept,
 			sMethod = "DELETE",
 			sBody = arguments.body)>
-		
+
 		<cfif len(oRequestResult["RESPONSE"]) GT 0 >
 			<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
 			<cfif structKeyExists(rawResult,"ErrorNumber")>
@@ -192,7 +198,13 @@
 			</cfif>
 
 			<cfif isJSON(variables.oRequestResult["RESPONSE"])>
-				<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
+				<cfif StructKeyExists(rawResult,arguments.endpoint)>
+					<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
+				<cfelseif StructKeyExists(rawResult,arguments.child)>
+					<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.child]>
+				<cfelse>
+					<cfdump var="#rawResult#" abort>
+				</cfif>
 			<cfelse>
 				<cfset variables.result = this.toJSON()>
 			</cfif>

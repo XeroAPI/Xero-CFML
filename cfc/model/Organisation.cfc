@@ -31,7 +31,7 @@
   <cfproperty name="Addresses" type="array" default="" />
   <cfproperty name="Phones" type="array" default="" />
   <cfproperty name="ExternalLinks" type="array" default="" />
-  <cfproperty name="PaymentTerms" type="array" default="" />
+  <cfproperty name="PaymentTerms" type="Struct" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -264,7 +264,7 @@
         if (structKeyExists(obj,"PaysTax")) {
           setPaysTax(obj.PaysTax);
         } else {
-          setPaysTax("");
+          setPaysTax(false);
         }
         if (structKeyExists(obj,"Version")) {
           setVersion(obj.Version);
@@ -289,7 +289,7 @@
         if (structKeyExists(obj,"IsDemoCompany")) {
           setIsDemoCompany(obj.IsDemoCompany);
         } else {
-          setIsDemoCompany("");
+          setIsDemoCompany(false);
         }
         if (structKeyExists(obj,"OrganisationStatus")) {
           setOrganisationStatus(obj.OrganisationStatus);
@@ -389,7 +389,7 @@
         if (structKeyExists(obj,"PaymentTerms")) {
           setPaymentTerms(obj.PaymentTerms);
         } else {
-          setPaymentTerms("");
+          setPaymentTerms(StructNew());
         }
       </cfscript>
       
@@ -399,6 +399,11 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="Organisations"))>
+
+      <cfset var ArrayResult = this.get(endpoint="Organisations")>
+      <cfscript>
+        this.populate(ArrayResult[1]);
+      </cfscript>
     <cfreturn this>
   </cffunction>
 
@@ -869,7 +874,7 @@
   </cffunction>
 
   <cffunction name="setPaymentTerms" access="public"  output="false" hint="I set the PaymentTerms into the variables.instance scope.">
-    <cfargument name="PaymentTerms" type="array" hint="I am the PaymentTerms." />
+    <cfargument name="PaymentTerms" type="Struct" hint="I am the PaymentTerms." />
       <cfset variables.instance.PaymentTerms = arguments.PaymentTerms />
   </cffunction>
 
@@ -882,4 +887,5 @@
 </cffunction>
 
 </cfcomponent>   
+
 

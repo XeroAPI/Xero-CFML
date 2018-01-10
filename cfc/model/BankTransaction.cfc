@@ -297,6 +297,7 @@
   </cffunction>
 
   <cffunction name="create" access="public" output="false">
+
     <cfset variables.result = Super.put(endpoint="BankTransactions",body=this.toJSON())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
@@ -389,12 +390,41 @@
    * @return Lineitems
   --->
   <cffunction name="getLineitems" access="public" output="false" hint="I return the Lineitems">
+
+    <cfset var lines = variables.instance.Lineitems>
+    <cfset var exclude = "">
+    <cfif this.getType() EQ "RECEIVE-OVERPAYMENT" OR this.getType() EQ "RECEIVE-PREPAYMENT">
+      <cfset exclude = "ItemCode,Quantity,TaxAmount,TaxType,Tracking,DiscountRate,LineAmount,RepeatingInvoiceID">
+    </cfif>
+    <cfscript>
+        var arr = ArrayNew(1);
+        for (var i=1;i LTE ArrayLen(lines);i=i+1) {
+          ArrayAppend(arr,lines[i].toStruct(exclude=exclude));
+        }
+    </cfscript>
+
+    <cfreturn arr />
+
+
+    <!--- OLD 
     <cfreturn variables.instance.Lineitems />
+  --->
   </cffunction>
 
   <cffunction name="setLineitems" access="public"  output="false" hint="I set the Lineitems into the variables.instance scope.">
     <cfargument name="Lineitems" type="array" hint="I am the Lineitems." />
+       <cfscript>
+            var arr = ArrayNew(1);
+            for (var i=1;i LTE ArrayLen(arguments.Lineitems);i=i+1) {
+              var item=createObject("component","cfc.model.Lineitem").init().populate(arguments.Lineitems[i]); 
+              ArrayAppend(arr,item);
+            }
+      </cfscript>
+      <cfset variables.instance.Lineitems = arr />
+
+      <!---
       <cfset variables.instance.Lineitems = arguments.Lineitems />
+    --->
   </cffunction>
 
   <!---

@@ -14,7 +14,7 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the User Class.">
-      
+      <cfset populate(StructNew())>
     <cfreturn this />
   </cffunction>
 
@@ -35,53 +35,77 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.UserID=getUserID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"UserID")) {
-            if (NOT listFindNoCase(arguments.exclude, "UserID")) {
-              myStruct.UserID=getUserID();
+            if (structKeyExists(variables.instance,"UserID")) {
+              if (NOT listFindNoCase(arguments.exclude, "UserID")) {
+                myStruct.UserID=getUserID();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"EmailAddress")) {
-            if (NOT listFindNoCase(arguments.exclude, "EmailAddress")) {
-              myStruct.EmailAddress=getEmailAddress();
+            if (structKeyExists(variables.instance,"EmailAddress")) {
+              if (NOT listFindNoCase(arguments.exclude, "EmailAddress")) {
+                myStruct.EmailAddress=getEmailAddress();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"FirstName")) {
-            if (NOT listFindNoCase(arguments.exclude, "FirstName")) {
-              myStruct.FirstName=getFirstName();
+            if (structKeyExists(variables.instance,"FirstName")) {
+              if (NOT listFindNoCase(arguments.exclude, "FirstName")) {
+                myStruct.FirstName=getFirstName();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"LastName")) {
-            if (NOT listFindNoCase(arguments.exclude, "LastName")) {
-              myStruct.LastName=getLastName();
+            if (structKeyExists(variables.instance,"LastName")) {
+              if (NOT listFindNoCase(arguments.exclude, "LastName")) {
+                myStruct.LastName=getLastName();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
-            if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-              myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+            if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
+              if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
+                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"IsSubscriber")) {
-            if (NOT listFindNoCase(arguments.exclude, "IsSubscriber")) {
-              myStruct.IsSubscriber=getIsSubscriber();
+            if (structKeyExists(variables.instance,"IsSubscriber")) {
+              if (NOT listFindNoCase(arguments.exclude, "IsSubscriber")) {
+                myStruct.IsSubscriber=getIsSubscriber();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"OrganisationRole")) {
-            if (NOT listFindNoCase(arguments.exclude, "OrganisationRole")) {
-              myStruct.OrganisationRole=getOrganisationRole();
+            if (structKeyExists(variables.instance,"OrganisationRole")) {
+              if (NOT listFindNoCase(arguments.exclude, "OrganisationRole")) {
+                myStruct.OrganisationRole=getOrganisationRole();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -118,7 +142,7 @@
         if (structKeyExists(obj,"IsSubscriber")) {
           setIsSubscriber(obj.IsSubscriber);
         } else {
-          setIsSubscriber("");
+          setIsSubscriber(false);
         }
         if (structKeyExists(obj,"OrganisationRole")) {
           setOrganisationRole(obj.OrganisationRole);
@@ -133,6 +157,7 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="Users"))>
+      <cfset temp = this.populate(StructNew())>
     <cfreturn this>
   </cffunction>
 
@@ -168,7 +193,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Users",body=this.toJSON(),id=this.getUserID())>
+    <cfset variables.result = Super.post(endpoint="Users",body=this.toJSON(archive=true),id=this.getUserID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -306,3 +331,4 @@
 </cffunction>
 
 </cfcomponent>   
+

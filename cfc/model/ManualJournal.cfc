@@ -12,7 +12,7 @@
   <cfproperty name="ShowOnCashBasisReports" type="Boolean" default="" />
   <cfproperty name="HasAttachments" type="Boolean" default="" />
   <cfproperty name="UpdatedDateUTC" type="String" default="" />
-  <cfproperty name="JournalID" type="String" default="" />
+  <cfproperty name="ManualJournalID" type="String" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -38,68 +38,90 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.ManualJournalID=getManualJournalID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"Narration")) {
-            if (NOT listFindNoCase(arguments.exclude, "Narration")) {
-              myStruct.Narration=getNarration();
+            if (structKeyExists(variables.instance,"Narration")) {
+              if (NOT listFindNoCase(arguments.exclude, "Narration")) {
+                myStruct.Narration=getNarration();
+              }
+            }
+            if (structKeyExists(variables.instance,"JournalLines")) {
+              if (NOT listFindNoCase(arguments.exclude, "JournalLines")) {
+                myStruct.JournalLines=getJournalLines();
+              }
+            }
+            if (structKeyExists(variables.instance,"Date")) {
+              if (NOT listFindNoCase(arguments.exclude, "Date")) {
+                myStruct.Date=getDate();
+              }
+            }
+            if (structKeyExists(variables.instance,"LineAmountTypes")) {
+              if (NOT listFindNoCase(arguments.exclude, "LineAmountTypes")) {
+                myStruct.LineAmountTypes=getLineAmountTypes();
+              }
+            }
+            if (structKeyExists(variables.instance,"Status")) {
+              if (NOT listFindNoCase(arguments.exclude, "Status")) {
+                myStruct.Status=getStatus();
+              }
+            }
+            if (structKeyExists(variables.instance,"Url")) {
+              if (NOT listFindNoCase(arguments.exclude, "Url")) {
+                if(len(getUrl()) GT 0) {
+                  myStruct.Url=getUrl();
+                }
+              }
+            }
+            if (structKeyExists(variables.instance,"ShowOnCashBasisReports")) {
+              if (NOT listFindNoCase(arguments.exclude, "ShowOnCashBasisReports")) {
+                myStruct.ShowOnCashBasisReports=getShowOnCashBasisReports();
+              }
+            }
+            if (structKeyExists(variables.instance,"HasAttachments")) {
+              if (NOT listFindNoCase(arguments.exclude, "HasAttachments")) {
+                myStruct.HasAttachments=getHasAttachments();
+              }
+            }
+            if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
+              if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
+                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+              }
             }
           }
-          if (structKeyExists(variables.instance,"JournalLines")) {
-            if (NOT listFindNoCase(arguments.exclude, "JournalLines")) {
-              myStruct.JournalLines=getJournalLines();
-            }
-          }
-          if (structKeyExists(variables.instance,"Date")) {
-            if (NOT listFindNoCase(arguments.exclude, "Date")) {
-              myStruct.Date=getDate();
-            }
-          }
-          if (structKeyExists(variables.instance,"LineAmountTypes")) {
-            if (NOT listFindNoCase(arguments.exclude, "LineAmountTypes")) {
-              myStruct.LineAmountTypes=getLineAmountTypes();
-            }
-          }
-          if (structKeyExists(variables.instance,"Status")) {
-            if (NOT listFindNoCase(arguments.exclude, "Status")) {
-              myStruct.Status=getStatus();
-            }
-          }
-          if (structKeyExists(variables.instance,"Url")) {
-            if (NOT listFindNoCase(arguments.exclude, "Url")) {
-              myStruct.Url=getUrl();
-            }
-          }
-          if (structKeyExists(variables.instance,"ShowOnCashBasisReports")) {
-            if (NOT listFindNoCase(arguments.exclude, "ShowOnCashBasisReports")) {
-              myStruct.ShowOnCashBasisReports=getShowOnCashBasisReports();
-            }
-          }
-          if (structKeyExists(variables.instance,"HasAttachments")) {
-            if (NOT listFindNoCase(arguments.exclude, "HasAttachments")) {
-              myStruct.HasAttachments=getHasAttachments();
-            }
-          }
-          if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
-            if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-              myStruct.UpdatedDateUTC=getUpdatedDateUTC();
-            }
-          }
-          if (structKeyExists(variables.instance,"JournalID")) {
-            if (NOT listFindNoCase(arguments.exclude, "JournalID")) {
-              myStruct.JournalID=getJournalID();
-            }
-          }
+
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -141,7 +163,7 @@
         if (structKeyExists(obj,"ShowOnCashBasisReports")) {
           setShowOnCashBasisReports(obj.ShowOnCashBasisReports);
         } else {
-          setShowOnCashBasisReports("");
+          setShowOnCashBasisReports(false);
         }
         if (structKeyExists(obj,"HasAttachments")) {
           setHasAttachments(obj.HasAttachments);
@@ -153,10 +175,10 @@
         } else {
           setUpdatedDateUTC("");
         }
-        if (structKeyExists(obj,"JournalID")) {
-          setJournalID(obj.JournalID);
+        if (structKeyExists(obj,"ManualJournalID")) {
+          setManualJournalID(obj.ManualJournalID);
         } else {
-          setJournalID("");
+          setManualJournalID("");
         }
       </cfscript>
       
@@ -166,6 +188,7 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="ManualJournals"))>
+      <cfset temp = this.populate(StructNew())>
     <cfreturn this>
   </cffunction>
 
@@ -201,7 +224,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="ManualJournals",body=this.toJSON(),id=this.getManualJournalID())>
+    <cfset variables.result = Super.post(endpoint="ManualJournals",body=this.toJSON(archive=true),id=this.getManualJournalID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -257,20 +280,28 @@
    * @return JournalLines
   --->
   <cffunction name="getJournalLines" access="public" output="false" hint="I return the JournalLines">
-    <cfreturn variables.instance.JournalLines />
+    
+    <cfset var lines = variables.instance.JournalLines>
+    <cfscript>
+        var arr = ArrayNew(1);
+        for (var i=1;i LTE ArrayLen(lines);i=i+1) {
+          ArrayAppend(arr,lines[i].toStruct());
+        }
+    </cfscript>
+    <cfreturn arr />
   </cffunction>
 
   <cffunction name="setJournalLines" access="public"  output="false" hint="I set the JournalLines into the variables.instance scope.">
     <cfargument name="JournalLines" type="array" hint="I am the JournalLines." />
-			<cfscript>
-		        var arr = ArrayNew(1);
+			
+      <cfscript>
+            var arr = ArrayNew(1);
 		        for (var i=1;i LTE ArrayLen(arguments.JournalLines);i=i+1) {
 		          var item=createObject("component","cfc.model.JournalLine").init().populate(arguments.JournalLines[i]); 
 		          ArrayAppend(arr,item);
 		        }
-		      </cfscript>
-		      <cfset variables.instance.JournalLines = arr />
-		
+		  </cfscript>
+		  <cfset variables.instance.JournalLines = arr />
   </cffunction>
 
   <!---
@@ -368,13 +399,13 @@
    * The Xero identifier for a Manual Journal
    * @return JournalID
   --->
-  <cffunction name="getJournalID" access="public" output="false" hint="I return the JournalID">
-    <cfreturn variables.instance.JournalID />
+  <cffunction name="getManualJournalID" access="public" output="false" hint="I return the ManualJournalID">
+    <cfreturn variables.instance.ManualJournalID />
   </cffunction>
 
-  <cffunction name="setJournalID" access="public"  output="false" hint="I set the JournalID into the variables.instance scope.">
-    <cfargument name="JournalID" type="String" hint="I am the JournalID." />
-      <cfset variables.instance.JournalID = arguments.JournalID />
+  <cffunction name="setManualJournalID" access="public"  output="false" hint="I set the ManualJournalID into the variables.instance scope.">
+    <cfargument name="ManualJournalID" type="String" hint="I am the ManualJournalID." />
+      <cfset variables.instance.ManualJournalID = arguments.ManualJournalID />
   </cffunction>
 
 

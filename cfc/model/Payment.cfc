@@ -3,16 +3,21 @@
 
 <!--- PROPERTIES --->
 
+  <cfproperty name="Invoice" type="Struct" default="" />
+  <cfproperty name="CreditNote" type="Struct" default="" />
+  <cfproperty name="Prepayment" type="Struct" default="" />
+  <cfproperty name="Overpayment" type="Struct" default="" />
   <cfproperty name="InvoiceNumber" type="String" default="" />
   <cfproperty name="CreditNoteNumber" type="String" default="" />
+  <cfproperty name="Account" type="Struct" default="" />
   <cfproperty name="Code" type="String" default="" />
   <cfproperty name="Date" type="String" default="" />
   <cfproperty name="CurrencyRate" type="String" default="" />
   <cfproperty name="Amount" type="String" default="" />
   <cfproperty name="Reference" type="String" default="" />
   <cfproperty name="IsReconciled" type="String" default="" />
-  <cfproperty name="Status" type="StatusEnum" default="" />
-  <cfproperty name="PaymentType" type="PaymentTypeEnum" default="" />
+  <cfproperty name="Status" type="String" default="" />
+  <cfproperty name="PaymentType" type="String" default="" />
   <cfproperty name="UpdatedDateUTC" type="String" default="" />
   <cfproperty name="PaymentID" type="String" default="" />
 
@@ -40,78 +45,127 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.PaymentID=getPaymentID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"InvoiceNumber")) {
-            if (NOT listFindNoCase(arguments.exclude, "InvoiceNumber")) {
-              myStruct.InvoiceNumber=getInvoiceNumber();
+            if (structKeyExists(variables.instance,"Invoice")) {
+              if (NOT listFindNoCase(arguments.exclude, "Invoice")) {
+                myStruct.Invoice=getInvoice();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CreditNoteNumber")) {
-            if (NOT listFindNoCase(arguments.exclude, "CreditNoteNumber")) {
-              myStruct.CreditNoteNumber=getCreditNoteNumber();
+            if (structKeyExists(variables.instance,"CreditNote")) {
+              if (NOT listFindNoCase(arguments.exclude, "CreditNote")) {
+                myStruct.CreditNote=getCreditNote();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Code")) {
-            if (NOT listFindNoCase(arguments.exclude, "Code")) {
-              myStruct.Code=getCode();
+            if (structKeyExists(variables.instance,"Prepayment")) {
+              if (NOT listFindNoCase(arguments.exclude, "Prepayment")) {
+                myStruct.Prepayment=getPrepayment();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Date")) {
-            if (NOT listFindNoCase(arguments.exclude, "Date")) {
-              myStruct.Date=getDate();
+            if (structKeyExists(variables.instance,"Overpayment")) {
+              if (NOT listFindNoCase(arguments.exclude, "Overpayment")) {
+                myStruct.Overpayment=getOverpayment();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"CurrencyRate")) {
-            if (NOT listFindNoCase(arguments.exclude, "CurrencyRate")) {
-              myStruct.CurrencyRate=getCurrencyRate();
+            if (structKeyExists(variables.instance,"InvoiceNumber")) {
+              if (NOT listFindNoCase(arguments.exclude, "InvoiceNumber")) {
+                myStruct.InvoiceNumber=getInvoiceNumber();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Amount")) {
-            if (NOT listFindNoCase(arguments.exclude, "Amount")) {
-              myStruct.Amount=getAmount();
+            if (structKeyExists(variables.instance,"CreditNoteNumber")) {
+              if (NOT listFindNoCase(arguments.exclude, "CreditNoteNumber")) {
+                myStruct.CreditNoteNumber=getCreditNoteNumber();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Reference")) {
-            if (NOT listFindNoCase(arguments.exclude, "Reference")) {
-              myStruct.Reference=getReference();
+            if (structKeyExists(variables.instance,"Account")) {
+              if (NOT listFindNoCase(arguments.exclude, "Account")) {
+                myStruct.Account=getAccount();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"IsReconciled")) {
-            if (NOT listFindNoCase(arguments.exclude, "IsReconciled")) {
-              myStruct.IsReconciled=getIsReconciled();
+            if (structKeyExists(variables.instance,"Code")) {
+              if (NOT listFindNoCase(arguments.exclude, "Code")) {
+                myStruct.Code=getCode();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Status")) {
-            if (NOT listFindNoCase(arguments.exclude, "Status")) {
-              myStruct.Status=getStatus();
+            if (structKeyExists(variables.instance,"Date")) {
+              if (NOT listFindNoCase(arguments.exclude, "Date")) {
+                myStruct.Date=getDate();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"PaymentType")) {
-            if (NOT listFindNoCase(arguments.exclude, "PaymentType")) {
-              myStruct.PaymentType=getPaymentType();
+            if (structKeyExists(variables.instance,"CurrencyRate")) {
+              if (NOT listFindNoCase(arguments.exclude, "CurrencyRate")) {
+                myStruct.CurrencyRate=getCurrencyRate();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
-            if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-              myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+            if (structKeyExists(variables.instance,"Amount")) {
+              if (NOT listFindNoCase(arguments.exclude, "Amount")) {
+                myStruct.Amount=getAmount();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"PaymentID")) {
-            if (NOT listFindNoCase(arguments.exclude, "PaymentID")) {
-              myStruct.PaymentID=getPaymentID();
+            if (structKeyExists(variables.instance,"Reference")) {
+              if (NOT listFindNoCase(arguments.exclude, "Reference")) {
+                myStruct.Reference=getReference();
+              }
+            }
+            if (structKeyExists(variables.instance,"IsReconciled")) {
+              if (NOT listFindNoCase(arguments.exclude, "IsReconciled")) {
+                myStruct.IsReconciled=getIsReconciled();
+              }
+            }
+            if (structKeyExists(variables.instance,"Status")) {
+              if (NOT listFindNoCase(arguments.exclude, "Status")) {
+                myStruct.Status=getStatus();
+              }
+            }
+            if (structKeyExists(variables.instance,"PaymentType")) {
+              if (NOT listFindNoCase(arguments.exclude, "PaymentType")) {
+                myStruct.PaymentType=getPaymentType();
+              }
+            }
+            if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
+              if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
+                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+              }
+            }
+            if (structKeyExists(variables.instance,"PaymentID")) {
+              if (NOT listFindNoCase(arguments.exclude, "PaymentID")) {
+                myStruct.PaymentID=getPaymentID();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -120,6 +174,26 @@
         <cfset obj = arguments.objects>
         <cfscript>
 
+        if (structKeyExists(obj,"Invoice")) {
+          setInvoice(obj.Invoice);
+        } else {
+          setInvoice(StructNew());
+        }
+        if (structKeyExists(obj,"CreditNote")) {
+          setCreditNote(obj.CreditNote);
+        } else {
+          setCreditNote(StructNew());
+        }
+        if (structKeyExists(obj,"Prepayment")) {
+          setPrepayment(obj.Prepayment);
+        } else {
+          setPrepayment(StructNew());
+        }
+        if (structKeyExists(obj,"Overpayment")) {
+          setOverpayment(obj.Overpayment);
+        } else {
+          setOverpayment(StructNew());
+        }
         if (structKeyExists(obj,"InvoiceNumber")) {
           setInvoiceNumber(obj.InvoiceNumber);
         } else {
@@ -129,6 +203,11 @@
           setCreditNoteNumber(obj.CreditNoteNumber);
         } else {
           setCreditNoteNumber("");
+        }
+        if (structKeyExists(obj,"Account")) {
+          setAccount(obj.Account);
+        } else {
+          setAccount(StructNew());
         }
         if (structKeyExists(obj,"Code")) {
           setCode(obj.Code);
@@ -188,6 +267,7 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="Payments"))>
+      <cfset temp = this.populate(StructNew())>
     <cfreturn this>
   </cffunction>
 
@@ -212,29 +292,10 @@
     <cfreturn this />
   </cffunction>
 
-  <cffunction name="update" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Payments",body=this.toJSON(),id=this.getPaymentID())>
-    
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
-
-    <cfreturn this />
-  </cffunction>
-
-  <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Payments",body=this.toJSON(),id=this.getPaymentID())>
-    
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
-
-    <cfreturn this />
-  </cffunction>
-
   <cffunction name="delete" access="public" output="false">
-    <cfset variables.result = Super.delete(endpoint="Payments",body=this.toJSON(),id=this.getPaymentID())>
-    
+    <cfset this.setStatus("DELETED")>
+    <cfset variables.result = Super.post(endpoint="Payments",body=this.toJSON(archive="true"),id=this.getPaymentID())>
+   
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
     </cfloop>
@@ -262,6 +323,58 @@
 <!--- GETTER / SETTER  --->
 
   <!---
+   * See Invoice
+   * @return Invoice
+  --->
+  <cffunction name="getInvoice" access="public" output="false" hint="I return the Invoice">
+    <cfreturn variables.instance.Invoice />
+  </cffunction>
+
+  <cffunction name="setInvoice" access="public"  output="false" hint="I set the Invoice into the variables.instance scope.">
+    <cfargument name="Invoice" type="Struct" hint="I am the Invoice." />
+      <cfset variables.instance.Invoice = arguments.Invoice />
+  </cffunction>
+
+  <!---
+   * See CreditNotes
+   * @return CreditNote
+  --->
+  <cffunction name="getCreditNote" access="public" output="false" hint="I return the CreditNote">
+    <cfreturn variables.instance.CreditNote />
+  </cffunction>
+
+  <cffunction name="setCreditNote" access="public"  output="false" hint="I set the CreditNote into the variables.instance scope.">
+    <cfargument name="CreditNote" type="Struct" hint="I am the CreditNote." />
+      <cfset variables.instance.CreditNote = arguments.CreditNote />
+  </cffunction>
+
+  <!---
+   * See Prepayment
+   * @return Prepayment
+  --->
+  <cffunction name="getPrepayment" access="public" output="false" hint="I return the Prepayment">
+    <cfreturn variables.instance.Prepayment />
+  </cffunction>
+
+  <cffunction name="setPrepayment" access="public"  output="false" hint="I set the Prepayment into the variables.instance scope.">
+    <cfargument name="Prepayment" type="Struct" hint="I am the Prepayment." />
+      <cfset variables.instance.Prepayment = arguments.Prepayment />
+  </cffunction>
+
+  <!---
+   * See Overpayment
+   * @return Overpayment
+  --->
+  <cffunction name="getOverpayment" access="public" output="false" hint="I return the Overpayment">
+    <cfreturn variables.instance.Overpayment />
+  </cffunction>
+
+  <cffunction name="setOverpayment" access="public"  output="false" hint="I set the Overpayment into the variables.instance scope.">
+    <cfargument name="Overpayment" type="Struct" hint="I am the Overpayment." />
+      <cfset variables.instance.Overpayment = arguments.Overpayment />
+  </cffunction>
+
+  <!---
    * Number of invoice or credit note you are applying payment to e.g. INV-4003
    * @return InvoiceNumber
   --->
@@ -285,6 +398,19 @@
   <cffunction name="setCreditNoteNumber" access="public"  output="false" hint="I set the CreditNoteNumber into the variables.instance scope.">
     <cfargument name="CreditNoteNumber" type="String" hint="I am the CreditNoteNumber." />
       <cfset variables.instance.CreditNoteNumber = arguments.CreditNoteNumber />
+  </cffunction>
+
+  <!---
+   * See Account
+   * @return Account
+  --->
+  <cffunction name="getAccount" access="public" output="false" hint="I return the Account">
+    <cfreturn variables.instance.Account />
+  </cffunction>
+
+  <cffunction name="setAccount" access="public"  output="false" hint="I set the Account into the variables.instance scope.">
+    <cfargument name="Account" type="Struct" hint="I am the Account." />
+      <cfset variables.instance.Account = arguments.Account />
   </cffunction>
 
   <!---
@@ -374,7 +500,7 @@
   </cffunction>
 
   <cffunction name="setStatus" access="public"  output="false" hint="I set the Status into the variables.instance scope.">
-    <cfargument name="Status" type="StatusEnum" hint="I am the Status." />
+    <cfargument name="Status" type="String" hint="I am the Status." />
       <cfset variables.instance.Status = arguments.Status />
   </cffunction>
 
@@ -387,7 +513,7 @@
   </cffunction>
 
   <cffunction name="setPaymentType" access="public"  output="false" hint="I set the PaymentType into the variables.instance scope.">
-    <cfargument name="PaymentType" type="PaymentTypeEnum" hint="I am the PaymentType." />
+    <cfargument name="PaymentType" type="String" hint="I am the PaymentType." />
       <cfset variables.instance.PaymentType = arguments.PaymentType />
   </cffunction>
 
@@ -426,3 +552,4 @@
 </cffunction>
 
 </cfcomponent>   
+

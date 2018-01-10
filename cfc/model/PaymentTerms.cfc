@@ -1,15 +1,14 @@
-<cfcomponent displayname="BankAccount" output="false" extends="cfc.xeroclient"
-  hint="I am the BankAccount Class.">
+<cfcomponent displayname="PaymentTerms" output="false" extends="cfc.xeroclient"
+  hint="I am the PaymentTerms Class.">
 
 <!--- PROPERTIES --->
 
-  <cfproperty name="Code" type="String" default="" />
-  <cfproperty name="AccountID" type="String" default="" />
-  <cfproperty name="Name" type="String" default="" />
+  <cfproperty name="Bills" type="List[PaymentTerm]" default="" />
+  <cfproperty name="Sales" type="List[PaymentTerm]" default="" />
 
-  <!--- INIT --->
+<!--- INIT --->
   <cffunction name="init" access="public" output="false"
-    returntype="any" hint="I am the constructor method for the BankAccount Class.">
+    returntype="any" hint="I am the constructor method for the PaymentTerms Class.">
       
     <cfreturn this />
   </cffunction>
@@ -33,29 +32,16 @@
 
   <cffunction name="toStruct" access="public" output="false">
     <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
-    <cfargument name="Only" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
-     
-      <cfif len(arguments.exclude) GT 0>
-        <cfset exclude = arguments.exclude>
-      <cfelse>
-        <cfset exclude = "">
-      </cfif>
-
-       <cfif Only EQ "id">
-        <cfset exclude = "Code,Name">
-      </cfif>
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
 
       <cfscript>
         myStruct=StructNew();
         myStruct=this.toJSON(exclude=exclude,returnType="struct");
       </cfscript>
-    <cfreturn myStruct />
-
-
-        <cfscript>
-          myStruct=StructNew();
-          myStruct=this.toJSON(returnType="struct");
-        </cfscript>
     <cfreturn myStruct />
   </cffunction>
 
@@ -63,27 +49,22 @@
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
      <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
      <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
-    
+     
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.BankAccountID=getBankAccountID();
+            myStruct.PaymentTermsID=getPaymentTermsID();
             myStruct.Status=getStatus();
           } else {
 
-            if (structKeyExists(variables.instance,"Code")) {
-              if (NOT listFindNoCase(arguments.exclude, "Code")) {
-                myStruct.Code=getCode();
+            if (structKeyExists(variables.instance,"Bills")) {
+              if (NOT listFindNoCase(arguments.exclude, "Bills")) {
+                myStruct.Bills=getBills();
               }
             }
-            if (structKeyExists(variables.instance,"AccountID")) {
-              if (NOT listFindNoCase(arguments.exclude, "AccountID")) {
-                myStruct.AccountID=getAccountID();
-              }
-            }
-            if (structKeyExists(variables.instance,"Name")) {
-              if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+            if (structKeyExists(variables.instance,"Sales")) {
+              if (NOT listFindNoCase(arguments.exclude, "Sales")) {
+                myStruct.Sales=getSales();
               }
             }
           }
@@ -103,20 +84,15 @@
         <cfset obj = arguments.objects>
         <cfscript>
 
-        if (structKeyExists(obj,"Code")) {
-          setCode(obj.Code);
+        if (structKeyExists(obj,"Bills")) {
+          setBills(obj.Bills);
         } else {
-          setCode("");
+          setBills("");
         }
-        if (structKeyExists(obj,"AccountID")) {
-          setAccountID(obj.AccountID);
+        if (structKeyExists(obj,"Sales")) {
+          setSales(obj.Sales);
         } else {
-          setAccountID("");
-        }
-        if (structKeyExists(obj,"Name")) {
-          setName(obj.Name);
-        } else {
-          setName("");
+          setSales("");
         }
       </cfscript>
       
@@ -125,21 +101,15 @@
 
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
-      <cfset stParam = StructNew()>
-      <cfset stParam["where"] = 'Type=="BANK"'>
-      <cfset this.setParameters(stParam)>
-    
-      <cfset this.setList(this.get(endpoint="Accounts"))>
-
+      <cfset this.setList(this.get(endpoint="PaymentTermss"))>
       <cfset temp = this.populate(StructNew())>
- 
     <cfreturn this>
   </cffunction>
 
   <cffunction name="getById" access="public" returntype="any">
     <cfargument name="id"  type="string" default="">
     
-    <cfset var ArrayResult = this.get(endpoint="Accounts",id=id)>
+    <cfset var ArrayResult = this.get(endpoint="PaymentTermss",id=id)>
     <cfscript>
       this.populate(ArrayResult[1]);
     </cfscript>
@@ -148,7 +118,7 @@
   </cffunction>
 
   <cffunction name="create" access="public" output="false">
-    <cfset variables.result = Super.put(endpoint="Accounts",body=this.toJSON())>
+    <cfset variables.result = Super.put(endpoint="PaymentTermss",body=this.toJSON())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -158,7 +128,7 @@
   </cffunction>
 
   <cffunction name="update" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Accounts",body=this.toJSON(),id=this.getBankAccountID())>
+    <cfset variables.result = Super.post(endpoint="PaymentTermss",body=this.toJSON(),id=this.getPaymentTermsID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -168,7 +138,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="Accounts",body=this.toJSON(),id=this.getBankAccountID())>
+    <cfset variables.result = Super.post(endpoint="PaymentTermss",body=this.toJSON(archive=true),id=this.getPaymentTermsID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -178,7 +148,7 @@
   </cffunction>
 
   <cffunction name="delete" access="public" output="false">
-    <cfset variables.result = Super.delete(endpoint="Accounts",body=this.toJSON(),id=this.getBankAccountID())>
+    <cfset variables.result = Super.delete(endpoint="PaymentTermss",body=this.toJSON(),id=this.getPaymentTermsID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -195,54 +165,41 @@
     <cfreturn this>
   </cffunction>
 
-  <cffunction name="setList" access="public"  output="false" hint="I set the array of BankAccounts">
+  <cffunction name="setList" access="public"  output="false" hint="I set the array of PaymentTermss">
     <cfargument name="list" type="Array" hint="I am the list." />
       <cfset this.list = arguments.list />
   </cffunction>
 
-  <cffunction name="getList" access="public" output="false" hint="I return the array of BankAccounts">
+  <cffunction name="getList" access="public" output="false" hint="I return the array of PaymentTermss">
     <cfreturn this.list />
   </cffunction>
 
 <!--- GETTER / SETTER  --->
 
   <!---
-   * The Account Code of the Bank Account
-   * @return Code
+   * Default payment terms for bills (accounts payable) - see Payment Terms
+   * @return Bills
   --->
-  <cffunction name="getCode" access="public" output="false" hint="I return the Code">
-    <cfreturn variables.instance.Code />
+  <cffunction name="getBills" access="public" output="false" hint="I return the Bills">
+    <cfreturn variables.instance.Bills />
   </cffunction>
 
-  <cffunction name="setCode" access="public"  output="false" hint="I set the Code into the variables.instance scope.">
-    <cfargument name="Code" type="String" hint="I am the Code." />
-      <cfset variables.instance.Code = arguments.Code />
+  <cffunction name="setBills" access="public"  output="false" hint="I set the Bills into the variables.instance scope.">
+    <cfargument name="Bills" type="List[PaymentTerm]" hint="I am the Bills." />
+      <cfset variables.instance.Bills = arguments.Bills />
   </cffunction>
 
   <!---
-   * The ID of the Bank Account
-   * @return AccountID
+   * Default payment terms for sales invoices(accounts receivable) see Payment Terms
+   * @return Sales
   --->
-  <cffunction name="getAccountID" access="public" output="false" hint="I return the AccountID">
-    <cfreturn variables.instance.AccountID />
+  <cffunction name="getSales" access="public" output="false" hint="I return the Sales">
+    <cfreturn variables.instance.Sales />
   </cffunction>
 
-  <cffunction name="setAccountID" access="public"  output="false" hint="I set the AccountID into the variables.instance scope.">
-    <cfargument name="AccountID" type="String" hint="I am the AccountID." />
-      <cfset variables.instance.AccountID = arguments.AccountID />
-  </cffunction>
-
-  <!---
-   * The Name Bank Account
-   * @return Name
-  --->
-  <cffunction name="getName" access="public" output="false" hint="I return the Name">
-    <cfreturn variables.instance.Name />
-  </cffunction>
-
-  <cffunction name="setName" access="public"  output="false" hint="I set the Name into the variables.instance scope.">
-    <cfargument name="Name" type="String" hint="I am the Name." />
-      <cfset variables.instance.Name = arguments.Name />
+  <cffunction name="setSales" access="public"  output="false" hint="I set the Sales into the variables.instance scope.">
+    <cfargument name="Sales" type="List[PaymentTerm]" hint="I am the Sales." />
+      <cfset variables.instance.Sales = arguments.Sales />
   </cffunction>
 
 
@@ -254,5 +211,3 @@
 </cffunction>
 
 </cfcomponent>   
-
-

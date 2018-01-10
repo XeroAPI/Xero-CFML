@@ -38,68 +38,92 @@
      </cfif>
   </cffunction>
 
+  <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfif len(arguments.exclude) GT 0>
+      <cfset exclude = arguments.exclude>
+    <cfelse>
+      <cfset exclude = "">
+    </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
-    
+     <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
      
         <cfscript>
           myStruct=StructNew();
+          if (archive) {
+            myStruct.LinkedTransactionID=getLinkedTransactionID();
+            myStruct.Status=getStatus();
+          } else {
 
-          if (structKeyExists(variables.instance,"SourceTransactionID")) {
-            if (NOT listFindNoCase(arguments.exclude, "SourceTransactionID")) {
-              myStruct.SourceTransactionID=getSourceTransactionID();
+            if (structKeyExists(variables.instance,"SourceTransactionID")) {
+              if (NOT listFindNoCase(arguments.exclude, "SourceTransactionID")) {
+                myStruct.SourceTransactionID=getSourceTransactionID();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"SourceLineItemID")) {
-            if (NOT listFindNoCase(arguments.exclude, "SourceLineItemID")) {
-              myStruct.SourceLineItemID=getSourceLineItemID();
+            if (structKeyExists(variables.instance,"SourceLineItemID")) {
+              if (NOT listFindNoCase(arguments.exclude, "SourceLineItemID")) {
+                myStruct.SourceLineItemID=getSourceLineItemID();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"ContactID")) {
-            if (NOT listFindNoCase(arguments.exclude, "ContactID")) {
-              myStruct.ContactID=getContactID();
+            if (structKeyExists(variables.instance,"ContactID")) {
+              if (NOT listFindNoCase(arguments.exclude, "ContactID")) {
+                myStruct.ContactID=getContactID();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TargetTransactionID")) {
-            if (NOT listFindNoCase(arguments.exclude, "TargetTransactionID")) {
-              myStruct.TargetTransactionID=getTargetTransactionID();
+            if (structKeyExists(variables.instance,"TargetTransactionID")) {
+              if (NOT listFindNoCase(arguments.exclude, "TargetTransactionID")) {
+                myStruct.TargetTransactionID=getTargetTransactionID();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"TargetLineItemID")) {
-            if (NOT listFindNoCase(arguments.exclude, "TargetLineItemID")) {
-              myStruct.TargetLineItemID=getTargetLineItemID();
+            if (structKeyExists(variables.instance,"TargetLineItemID")) {
+              if (NOT listFindNoCase(arguments.exclude, "TargetLineItemID")) {
+                myStruct.TargetLineItemID=getTargetLineItemID();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"LinkedTransactionID")) {
-            if (NOT listFindNoCase(arguments.exclude, "LinkedTransactionID")) {
-              myStruct.LinkedTransactionID=getLinkedTransactionID();
+            if (structKeyExists(variables.instance,"LinkedTransactionID")) {
+              if (NOT listFindNoCase(arguments.exclude, "LinkedTransactionID")) {
+                myStruct.LinkedTransactionID=getLinkedTransactionID();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Status")) {
-            if (NOT listFindNoCase(arguments.exclude, "Status")) {
-              myStruct.Status=getStatus();
+            if (structKeyExists(variables.instance,"Status")) {
+              if (NOT listFindNoCase(arguments.exclude, "Status")) {
+                myStruct.Status=getStatus();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"Type")) {
-            if (NOT listFindNoCase(arguments.exclude, "Type")) {
-              myStruct.Type=getType();
+            if (structKeyExists(variables.instance,"Type")) {
+              if (NOT listFindNoCase(arguments.exclude, "Type")) {
+                myStruct.Type=getType();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
-            if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-              myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+            if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
+              if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
+                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+              }
             }
-          }
-          if (structKeyExists(variables.instance,"SourceTransactionTypeCode")) {
-            if (NOT listFindNoCase(arguments.exclude, "SourceTransactionTypeCode")) {
-              myStruct.SourceTransactionTypeCode=getSourceTransactionTypeCode();
+            if (structKeyExists(variables.instance,"SourceTransactionTypeCode")) {
+              if (NOT listFindNoCase(arguments.exclude, "SourceTransactionTypeCode")) {
+                myStruct.SourceTransactionTypeCode=getSourceTransactionTypeCode();
+              }
             }
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -201,7 +225,7 @@
   </cffunction>
 
   <cffunction name="archive" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="LinkedTransactions",body=this.toJSON(),id=this.getLinkedTransactionID())>
+    <cfset variables.result = Super.post(endpoint="LinkedTransactions",body=this.toJSON(archive=true),id=this.getLinkedTransactionID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>
@@ -213,9 +237,7 @@
   <cffunction name="delete" access="public" output="false">
     <cfset variables.result = Super.delete(endpoint="LinkedTransactions",body=this.toJSON(),id=this.getLinkedTransactionID())>
     
-    <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
-      <cfset temp = this.populate(variables.result[i])>
-    </cfloop>
+      <cfset temp = this.populate(variables.result)>
 
     <cfreturn this />
   </cffunction>
@@ -378,4 +400,3 @@
 </cffunction>
 
 </cfcomponent>   
-
