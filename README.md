@@ -1,7 +1,7 @@
 Xero-CFML
 =========
 
-CFML wrapper for Xero API - use with CFML application servers.
+CFML SDK for Xero API - use with CFML application servers.
 
 * [Things to note](#things-to-note)
 * [Select an Application Type](#select-an-application-type)
@@ -17,11 +17,11 @@ CFML wrapper for Xero API - use with CFML application servers.
 
 
 ## Select an application type
-Xero's API supports [3 application types] (http://developer.xero.com/documentation/getting-started/api-application-types/). All Xero Apps types supported by this SDK.  Please [review  each type] (http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
+Xero's API supports [3 application types](http://developer.xero.com/documentation/getting-started/api-application-types/). All Xero Apps types supported by this SDK.  Please [review  each type](http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
 
-* [Public] (http://developer.xero.com/documentation/auth-and-limits/public-applications/)
-* [Private] (http://developer.xero.com/documentation/auth-and-limits/private-applications/)
-* [Partner] (http://developer.xero.com/documentation/auth-and-limits/partner-applications/)
+* [Public](http://developer.xero.com/documentation/auth-and-limits/public-applications/)
+* [Private](http://developer.xero.com/documentation/auth-and-limits/private-applications/)
+* [Partner](http://developer.xero.com/documentation/auth-and-limits/partner-applications/)
 
 
 ## Getting Started
@@ -130,7 +130,6 @@ For Public & Parnter Aps you'll use 3 legged oAuth, which involves a RequestToke
 
 ### requesttoken.cfm
 
-
 ```java
 <cfscript>
 
@@ -155,7 +154,6 @@ catch(any e){
 
 ### callback.cfm
 
-
 ```java
 <cfscript>
 
@@ -179,6 +177,10 @@ catch(any e){
 
 
 ## Methods
+
+Each endpoint supports different set of methods - refer to [Xero API Documentation](https://developer.xero.com/documentation/api/api-overview)
+
+Below are examples of the types of methods you can call ....
 
 Reading objects from an endpoint
 
@@ -240,6 +242,66 @@ Delete an object on an endpoint
 ```
 
 
+Archive an object on an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init(); 
+
+  // Set the ID for the Account to Delete
+  account.setAccountID("XXXXXXXXXXXXX");
+  account.archive();
+</cfscript>		
+```
+
+Void an object on an endpoint
+
+```java
+<cfscript>
+  invoice=createObject("component","cfc.model.Invoice").init(); 
+
+  // Set the ID for the Account to Delete
+  invoice.setInvoiceID("XXXXXXXXXXXXX");
+  invoice.void();
+</cfscript>		
+```
+
+
+Add to an object on an endpoint
+
+```java
+<cfscript>
+  trackingcategory=createObject("component","cfc.model.TrackingCategory").init(); 
+
+  // Set the ID for the Tracking Category
+  trackingcategory.setTrackingCategoryID("XXXXXXXXXXXXX");
+ 
+  trackingoption=createObject("component","cfc.model.TrackingOption").init(); 
+  trackingoption.setName("Foobar" &RandRange(1, 10000, "SHA1PRNG"));
+  aTrackingOption = ArrayNew(1);
+  aTrackingOption.append(trackingoption.toStruct());
+
+  // Set the Array for Tracking Options
+  trackingcategory.setOptions(aTrackingOption);
+  trackingcategory.addOptions();
+</cfscript>		
+```
+
+
+Remove from an object on an endpoint
+
+```java
+<cfscript>
+  trackingcategory=createObject("component","cfc.model.TrackingCategory").init(); 	
+
+  // Set the ID for the Tracking Category
+  trackingcategory.setTrackingCategoryID("XXXXXXXXXXXXX");
+ 
+  trackingoptionToDelete=createObject("component","cfc.model.TrackingOption").init().populate(trackingcategory.getOptions()[1]); 	
+  trackingcategory.setOptionId(trackingoptionToDelete.getTrackingOptionId());	
+  trackingcategory.deleteOption();				
+</cfscript>		
+```
 
 
 
