@@ -124,25 +124,123 @@ Customize your callback base URL and callback path to point to the location of e
 
 Point your browser to example/index.cfm and click "Connect to Xero" to begin the authentication flow. 
 
+## OAuth Flow
+
+For Public & Parnter Aps you'll use 3 legged oAuth, which involves a RequestToken Call, then redirecting the user to Xero to select a Xero org, then callback to your server where you'll swap the request token for your 30 min access tokens.
+
+### Request Token
+
+
+```java
+<cfscript>
+
+req=createObject("component","cfc.xero").init(); 
+
+try {
+	req.requestToken();
+	location(req.getAuthorizeUrl());
+}	
+
+catch(any e){
+	if(e.ErrorCode EQ "401") {
+		location("index.cfm?" & e.message);
+	} else {
+		writeDump(e);
+		abort;
+	}
+}
+</cfscript>	
+```
+
+
+### Callback
+
+
+```java
+<cfscript>
+
+res=createObject("component","cfc.xero").init(); 
+
+try {
+	res.accessToken(aCallbackParams = cgi.query_string);
+	location("get.cfm","false");
+}	
+
+catch(any e){
+	if(e.ErrorCode EQ "401") {
+		location("index.cfm?" & e.message);
+	} else {
+		writeDump(e);
+		abort;
+	}
+}
+</cfscript>
+```
+
+
 ## Methods
 
 Reading objects from an endpoint
 
 ```java
 <cfscript>
-	account=createObject("component","cfc.model.Account").init(); 
-	account.getAll();
+  account=createObject("component","cfc.model.Account").init(); 
+  account.getAll();
 	
-	// Get an Array of items as Structs
-	account.getList();
+  // Get an Array of items as Structs
+  account.getList();
 
-	//Get the first item in the Array as an Object
-	account.getObject(1);	
+  //Get the first item in the Array as an Object
+  account.getObject(1);	
 
-	//Get an item by a specific ID
-	account.getById("XXXXXXXXXXXXXXXXX");
+  //Get an item by a specific ID
+  account.getById("XXXXXXXXXXXXXXXXX");
 </cfscript>		
 ```
+
+
+Creating objects on an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init(); 
+
+  account.setName("Dinner");
+  account.setCode("4040");
+  account.setType("CURRENT");
+  account.create();
+</cfscript>		
+```
+
+
+Update an object on an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init(); 
+
+  // Get all objects and set the first one in the Array to update
+  account.getAll().getObject(1);
+  account.setName("Meals");
+  account.update();
+</cfscript>		
+```
+
+
+Delete an object on an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init(); 
+
+  // Set the ID for the Account to Delete
+  account.setAccountID("XXXXXXXXXXXXX");
+  account.delete();
+</cfscript>		
+```
+
+
+
 
 
 
@@ -164,7 +262,7 @@ Thanks to the following Developers and Open Source libraries for making the wrap
 
 This software is published under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 
-	Copyright (c) 2014 Xero Limited
+	Copyright (c) 2014-2018 Xero Limited
 
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
