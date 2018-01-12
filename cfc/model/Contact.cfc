@@ -94,167 +94,233 @@
 
             if (structKeyExists(variables.instance,"ContactID")) {
               if (NOT listFindNoCase(arguments.exclude, "ContactID")) {
-                myStruct.ContactID=getContactID();
+                if (len(variables.instance.ContactID) GT 0) {
+                  myStruct.ContactID=getContactID();
+                }
               }
             }
             if (structKeyExists(variables.instance,"ContactNumber")) {
               if (NOT listFindNoCase(arguments.exclude, "ContactNumber")) {
-                myStruct.ContactNumber=getContactNumber();
+                if (len(variables.instance.ContactNumber) GT 0) {
+                  myStruct.ContactNumber=getContactNumber();
+                }
               }
             }
             if (structKeyExists(variables.instance,"AccountNumber")) {
               if (NOT listFindNoCase(arguments.exclude, "AccountNumber")) {
-                myStruct.AccountNumber=getAccountNumber();
+                if (len(variables.instance.AccountNumber) GT 0) {
+                  myStruct.AccountNumber=getAccountNumber();
+                }
               }
             }
             if (structKeyExists(variables.instance,"ContactStatus")) {
               if (NOT listFindNoCase(arguments.exclude, "ContactStatus")) {
-                myStruct.ContactStatus=getContactStatus();
+                if (len(variables.instance.ContactStatus) GT 0) {
+                  myStruct.ContactStatus=getContactStatus();
+                }
               }
             }
             if (structKeyExists(variables.instance,"Name")) {
               if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+                if (len(variables.instance.Name) GT 0) {
+                  myStruct.Name=getName();
+                }
               }
             }
             if (structKeyExists(variables.instance,"FirstName")) {
               if (NOT listFindNoCase(arguments.exclude, "FirstName")) {
-                myStruct.FirstName=getFirstName();
+                if (len(variables.instance.FirstName) GT 0) {
+                  myStruct.FirstName=getFirstName();
+                }
               }
             }
             if (structKeyExists(variables.instance,"LastName")) {
               if (NOT listFindNoCase(arguments.exclude, "LastName")) {
-                myStruct.LastName=getLastName();
+                if (len(variables.instance.LastName) GT 0) {
+                  myStruct.LastName=getLastName();
+                }
               }
             }
             if (structKeyExists(variables.instance,"EmailAddress")) {
               if (NOT listFindNoCase(arguments.exclude, "EmailAddress")) {
-                myStruct.EmailAddress=getEmailAddress();
+                if (len(variables.instance.EmailAddress) GT 0) {
+                  myStruct.EmailAddress=getEmailAddress();
+                }
               }
             }
             if (structKeyExists(variables.instance,"SkypeUserName")) {
               if (NOT listFindNoCase(arguments.exclude, "SkypeUserName")) {
-                myStruct.SkypeUserName=getSkypeUserName();
+                if (len(variables.instance.SkypeUserName) GT 0) {
+                  myStruct.SkypeUserName=getSkypeUserName();
+                }
               }
             }
             if (structKeyExists(variables.instance,"ContactPersons")) {
               if (NOT listFindNoCase(arguments.exclude, "ContactPersons")) {
-                myStruct.ContactPersons=getContactPersons();
+                if (ArrayLen(variables.instance.ContactPersons) GT 0) {
+                  myStruct.ContactPersons=getContactPersons();
+                }
               }
             }
             if (structKeyExists(variables.instance,"BankAccountDetails")) {
               if (NOT listFindNoCase(arguments.exclude, "BankAccountDetails")) {
-                myStruct.BankAccountDetails=getBankAccountDetails();
+                if (len(variables.instance.BankAccountDetails) GT 0) {
+                  myStruct.BankAccountDetails=getBankAccountDetails();
+                }
               }
             }
             if (structKeyExists(variables.instance,"TaxNumber")) {
               if (NOT listFindNoCase(arguments.exclude, "TaxNumber")) {
-                myStruct.TaxNumber=getTaxNumber();
+                if (len(variables.instance.TaxNumber) GT 0) {
+                  myStruct.TaxNumber=getTaxNumber();
+                }
               }
             }
             if (structKeyExists(variables.instance,"AccountsReceivableTaxType")) {
               if (NOT listFindNoCase(arguments.exclude, "AccountsReceivableTaxType")) {
-                myStruct.AccountsReceivableTaxType=getAccountsReceivableTaxType();
+                if (len(variables.instance.AccountsReceivableTaxType) GT 0) {
+                  myStruct.AccountsReceivableTaxType=getAccountsReceivableTaxType();
+                }
               }
             }
             if (structKeyExists(variables.instance,"AccountsPayableTaxType")) {
               if (NOT listFindNoCase(arguments.exclude, "AccountsPayableTaxType")) {
-                myStruct.AccountsPayableTaxType=getAccountsPayableTaxType();
+                if (len(variables.instance.AccountsPayableTaxType) GT 0) {
+                  myStruct.AccountsPayableTaxType=getAccountsPayableTaxType();
+                }
               }
             }
             if (structKeyExists(variables.instance,"Addresses")) {
               if (NOT listFindNoCase(arguments.exclude, "Addresses")) {
-                myStruct.Addresses=getAddresses();
+                if (ArrayLen(variables.instance.Addresses) GT 0) {
+                  myStruct.Addresses=getAddresses();
+                }
               }
             }
             if (structKeyExists(variables.instance,"Phones")) {
               if (NOT listFindNoCase(arguments.exclude, "Phones")) {
-                myStruct.Phones=getPhones();
+                if (ArrayLen(variables.instance.Phones) GT 0) {
+                  myStruct.Phones=getPhones();
+                }
               }
             }
             if (structKeyExists(variables.instance,"IsSupplier")) {
               if (NOT listFindNoCase(arguments.exclude, "IsSupplier")) {
-                myStruct.IsSupplier=getIsSupplier();
+                if (len(variables.instance.IsSupplier) GT 0) {
+                  myStruct.IsSupplier=getIsSupplier();
+                }
               }
             }
             if (structKeyExists(variables.instance,"IsCustomer")) {
               if (NOT listFindNoCase(arguments.exclude, "IsCustomer")) {
-                myStruct.IsCustomer=getIsCustomer();
+                if (len(variables.instance.IsCustomer) GT 0) {
+                  myStruct.IsCustomer=getIsCustomer();
+                }
               }
             }
             if (structKeyExists(variables.instance,"DefaultCurrency")) {
               if (NOT listFindNoCase(arguments.exclude, "DefaultCurrency")) {
-                myStruct.DefaultCurrency=getDefaultCurrency();
+                if (len(variables.instance.DefaultCurrency) GT 0) {
+                  myStruct.DefaultCurrency=getDefaultCurrency();
+                }
               }
             }
             if (structKeyExists(variables.instance,"XeroNetworkKey")) {
               if (NOT listFindNoCase(arguments.exclude, "XeroNetworkKey")) {
-                myStruct.XeroNetworkKey=getXeroNetworkKey();
+                if (len(variables.instance.XeroNetworkKey) GT 0) {
+                  myStruct.XeroNetworkKey=getXeroNetworkKey();
+                }
               }
             }
             if (structKeyExists(variables.instance,"SalesDefaultAccountCode")) {
               if (NOT listFindNoCase(arguments.exclude, "SalesDefaultAccountCode")) {
-                myStruct.SalesDefaultAccountCode=getSalesDefaultAccountCode();
+                if (len(variables.instance.SalesDefaultAccountCode) GT 0) {
+                  myStruct.SalesDefaultAccountCode=getSalesDefaultAccountCode();
+                }
               }
             }
             if (structKeyExists(variables.instance,"PurchasesDefaultAccountCode")) {
               if (NOT listFindNoCase(arguments.exclude, "PurchasesDefaultAccountCode")) {
-                myStruct.PurchasesDefaultAccountCode=getPurchasesDefaultAccountCode();
+                if (len(variables.instance.PurchasesDefaultAccountCode) GT 0) {
+                  myStruct.PurchasesDefaultAccountCode=getPurchasesDefaultAccountCode();
+                }
               }
             }
             if (structKeyExists(variables.instance,"SalesTrackingCategories")) {
               if (NOT listFindNoCase(arguments.exclude, "SalesTrackingCategories")) {
-                myStruct.SalesTrackingCategories=getSalesTrackingCategories();
+                if (ArrayLen(variables.instance.SalesTrackingCategories) GT 0) {
+                  myStruct.SalesTrackingCategories=getSalesTrackingCategories();
+                }
               }
             }
             if (structKeyExists(variables.instance,"PurchasesTrackingCategories")) {
               if (NOT listFindNoCase(arguments.exclude, "PurchasesTrackingCategories")) {
-                myStruct.PurchasesTrackingCategories=getPurchasesTrackingCategories();
+                if (ArrayLen(variables.instance.PurchasesTrackingCategories) GT 0) {
+                  myStruct.PurchasesTrackingCategories=getPurchasesTrackingCategories();
+                }
               }
             }
             if (structKeyExists(variables.instance,"TrackingCategoryName")) {
               if (NOT listFindNoCase(arguments.exclude, "TrackingCategoryName")) {
-                myStruct.TrackingCategoryName=getTrackingCategoryName();
+                if (len(variables.instance.TrackingCategoryName) GT 0) {
+                  myStruct.TrackingCategoryName=getTrackingCategoryName();
+                }
               }
             }
             if (structKeyExists(variables.instance,"TrackingCategoryOption")) {
               if (NOT listFindNoCase(arguments.exclude, "TrackingCategoryOption")) {
-                myStruct.TrackingCategoryOption=getTrackingCategoryOption();
+                if (len(variables.instance.TrackingCategoryOption) GT 0) {
+                  myStruct.TrackingCategoryOption=getTrackingCategoryOption();
+                }
               }
             }
             if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
               if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+                if (len(variables.instance.UpdatedDateUTC) GT 0) {
+                  myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+                }
               }
             }
             if (structKeyExists(variables.instance,"ContactGroups")) {
               if (NOT listFindNoCase(arguments.exclude, "ContactGroups")) {
-                myStruct.ContactGroups=getContactGroups();
+                if (ArrayLen(variables.instance.ContactGroups) GT 0) {
+                  myStruct.ContactGroups=getContactGroups();
+                }
               }
             }
             if (structKeyExists(variables.instance,"Website")) {
               if (NOT listFindNoCase(arguments.exclude, "Website")) {
-                myStruct.Website=getWebsite();
+                if (len(variables.instance.Website) GT 0) {
+                  myStruct.Website=getWebsite();
+                }
               }
             }
             if (structKeyExists(variables.instance,"BatchPayments")) {
               if (NOT listFindNoCase(arguments.exclude, "BatchPayments")) {
-                myStruct.BatchPayments=getBatchPayments();
+                if (len(variables.instance.BatchPayments) GT 0) {
+                  myStruct.BatchPayments=getBatchPayments();
+                }
               }
             }
             if (structKeyExists(variables.instance,"Discount")) {
               if (NOT listFindNoCase(arguments.exclude, "Discount")) {
-                myStruct.Discount=getDiscount();
+                if (len(variables.instance.Discount) GT 0) {
+                  myStruct.Discount=getDiscount();
+                }
               }
             }
             if (structKeyExists(variables.instance,"Balances")) {
               if (NOT listFindNoCase(arguments.exclude, "Balances")) {
-                myStruct.Balances=getBalances();
+                if (NOT structIsEmpty(variables.instance.Balances) GT 0) {
+                  myStruct.Balances=getBalances();
+                }
               }
             }
             if (structKeyExists(variables.instance,"HasAttachments")) {
               if (NOT listFindNoCase(arguments.exclude, "HasAttachments")) {
-                myStruct.HasAttachments=getHasAttachments();
+                if (len(variables.instance.HasAttachments) GT 0) {
+                  myStruct.HasAttachments=getHasAttachments();
+                }
               }
             }
           }

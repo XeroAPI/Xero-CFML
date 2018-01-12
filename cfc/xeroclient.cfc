@@ -1,26 +1,6 @@
 
 <cfcomponent displayname="xeroclient">
 
-	<cffunction name="init" returntype="xeroclient" output="true">
-		<cfreturn this>
-	</cffunction>
-
-	<cffunction name="getOAuthToken" access="public" returntype="string">
-		<cfset variables.oauth_token = ""> 
-		<cfif application.config["AppType"] NEQ "Private" AND StructKeyExists(session, "stToken")>
-			<cfset variables.oauth_token = session.stToken["oauth_token"]> 	
-		</cfif>
-		<cfreturn variables.oauth_token>
-	</cffunction>
-
-	<cffunction name="getOAuthTokenSecret" access="public" returntype="string">
-		<cfset variables.oauth_token_secret = ""> 
-		<cfif application.config["AppType"] NEQ "Private" AND StructKeyExists(session, "stToken")>
-			<cfset variables.oauth_token_secret = session.stToken["oauth_token_secret"]> 
-		</cfif>
-		<cfreturn variables.oauth_token_secret>
-	</cffunction>
-
 	<cffunction name="getBaseURL" access="public" returntype="string">
 		<cfset variables.baseUrl = "#application.config.ApiBaseUrl##application.config.ApiEndpointPath#"> 
 		
@@ -65,23 +45,21 @@
 			</cfif>
 		</cfif>
 		
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
+		<cfset oRequestResult = CreateObject("component", "cfc.xero").init().requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
-			sOAuthToken = this.getOAuthToken(),
-			sOAuthTokenSecret= this.getOAuthTokenSecret(),
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "GET",
 			sIfModifiedSince = arguments.ifModifiedSince)>
 
 		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
-			<cfdump var='#oRequestResult["RESPONSE"]#' abort>
+			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
 		</cfif>
 
 		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
 
 		<cfif structKeyExists(rawResult,"ErrorNumber")>
-			<cfdump var='#rawResult#' abort>
+			<cfthrow errorCode='400' message="#rawResult["Message"]#" Type='#rawResult["Type"]#' detail="#serializeJSON(rawResult["Elements"][1]["ValidationErrors"])#">
 		</cfif>
 
 		<cfset variables.ArrayResult = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
@@ -113,19 +91,21 @@
 			</cfif>
 		</cfif>
 
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
+		<cfset oRequestResult = CreateObject("component", "cfc.xero").init().requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
-			sOAuthToken = this.getOAuthToken(),
-			sOAuthTokenSecret= this.getOAuthTokenSecret(),
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "PUT",
 			sBody = arguments.body)>
 
+		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
+			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
+		</cfif>
+
 		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
 
 		<cfif structKeyExists(rawResult,"ErrorNumber")>
-			<cfdump var='#rawResult#' abort>
+			<cfthrow errorCode='400' message="#rawResult["Message"]#" Type='#rawResult["Type"]#' detail="#serializeJSON(rawResult["Elements"][1]["ValidationErrors"])#">
 		</cfif>
 
 		<cfif len(child) GT 0>
@@ -144,19 +124,21 @@
 
 		<cfset resource = arguments.endpoint & "/" & arguments.id>
 
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
+		<cfset oRequestResult = CreateObject("component", "cfc.xero").init().requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
-			sOAuthToken = this.getOAuthToken(),
-			sOAuthTokenSecret= this.getOAuthTokenSecret(),
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "POST",
 			sBody = arguments.body)>
 
+		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
+			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
+		</cfif>
+	
 		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
 
 		<cfif structKeyExists(rawResult,"ErrorNumber")>
-			<cfdump var='#rawResult#' abort>
+			<cfthrow errorCode='400' message="#rawResult["Message"]#" Type='#rawResult["Type"]#' detail="#serializeJSON(rawResult["Elements"][1]["ValidationErrors"])#">			
 		</cfif>
 
 		<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
@@ -182,19 +164,21 @@
 			</cfif>
 		</cfif>
 
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
+		<cfset oRequestResult = CreateObject("component", "cfc.xero").init().requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
-			sOAuthToken = this.getOAuthToken(),
-			sOAuthTokenSecret= this.getOAuthTokenSecret(),
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "DELETE",
 			sBody = arguments.body)>
 
+		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
+			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
+		</cfif>
+
 		<cfif len(oRequestResult["RESPONSE"]) GT 0 >
 			<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
 			<cfif structKeyExists(rawResult,"ErrorNumber")>
-				<cfdump var='#rawResult#' abort>
+				<cfthrow errorCode='#rawResult["ErrorNumber"]#' message="#rawResult["Message"]#" Type='#rawResult["Type"]#'>
 			</cfif>
 
 			<cfif isJSON(variables.oRequestResult["RESPONSE"])>
@@ -203,7 +187,8 @@
 				<cfelseif StructKeyExists(rawResult,arguments.child)>
 					<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.child]>
 				<cfelse>
-					<cfdump var="#rawResult#" abort>
+					<cfthrow errorCode='400' message="#oRequestResult["RESPONSE"]["Message"]#" Type='#oRequestResult["RESPONSE"]["Type"]#' >	
+					
 				</cfif>
 			<cfelse>
 				<cfset variables.result = this.toJSON()>

@@ -42,7 +42,7 @@
 
   <cffunction name="getContactsAsJSON" access="public" output="false">
         
-    <cfreturn this.toJSON(exclude="Name,Status,ContactGroupID") />
+    <cfreturn this.toJSON(exclude="HasAttachments,Name,IsCustomer,IsSupplier,Status,ContactGroupID") />
   </cffunction>
 
   <cffunction name="toJSON" access="public" output="false">
@@ -263,13 +263,33 @@
    * @return Contacts
   --->
   <cffunction name="getContacts" access="public" output="false" hint="I return the Contacts">
-    <cfreturn variables.instance.Contacts />
+    <!---
+    <cfset var lines = variables.instance.Contacts>
+    <cfscript>
+            var arr = ArrayNew(1);
+            for (var i=1;i LTE ArrayLen(lines);i=i+1) {
+              ArrayAppend(arr,lines[i].toStruct());
+            }
+    </cfscript>
+    <cfreturn arr />
+  --->
+    <cfreturn variables.instance.Contacts>
   </cffunction>
 
   <cffunction name="setContacts" access="public"  output="false" hint="I set the Contacts into the variables.instance scope.">
     <cfargument name="Contacts" type="array" hint="I am the Contacts." />
-			
-      <cfset variables.instance.Contacts = arguments.Contacts />	
+     <!---
+     <cfscript>
+            var arr = ArrayNew(1);
+            for (var i=1;i LTE ArrayLen(arguments.Contacts);i=i+1) {
+              var item=createObject("component","cfc.model.Contact").init().populate(arguments.Contacts[i]); 
+              ArrayAppend(arr,item);
+            }
+      </cfscript>
+      <cfset variables.instance.Contacts = arr />
+		--->
+      <cfset variables.instance.Contacts = arguments.Contacts />
+    
   </cffunction>
 
 <cffunction name="getMemento" access="public"

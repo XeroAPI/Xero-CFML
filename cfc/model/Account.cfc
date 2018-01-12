@@ -259,6 +259,11 @@
 
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
+    <cfargument name="where"  type="string" default="">
+
+      <cfset stParam = StructNew()>
+      <cfset stParam["where"] = arguments.where>
+      <cfset this.setParameters(stParam)>
       <cfset this.setList(this.get(endpoint="Accounts"))>
     <cfreturn this>
   </cffunction>

@@ -14,6 +14,7 @@
   <cfproperty name="Tracking" type="array" default="" />
   <cfproperty name="DiscountRate" type="String" default="" />
   <cfproperty name="RepeatingInvoiceID" type="String" default="" />
+  <cfproperty name="LineItemID" type="String" default="" />
 
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
@@ -84,7 +85,9 @@
           }
           if (structKeyExists(variables.instance,"ItemCode")) {
             if (NOT listFindNoCase(arguments.exclude, "ItemCode")) {
-              myStruct.ItemCode=getItemCode();
+              if(len(variables.instance.ItemCode) GT 0){
+                myStruct.ItemCode=getItemCode();
+              }
             }
           }
           if (structKeyExists(variables.instance,"AccountCode")) {
@@ -120,6 +123,11 @@
           if (structKeyExists(variables.instance,"RepeatingInvoiceID")) {
             if (NOT listFindNoCase(arguments.exclude, "RepeatingInvoiceID")) {
               myStruct.RepeatingInvoiceID=getRepeatingInvoiceID();
+            }
+          }
+         if (structKeyExists(variables.instance,"LineItemID")) {
+            if (NOT listFindNoCase(arguments.exclude, "LineItemID")) {
+              myStruct.LineItemID=getLineItemID();
             }
           }
         </cfscript>
@@ -192,6 +200,11 @@
           setRepeatingInvoiceID(obj.RepeatingInvoiceID);
         } else {
           setRepeatingInvoiceID("");
+        }
+        if (structKeyExists(obj,"LineItemID")) {
+          setLineItemID(obj.LineItemID);
+        } else {
+          setLineItemID("");
         }
       </cfscript>
       
@@ -418,6 +431,18 @@
   </cffunction>
 
 
+  <!---
+   * The Xero identifier for a LineItem.g. 297c2dc5-cc47-4afd-8ec8-74990b8761e9
+   * @return LineItemID
+  --->
+  <cffunction name="getLineItemID" access="public" output="false" hint="I return the RepeatingInvoiceID">
+    <cfreturn variables.instance.LineItemID />
+  </cffunction>
+
+  <cffunction name="setLineItemID" access="public"  output="false" hint="I set the RepeatingInvoiceID into the variables.instance scope.">
+    <cfargument name="LineItemID" type="String" hint="I am the RepeatingInvoiceID." />
+      <cfset variables.instance.LineItemID = arguments.LineItemID />
+  </cffunction>
 
 <cffunction name="getMemento" access="public"
   output="false" hint="I return a dumped struct of the

@@ -132,6 +132,7 @@
             }
             if (structKeyExists(variables.instance,"Total")) {
               if (NOT listFindNoCase(arguments.exclude, "Total")) {
+
                 myStruct.Total=getTotal();
               }
             }
@@ -281,6 +282,12 @@
 
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
+    <cfargument name="where"  type="string" default="">
+      <cfset stParam = StructNew()>
+      <cfset stParam["where"] = arguments.where>
+      <cfset this.setParameters(stParam)>
+    
+
       <cfset this.setList(this.get(endpoint="BankTransactions"))>
     <cfreturn this>
   </cffunction>
@@ -308,7 +315,7 @@
   </cffunction>
 
   <cffunction name="update" access="public" output="false">
-    <cfset variables.result = Super.post(endpoint="BankTransactions",body=this.toJSON(),id=this.getBankTransactionID())>
+    <cfset variables.result = Super.post(endpoint="BankTransactions",body=this.toJSON(exclude="Total,SubTotal"),id=this.getBankTransactionID())>
     
     <cfloop from="1" to="#ArrayLen(variables.result)#" index="i">
       <cfset temp = this.populate(variables.result[i])>

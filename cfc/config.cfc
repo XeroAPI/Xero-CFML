@@ -50,12 +50,9 @@ History:
 	<cfset this.CallbackBaseUrl = "">
 	<cfset this.CallbackPath = "">
 	<cfset this.PrivateKeyCert = "">
-	<cfset this.EntrustCert = "">
-	<cfset this.EntrustCertPassword = "">
 
 	<cfset this.CallbackUrl = "">
 	<cfset this.PathToPrivateKey = "">
-	<cfset this.PathToEntrustCert = "">
 	<cfset this.RequestTokenUrl = "">
 	<cfset this.AccessTokenUrl = "">
 
@@ -71,10 +68,12 @@ History:
 			<cfset this.AppType = this.json["AppType"]>
 		</cfif>
 		<cfif structKeyExists(this.json, "UserAgent")>
-			<cfset this.UserAgent = this.json["UserAgent"] & "-CFML-[0.1.0] ">
+			<cfset this.UserAgent = this.json["UserAgent"] & "-CFML-[0.5.0]">
 		</cfif>
 		<cfif structKeyExists(this.json, "Accept")>
 			<cfset this.Accept = this.json["Accept"]>
+		<cfelse>
+			<cfset this.Accept = "application/json">
 		</cfif>
 		<cfif structKeyExists(this.json, "ConsumerKey")>
 			<cfset this.ConsumerKey = this.json["ConsumerKey"]>
@@ -92,18 +91,28 @@ History:
 		</cfif>
 		<cfif structKeyExists(this.json, "ApiBaseUrl")>
 			<cfset this.ApiBaseUrl = this.json["ApiBaseUrl"]>
+		<cfelse>
+			<cfset this.ApiBaseUrl = "https://api.xero.com">
 		</cfif>
 		<cfif structKeyExists(this.json, "ApiEndpointPath")>
 			<cfset this.ApiEndpointPath = this.json["ApiEndpointPath"]>
+		<cfelse>
+			<cfset this.ApiEndpointPath = "/api.xro/2.0/">
 		</cfif>
 		<cfif structKeyExists(this.json, "RequestTokenPath")>
 			<cfset this.RequestTokenPath = this.json["RequestTokenPath"]>
+		<cfelse>
+			<cfset this.RequestTokenPath = "/oauth/RequestToken">
 		</cfif>
 		<cfif structKeyExists(this.json, "AuthenticateUrl")>
 			<cfset this.AuthenticateUrl = this.json["AuthenticateUrl"]>
+		<cfelse>
+			<cfset this.AuthenticateUrl = "https://api.xero.com/oauth/Authorize">
 		</cfif>
 		<cfif structKeyExists(this.json, "AccessTokenPath")>
 			<cfset this.AccessTokenPath = this.json["AccessTokenPath"]>
+		<cfelse>
+			<cfset this.AccessTokenPath = "/oauth/AccessToken">
 		</cfif>
 		<cfif structKeyExists(this.json, "CallbackBaseUrl")>
 			<cfset this.CallbackBaseUrl = this.json["CallbackBaseUrl"]>
@@ -114,13 +123,7 @@ History:
 		<cfif structKeyExists(this.json, "PrivateKeyCert")>
 			<cfset this.PrivateKeyCert = this.json["PrivateKeyCert"]>
 		</cfif>
-		<cfif structKeyExists(this.json, "EntrustCert")>
-			<cfset this.EntrustCert = this.json["EntrustCert"]>
-		</cfif>
-		<cfif structKeyExists(this.json, "EntrustCertPassword")>
-			<cfset this.EntrustCertPassword = this.json["EntrustCertPassword"]>
-		</cfif>
-
+		
 		<cfif structKeyExists(this.json, "CallbackBaseUrl")>
 			<cfset this.CallbackUrl = this.json["CallbackBaseUrl"] & this.json["CallbackPath"]>
 		</cfif>
@@ -131,10 +134,6 @@ History:
 				<cfoutput>No Private Key File Found	- Check the path set in /resource/config.json - #this.PathToPrivateKey#</cfoutput>
 				<cfabort>
 			</cfif>
-		</cfif>
-
-		<cfif structKeyExists(this.json, "EntrustCert")>
-			<cfset this.PathToEntrustCert = pathToConfig & this.json["EntrustCert"]>
 		</cfif>
 
 		<cfif structKeyExists(this.json, "RequestTokenPath")>
