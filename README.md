@@ -3,41 +3,40 @@ Xero-CFML
 
 CFML wrapper for Xero API - use with CFML application servers.
 
-* [Things to note](#things-to-note)
-* [Select an Application Type](#select-an-application-type)
-* [Getting Started](#getting-started)
-* [To Do](#to-do)
-* [Additional Reading](#additional-reading)
-* [Acknowledgements](#acknowledgements)
-* [License](#license)
+* [Things to note] (#things-to-note)
+* [Select an Application Type] (#select-an-application-type)
+* [Getting Started] (#getting-started)
+* [To Do] (#to-do)
+* [Additional Reading] (#additional-reading)
+* [Acknowledgements] (#acknowledgements)
+* [License] (#license)
 
 ## Things to note
-* The library focuses on the authentication for Xero's API and provides a basis to be extended.  You can configure this library to use  different Xero application types (see below). Once you've connected to Xero's API, you can read different types of data. This example code is enough to get you going, but is not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
+* This SDK offers an Object Oriented approach using CFCs to model endpoints and methods you can invoke. You can still instantiate the xero.cfc and construct http calls for your own use and situation if you find the models don't meet your needs. 
 * Not tested on Lucee, please submit issues if you encounter any.
 
 
 ## Select an application type
-Xero's API supports [3 application types](http://developer.xero.com/documentation/getting-started/api-application-types/).  The three types are public, private and partner.  Each application type is supported by this library.  Please [review  each type](http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
+Xero's API supports [3 application types] (http://developer.xero.com/documentation/getting-started/api-application-types/). All Xero Apps types supported by this SDK.  Please [review  each type] (http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
 
-* [Public](http://developer.xero.com/documentation/auth-and-limits/public-applications/)
-* [Private](http://developer.xero.com/documentation/auth-and-limits/private-applications/)
-* [Partner](http://developer.xero.com/documentation/auth-and-limits/partner-applications/)
+* [Public] (http://developer.xero.com/documentation/auth-and-limits/public-applications/)
+* [Private] (http://developer.xero.com/documentation/auth-and-limits/private-applications/)
+* [Partner] (http://developer.xero.com/documentation/auth-and-limits/partner-applications/)
 
 
 ## Getting Started
 ### Create a Xero User Account
-You can [create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
+[Create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the free Demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
 
 ### Install Xero-CFML Library
 Download this library and place it in your webroot. There are two directory maps in the Application.cfc file.
 
 	<cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" /> 
-	<cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" /> 
-
+    <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" /> 
 
 ## Configuration of API Keys and Certificates
 ### Securing your resources directory
-All configuration files and certificates are located in the resources directory.  In a production environment, you will move this directory outside the webroot for security reasons.  Once you've done that, make sure you update the *pathToConfigJSON* variable in your Application.cfc.  
+All configuration files and certificates are located in the resources directory.  In a production environment, you will move this directory outside the webroot for security reasons.  Remember to update the *pathToConfigJSON* variable in your Application.cfc.  
 
 <cfset pathToConfigJSON = getDirectoryFromPath(getCurrentTemplatePath()) & "resources/config.json"> 
 
@@ -51,7 +50,7 @@ Inside the resources directory, you'll find 4 files.  *the ONLY file used is con
 
 ### Public Application
 #### Configure Xero Application
-Create a [Xero Public application](https://app.xero.com/Application). Enter a callback domain i.e. localhost.
+Create a [Xero Public application](https://app.xero.com/). Enter a callback domain i.e. localhost.
 
 Open *config.json* file located in the resources directory.  Copy and paste your consumer key and secret.
 
@@ -110,7 +109,7 @@ For this wrapper, you will need to run one additional command to create a .pk8 f
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
 #### Configure Xero Application
-Go to your upgraded [Xero Partner application](https://app.xero.com/Application). Enter a callback domain i.e. localhost.
+Go to your upgraded [Xero Partner application](https://app.xero.com/). Enter a callback domain i.e. localhost.
 
 Open *config-partner.json* located in the resources directory and save it as *config.json*, Open *config.json* then copy and paste the consumer key and secret.
 
@@ -125,8 +124,30 @@ Customize your callback base URL and callback path to point to the location of e
 
 Point your browser to example/index.cfm and click "Connect to Xero" to begin the authentication flow. 
 
+## Methods
+
+Reading objects from an endpoint
+
+```java
+<cfscript>
+    account=createObject("component","cfc.model.Account").init(); 
+    account.getAll();
+	
+	// Get an Array of items as Structs
+	account.getList();
+
+	//Get the first item in the Array as an Object
+	account.getObject(1);	
+
+	//Get an item by a specific ID
+	account.getById("XXXXXXXXXXXXXXXXX");
+</cfscript>		
+```
+
+
+
 ## To Do
-* Refresh Token method for partner applications
+* Reports Endpoint
 
 ## Additional Reading
 * [oAuth Bibile](http://oauthbible.com/)
