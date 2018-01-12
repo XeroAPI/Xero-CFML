@@ -3,13 +3,13 @@ Xero-CFML
 
 CFML wrapper for Xero API - use with CFML application servers.
 
-* [Things to note] (#things-to-note)
-* [Select an Application Type] (#select-an-application-type)
-* [Getting Started] (#getting-started)
-* [To Do] (#to-do)
-* [Additional Reading] (#additional-reading)
-* [Acknowledgements] (#acknowledgements)
-* [License] (#license)
+* [Things to note](#things-to-note)
+* [Select an Application Type](#select-an-application-type)
+* [Getting Started](#getting-started)
+* [To Do](#to-do)
+* [Additional Reading](#additional-reading)
+* [Acknowledgements](#acknowledgements)
+* [License](#license)
 
 ## Things to note
 * This SDK offers an Object Oriented approach using CFCs to model endpoints and methods you can invoke. You can still instantiate the xero.cfc and construct http calls for your own use and situation if you find the models don't meet your needs. 
@@ -130,8 +130,8 @@ Reading objects from an endpoint
 
 ```java
 <cfscript>
-    account=createObject("component","cfc.model.Account").init(); 
-    account.getAll();
+	account=createObject("component","cfc.model.Account").init(); 
+	account.getAll();
 	
 	// Get an Array of items as Structs
 	account.getList();
