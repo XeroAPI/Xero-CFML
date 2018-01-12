@@ -128,7 +128,7 @@ Point your browser to example/index.cfm and click "Connect to Xero" to begin the
 
 For Public & Parnter Aps you'll use 3 legged oAuth, which involves a RequestToken Call, then redirecting the user to Xero to select a Xero org, then callback to your server where you'll swap the request token for your 30 min access tokens.
 
-### Request Token
+### requesttoken.cfm
 
 
 ```java
@@ -137,23 +137,23 @@ For Public & Parnter Aps you'll use 3 legged oAuth, which involves a RequestToke
 req=createObject("component","cfc.xero").init(); 
 
 try {
-	req.requestToken();
-	location(req.getAuthorizeUrl());
+  req.requestToken();
+  location(req.getAuthorizeUrl());
 }	
 
 catch(any e){
-	if(e.ErrorCode EQ "401") {
-		location("index.cfm?" & e.message);
-	} else {
-		writeDump(e);
-		abort;
-	}
+  if(e.ErrorCode EQ "401") {
+    location("index.cfm?" & e.message);
+  } else {
+    writeDump(e);
+    abort;
+  }
 }
 </cfscript>	
 ```
 
 
-### Callback
+### callback.cfm
 
 
 ```java
@@ -162,17 +162,17 @@ catch(any e){
 res=createObject("component","cfc.xero").init(); 
 
 try {
-	res.accessToken(aCallbackParams = cgi.query_string);
-	location("get.cfm","false");
+  res.accessToken(aCallbackParams = cgi.query_string);
+  location("get.cfm","false");
 }	
 
 catch(any e){
-	if(e.ErrorCode EQ "401") {
-		location("index.cfm?" & e.message);
-	} else {
-		writeDump(e);
-		abort;
-	}
+  if(e.ErrorCode EQ "401") {
+    location("index.cfm?" & e.message);
+  } else {
+    writeDump(e);
+    abort;
+  }
 }
 </cfscript>
 ```
