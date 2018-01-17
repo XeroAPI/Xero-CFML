@@ -74,7 +74,7 @@ The basic command line steps to generate a public and private key using OpenSSL 
 	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
 	openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
 
-For this wrapper, you will need to run one additional command to create a .pk8 formatted private key.
+For this SDK, you will need to run one additional command to create a .pk8 formatted private key.
 
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
@@ -104,7 +104,7 @@ The basic command line steps to generate a public and private key using OpenSSL 
 	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
 	openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
 
-For this wrapper, you will need to run one additional command to create a .pk8 formatted private key.
+For this SDK, you will need to run one additional command to create a .pk8 formatted private key.
 
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
@@ -182,21 +182,19 @@ Each endpoint supports different set of methods - refer to [Xero API Documentati
 
 Below are examples of the types of methods you can call ....
 
-Reading objects from an endpoint
+Reading all objects from an endpoint
 
 ```java
 <cfscript>
-  account=createObject("component","cfc.model.Account").init(); 
+  account=createObject("component","cfc.model.Account").init();
+
+  // Get all items 
   account.getAll();
-	
-  // Get an Array of items as Structs
+	// After you getAll - you can loop over an Array of items (NOTE: Your object is not populated with the getAll method)
   account.getList();
 
-  //Get the first item in the Array as an Object
+  //After you getAll - Populate your object with the first item in the Array
   account.getObject(1);	
-
-  //Get an item by a specific ID
-  account.getById("XXXXXXXXXXXXXXXXX");
 
   //Get all using where clause
   account.getAll(where='Status=="ACTIVE"');
@@ -208,7 +206,22 @@ Reading objects from an endpoint
   dateTime24hoursAgo = DateAdd("d", -1, now());
   ifModifiedSince = DateConvert("local2utc", dateTime24hoursAgo);
   account.getAll(ifModifiedSince=ifModifiedSince);
+
+ //Get an item by a specific ID (No need to getAll with this method)
+  account.getById("XXXXXXXXXXXXXXXXX");
 </cfscript>		
+```
+
+
+Reading a single object from an endpoint.
+
+```java
+<cfscript>  
+  account=createObject("component","cfc.model.Account").init();
+
+  //Get an item by a specific ID (No need to getAll with this method)
+  account.getById("XXXXXXXXXXXXXXXXX");
+</cfscript>   
 ```
 
 
@@ -353,7 +366,7 @@ If you find yourself limited by the models, you can always hack your own raw API
 * [oAuth Bibile](http://oauthbible.com/)
 
 ##Acknowledgements
-Thanks to the following Developers and Open Source libraries for making the wrapper and samples easier
+Thanks to the following Developers and Open Source libraries for making the SDK and samples easier
 
 * [ColdFusion oAuth Library](http://oauth.riaforge.org/) - OAuth 1.0
 * [Sharad Gupta](http://www.jensbits.com/2010/05/16/generating-signatures-in-coldfusion-with-rsa-sha1-for-secure-authsub-in-google-analytics/) - RSA-SHA1 signature
