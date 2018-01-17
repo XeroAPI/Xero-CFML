@@ -1,7 +1,7 @@
 Xero-CFML
 =========
 
-CFML wrapper for Xero API - use with CFML application servers.
+CFML SDK for Xero API - use with CFML application servers.
 
 * [Things to note](#things-to-note)
 * [Select an Application Type](#select-an-application-type)
@@ -12,12 +12,12 @@ CFML wrapper for Xero API - use with CFML application servers.
 * [License](#license)
 
 ## Things to note
-* The library focuses on the authentication for Xero's API and provides a basis to be extended.  You can configure this library to use  different Xero application types (see below). Once you've connected to Xero's API, you can read different types of data. This example code is enough to get you going, but is not a complete solution to all your needs. You will need to adapt them for your own use and situation. 
+* This SDK offers an Object Oriented approach using CFCs to model endpoints and methods you can invoke. You can still instantiate the xero.cfc and construct http calls for your own use and situation if you find the models don't meet your needs. 
 * Not tested on Lucee, please submit issues if you encounter any.
 
 
 ## Select an application type
-Xero's API supports [3 application types](http://developer.xero.com/documentation/getting-started/api-application-types/).  The three types are public, private and partner.  Each application type is supported by this library.  Please [review  each type](http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
+Xero's API supports [3 application types](http://developer.xero.com/documentation/getting-started/api-application-types/). All Xero Apps types supported by this SDK.  Please [review  each type](http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
 
 * [Public](http://developer.xero.com/documentation/auth-and-limits/public-applications/)
 * [Private](http://developer.xero.com/documentation/auth-and-limits/private-applications/)
@@ -26,18 +26,17 @@ Xero's API supports [3 application types](http://developer.xero.com/documentatio
 
 ## Getting Started
 ### Create a Xero User Account
-You can [create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
+[Create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the free Demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
 
 ### Install Xero-CFML Library
 Download this library and place it in your webroot. There are two directory maps in the Application.cfc file.
 
 	<cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" /> 
-	<cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" /> 
-
+    <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" /> 
 
 ## Configuration of API Keys and Certificates
 ### Securing your resources directory
-All configuration files and certificates are located in the resources directory.  In a production environment, you will move this directory outside the webroot for security reasons.  Once you've done that, make sure you update the *pathToConfigJSON* variable in your Application.cfc.  
+All configuration files and certificates are located in the resources directory.  In a production environment, you will move this directory outside the webroot for security reasons.  Remember to update the *pathToConfigJSON* variable in your Application.cfc.  
 
 <cfset pathToConfigJSON = getDirectoryFromPath(getCurrentTemplatePath()) & "resources/config.json"> 
 
@@ -51,7 +50,7 @@ Inside the resources directory, you'll find 4 files.  *the ONLY file used is con
 
 ### Public Application
 #### Configure Xero Application
-Create a [Xero Public application](https://app.xero.com/Application). Enter a callback domain i.e. localhost.
+Create a [Xero Public application](https://app.xero.com/). Enter a callback domain i.e. localhost.
 
 Open *config.json* file located in the resources directory.  Copy and paste your consumer key and secret.
 
@@ -75,7 +74,7 @@ The basic command line steps to generate a public and private key using OpenSSL 
 	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
 	openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
 
-For this wrapper, you will need to run one additional command to create a .pk8 formatted private key.
+For this SDK, you will need to run one additional command to create a .pk8 formatted private key.
 
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
@@ -105,12 +104,12 @@ The basic command line steps to generate a public and private key using OpenSSL 
 	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
 	openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
 
-For this wrapper, you will need to run one additional command to create a .pk8 formatted private key.
+For this SDK, you will need to run one additional command to create a .pk8 formatted private key.
 
 	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
 #### Configure Xero Application
-Go to your upgraded [Xero Partner application](https://app.xero.com/Application). Enter a callback domain i.e. localhost.
+Go to your upgraded [Xero Partner application](https://app.xero.com/). Enter a callback domain i.e. localhost.
 
 Open *config-partner.json* located in the resources directory and save it as *config.json*, Open *config.json* then copy and paste the consumer key and secret.
 
@@ -125,14 +124,249 @@ Customize your callback base URL and callback path to point to the location of e
 
 Point your browser to example/index.cfm and click "Connect to Xero" to begin the authentication flow. 
 
+## OAuth Flow
+
+For Public & Parnter Aps you'll use 3 legged oAuth, which involves a RequestToken Call, then redirecting the user to Xero to select a Xero org, then callback to your server where you'll swap the request token for your 30 min access tokens.
+
+### requesttoken.cfm
+
+```java
+<cfscript>
+
+req=createObject("component","cfc.xero").init(); 
+
+try {
+  req.requestToken();
+  location(req.getAuthorizeUrl());
+}	
+
+catch(any e){
+  if(e.ErrorCode EQ "401") {
+    location("index.cfm?" & e.message);
+  } else {
+    writeDump(e);
+    abort;
+  }
+}
+</cfscript>	
+```
+
+
+### callback.cfm
+
+```java
+<cfscript>
+
+res=createObject("component","cfc.xero").init(); 
+
+try {
+  res.accessToken(aCallbackParams = cgi.query_string);
+  location("get.cfm","false");
+}	
+
+catch(any e){
+  if(e.ErrorCode EQ "401") {
+    location("index.cfm?" & e.message);
+  } else {
+    writeDump(e);
+    abort;
+  }
+}
+</cfscript>
+```
+
+
+## Methods
+
+Each endpoint supports different set of methods - refer to [Xero API Documentation](https://developer.xero.com/documentation/api/api-overview)
+
+Below are examples of the types of methods you can call ....
+
+Reading all objects from an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init();
+
+  // Get all items 
+  account.getAll();
+	// After you getAll - you can loop over an Array of items (NOTE: Your object is not populated with the getAll method)
+  account.getList();
+
+  //After you getAll - Populate your object with the first item in the Array
+  account.getObject(1);	
+
+  //Get all using where clause
+  account.getAll(where='Status=="ACTIVE"');
+
+  //Get all using order param
+  account.getAll(order='Name DESC');
+
+  //Get all items modified since this date/time (i.e. 24 hours ago)
+  dateTime24hoursAgo = DateAdd("d", -1, now());
+  ifModifiedSince = DateConvert("local2utc", dateTime24hoursAgo);
+  account.getAll(ifModifiedSince=ifModifiedSince);
+
+ //Get an item by a specific ID (No need to getAll with this method)
+  account.getById("XXXXXXXXXXXXXXXXX");
+</cfscript>		
+```
+
+
+Reading a single object from an endpoint.
+
+```java
+<cfscript>  
+  account=createObject("component","cfc.model.Account").init();
+
+  //Get an item by a specific ID (No need to getAll with this method)
+  account.getById("XXXXXXXXXXXXXXXXX");
+</cfscript>   
+```
+
+
+Creating objects on an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init(); 
+
+  account.setName("Dinner");
+  account.setCode("4040");
+  account.setType("CURRENT");
+  account.create();
+</cfscript>		
+```
+
+
+Update an object on an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init(); 
+
+  // Get all objects and set the first one in the Array to update
+  account.getAll().getObject(1);
+  account.setName("Meals");
+  account.update();
+</cfscript>		
+```
+
+
+Delete an object on an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init(); 
+
+  // Set the ID for the Account to Delete
+  account.setAccountID("XXXXXXXXXXXXX");
+  account.delete();
+</cfscript>		
+```
+
+
+Archive an object on an endpoint
+
+```java
+<cfscript>
+  account=createObject("component","cfc.model.Account").init(); 
+
+  // Set the ID for the Account to Delete
+  account.setAccountID("XXXXXXXXXXXXX");
+  account.archive();
+</cfscript>		
+```
+
+Void an object on an endpoint
+
+```java
+<cfscript>
+  invoice=createObject("component","cfc.model.Invoice").init(); 
+
+  // Set the ID for the Account to Delete
+  invoice.setInvoiceID("XXXXXXXXXXXXX");
+  invoice.void();
+</cfscript>		
+```
+
+
+Add to an object on an endpoint
+
+```java
+<cfscript>
+  trackingcategory=createObject("component","cfc.model.TrackingCategory").init(); 
+
+  // Set the ID for the Tracking Category
+  trackingcategory.setTrackingCategoryID("XXXXXXXXXXXXX");
+ 
+  trackingoption=createObject("component","cfc.model.TrackingOption").init(); 
+  trackingoption.setName("Foobar" &RandRange(1, 10000, "SHA1PRNG"));
+  aTrackingOption = ArrayNew(1);
+  aTrackingOption.append(trackingoption.toStruct());
+
+  // Set the Array for Tracking Options
+  trackingcategory.setOptions(aTrackingOption);
+  trackingcategory.addOptions();
+</cfscript>		
+```
+
+
+Remove from an object on an endpoint
+
+```java
+<cfscript>
+  trackingcategory=createObject("component","cfc.model.TrackingCategory").init(); 	
+
+  // Set the ID for the Tracking Category
+  trackingcategory.setTrackingCategoryID("XXXXXXXXXXXXX");
+ 
+  trackingoptionToDelete=createObject("component","cfc.model.TrackingOption").init().populate(trackingcategory.getOptions()[1]); 	
+  trackingcategory.setOptionId(trackingoptionToDelete.getTrackingOptionId());	
+  trackingcategory.deleteOption();				
+</cfscript>		
+```
+
+
+## Make API calls without Models
+
+If you find yourself limited by the models, you can always hack your own raw API call.
+
+```java
+  <cfset config = application.config.json>
+  <cfset parameters = structNew()>
+  <cfset body = "">
+  <cfset ifModifiedSince = "">
+  <cfset method = "GET">
+  <cfset accept = "json/application">
+  <cfset endpoint = "Organisation">
+
+  <cfset sResourceEndpoint = "#config.ApiBaseUrl##config.ApiEndpointPath##endpoint#">
+  
+  <!--- Build and Call API, return new structure of XML results --->
+  <cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
+    sResourceEndpoint = sResourceEndpoint,
+    sOAuthToken = sOAuthToken,
+    sOAuthTokenSecret= sOAuthTokenSecret,
+    stParameters = parameters,
+    sAccept = accept,
+    sMethod = method,
+    sIfModifiedSince = ifModifiedSince,
+    sBody = body)>
+
+  <cfdump var="#oRequestResult#" >
+```
+
+
 ## To Do
-* Refresh Token method for partner applications
+* Attachments Endpoint
+* Get PDF of Invoices
 
 ## Additional Reading
 * [oAuth Bibile](http://oauthbible.com/)
 
 ##Acknowledgements
-Thanks to the following Developers and Open Source libraries for making the wrapper and samples easier
+Thanks to the following Developers and Open Source libraries for making the SDK and samples easier
 
 * [ColdFusion oAuth Library](http://oauth.riaforge.org/) - OAuth 1.0
 * [Sharad Gupta](http://www.jensbits.com/2010/05/16/generating-signatures-in-coldfusion-with-rsa-sha1-for-secure-authsub-in-google-analytics/) - RSA-SHA1 signature
@@ -143,7 +377,7 @@ Thanks to the following Developers and Open Source libraries for making the wrap
 
 This software is published under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 
-	Copyright (c) 2014 Xero Limited
+	Copyright (c) 2014-2018 Xero Limited
 
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation

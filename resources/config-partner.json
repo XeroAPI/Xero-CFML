@@ -1,14 +1,8 @@
 { 
 	"AppType" : "PARTNER",
-	"UserAgent" : "Xero-CFML-Partner",
-	"Accept" : "application/json", 
+	"UserAgent" : "MyAppName",
 	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
 	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
-	"ApiBaseUrl" : "https://api.xero.com",
-	"ApiEndpointPath" : "/api.xro/2.0/",
-	"RequestTokenPath": "/oauth/RequestToken",
-	"AuthenticateUrl" : "https://api.xero.com/oauth/Authorize",
-	"AccessTokenPath"  : "/oauth/AccessToken",
 	"CallbackBaseUrl" : "http://localhost:8500",
 	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm",
 	"PrivateKeyCert" :  "certs/privatekey.pk8"

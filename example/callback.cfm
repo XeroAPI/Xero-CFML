@@ -1,26 +1,33 @@
-<!--- Example callback from Xero Xero Public App
+<!--- Example callback from Xero App
 ----------------------------------------------------------------------------
-1) run request_token.cfm FIRST, this page will be called by Xero's server after successful user authorization.
+1) run request_token.cfm FIRST, this CALLBACK page will be called by Xero's server after successful user authorization.
 --->
 <html>
 <head>
-	<title>CFML Xero Public Application - Callback</title>
+	<title>Xero-CFML Sample App - Callback</title>
 	<cfinclude template="/common/header.cfm" >
 </head>
 <body>
-	<div class="container">
+<div class="container">
 
-	<!--- Build accessToken URL --->
-	<cfset oAccessResult = CreateObject("component", "cfc.xero").accessToken(aCallbackParams = cgi.query_string)>
+<cfscript>
 
-	<cfif oAccessResult["content"] EQ "success">
-		<!---cflocation url="get.cfm" addtoken="false"--->
-		<cfinclude template="/common/resource.cfm">
-	<cfelse>
-		<cfoutput>#oAccessResult["content"]#</cfoutput>
-		<br><br>
-		<a class="btn btn-primary" href="request_token.cfm">Connect to Xero</a>
-	</cfif>
-	</div>
+res=createObject("component","cfc.xero").init(); 
+
+try {
+	res.accessToken(aCallbackParams = cgi.query_string);
+	location("get.cfm","false");
+}	
+
+catch(any e){
+	if(e.ErrorCode EQ "401") {
+		location("index.cfm?" & e.message);
+	} else {
+		writeDump(e);
+		abort;
+	}
+}
+</cfscript>
+</div>
 </body>
 </html>

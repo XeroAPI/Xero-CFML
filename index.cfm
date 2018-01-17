@@ -1,20 +1,23 @@
 <html>
 <head>
-<title>Xero CFML Wrapper</title>
-
-<cfinclude template="/common/header.cfm" >
+	<title>Xero-CFML SDK</title>
+	<cfinclude template="/common/header.cfm" >
 </head>
 <body>
-<h1>Xero CFML Wrapper</h1>
-
-<cfoutput>
-<h3>Currently Configured as #application.config["AppType"]# Application. </h3> 
-</cfoutput>
-<p>
-Go to /resources/config.json to modify application.
-</p>
-<ul>
-	<li><a href="example/">Explore Application</a></li>
-</ul>
+<div class="container">
+	<cfoutput>
+		<h1>Xero-CFML SDK</h1>
+		<h3>Welcome</h3>
+		<p>
+		Your sample app is currently configured as Xero <strong>#application.config["AppType"]#</strong> Application. 
+		</p>
+		<p>
+			To set modify your configuration ... go to /resources/config.json
+		</p>
+		<p>
+			<a href="example/">Explore Sample Application</a></li>
+		</p>
+	</cfoutput>
+</div>
 </body>
 </html>
