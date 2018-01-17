@@ -1,0 +1,14 @@
+config.json
+_update.cfm
+test.cfm
+*.cer
+*.pfx
+*.pem
+*.pk8
+*.p12
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumb.db
