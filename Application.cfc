@@ -9,6 +9,7 @@
     <cfset THIS.ApplicationTimeout = CreateTimeSpan( 0, 0, 3, 0 ) />
     <cfset THIS.SessionManagement = true />
     <cfset THIS.SetClientCookies = true />
+    <cfset THIS.serialization.preservecaseforstructkey = true>
 
     <cfset this.mappings = structNew() />
     <cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" />
@@ -88,9 +89,6 @@
  
         <!--- Include the requested page. --->
         <cfinclude template="#ARGUMENTS.TargetPage#" />
-
-
-       
  
         <!--- Return out. --->
         <cfreturn />

@@ -77,7 +77,8 @@
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
      <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
-    
+     <cfargument name="returnType" type="String" default="json" hint="I set how the data is returned" />
+
      
         <cfscript>
           myStruct=StructNew();
@@ -148,7 +149,7 @@
             }
             if (structKeyExists(variables.instance,"Class")) {
               if (NOT listFindNoCase(arguments.exclude, "Class")) {
-                myStruct.Class=getClass();
+                myStruct.Class=getAccountClass();
               }
             }
             if (structKeyExists(variables.instance,"SystemAccount")) {
@@ -179,9 +180,12 @@
           }
         </cfscript>
 
+    <cfif returnType EQ "Struct">
+       <cfreturn myStruct />
+    <cfelse>
       <cfset variables.jsonObj = serializeJSON(myStruct)>
-
-   <cfreturn variables.jsonObj />
+      <cfreturn variables.jsonObj />
+    </cfif>
   </cffunction>
 
   <cffunction name="populate" access="public" output="false">
@@ -251,9 +255,9 @@
           setAccountID("");
         }
         if (structKeyExists(obj,"Class")) {
-          setClass(obj.Class);
+          setAccountClass(obj.Class);
         } else {
-          setClass("");
+          setAccountClass("");
         }
         if (structKeyExists(obj,"SystemAccount")) {
           setSystemAccount(obj.SystemAccount);
@@ -530,11 +534,11 @@
    * See Account Class Types
    * @return Class
   --->
-  <cffunction name="getClass" access="public" output="false" hint="I return the Class">
+  <cffunction name="getAccountClass" access="public" output="false" hint="I return the Class">
     <cfreturn variables.instance.Class />
   </cffunction>
 
-  <cffunction name="setClass" access="public"  output="false" hint="I set the Class into the variables.instance scope.">
+  <cffunction name="setAccountClass" access="public"  output="false" hint="I set the Class into the variables.instance scope.">
     <cfargument name="Class" type="String" hint="I am the Class." />
       <cfset variables.instance.Class = arguments.Class />
   </cffunction>
