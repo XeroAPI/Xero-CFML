@@ -4,11 +4,11 @@
 --->
 <html>
 <head>
-	<title>CFML Xero Application - Callback</title>
+	<title>Xero-CFML Sample App - Callback</title>
 	<cfinclude template="/common/header.cfm" >
 </head>
 <body>
-	<div class="container">
+<div class="container">
 
 <cfscript>
 
@@ -28,6 +28,6 @@ catch(any e){
 	}
 }
 </cfscript>
-	</div>
+</div>
 </body>
 </html>

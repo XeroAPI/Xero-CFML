@@ -197,6 +197,17 @@ Reading objects from an endpoint
 
   //Get an item by a specific ID
   account.getById("XXXXXXXXXXXXXXXXX");
+
+  //Get all using where clause
+  account.getAll(where='Status=="ACTIVE"');
+
+  //Get all using order param
+  account.getAll(order='Name DESC');
+
+  //Get all items modified since this date/time (i.e. 24 hours ago)
+  dateTime24hoursAgo = DateAdd("d", -1, now());
+  ifModifiedSince = DateConvert("local2utc", dateTime24hoursAgo);
+  account.getAll(ifModifiedSince=ifModifiedSince);
 </cfscript>		
 ```
 
@@ -304,10 +315,39 @@ Remove from an object on an endpoint
 ```
 
 
+## Make API calls without Models
+
+If you find yourself limited by the models, you can always hack your own raw API call.
+
+```java
+  <cfset config = application.config.json>
+  <cfset parameters = structNew()>
+  <cfset body = "">
+  <cfset ifModifiedSince = "">
+  <cfset method = "GET">
+  <cfset accept = "json/application">
+  <cfset endpoint = "Organisation">
+
+  <cfset sResourceEndpoint = "#config.ApiBaseUrl##config.ApiEndpointPath##endpoint#">
+  
+  <!--- Build and Call API, return new structure of XML results --->
+  <cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
+    sResourceEndpoint = sResourceEndpoint,
+    sOAuthToken = sOAuthToken,
+    sOAuthTokenSecret= sOAuthTokenSecret,
+    stParameters = parameters,
+    sAccept = accept,
+    sMethod = method,
+    sIfModifiedSince = ifModifiedSince,
+    sBody = body)>
+
+  <cfdump var="#oRequestResult#" >
+```
 
 
 ## To Do
-* Reports Endpoint
+* Attachments Endpoint
+* Get PDF of Invoices
 
 ## Additional Reading
 * [oAuth Bibile](http://oauthbible.com/)
