@@ -4,7 +4,7 @@
 <cfparam name="body" default="">
 <cfparam name="contentType" default="">
 
-<cfset aEndpoint=["Accounts","BankTransactions","BankTransfers","BrandingThemes","Contacts","ContactGroups","CreditNotes","Currencies","Employees","Invoices","InvoiceReminders","Items","Journals","LinkedTransactions","ManualJournals","Organisation","Overpayments","Payments","Prepayments","PurchaseOrders","RepeatingInvoices","TaxRates","TrackingCategories","Users"]>
+<cfset aEndpoint=["Accounts","BankTransactions","BankTransfers","BrandingThemes","Contacts","ContactGroups","CreditNotes","Currencies","Employees","Invoices","InvoiceReminders","Items","Journals","LinkedTransactions","ManualJournals","Organisation","Overpayments","Payments","Prepayments","PurchaseOrders","RepeatingInvoices","Reports","TaxRates","TrackingCategories","Users"]>
 
 <cfset aAction=["Create","Read","Update","Delete","--------------","Archive","Void","Allocate","--------------","Add","Remove","RemoveOne"]>
 

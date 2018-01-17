@@ -46,6 +46,34 @@
      </cfif>
   </cffunction>
 
+   <cffunction name="toStruct" access="public" output="false">
+    <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+    <cfargument name="Only" type="String" default="" hint="I am a list of attributes to exclude from JSON" />
+     
+      <cfif len(arguments.exclude) GT 0>
+        <cfset exclude = arguments.exclude>
+      <cfelse>
+        <cfset exclude = "">
+      </cfif>
+
+       <cfif Only EQ "id">
+        <cfset exclude = "Code,Name">
+      </cfif>
+
+      <cfscript>
+        myStruct=StructNew();
+        myStruct=this.toJSON(exclude=exclude,returnType="struct");
+      </cfscript>
+    <cfreturn myStruct />
+
+
+        <cfscript>
+          myStruct=StructNew();
+          myStruct=this.toJSON(returnType="struct");
+        </cfscript>
+    <cfreturn myStruct />
+  </cffunction>
+
   <cffunction name="toJSON" access="public" output="false">
      <cfargument name="exclude" type="String" default="" hint="I am a list of attributes to exclude from JSON payload" />
      <cfargument name="archive" type="boolean" default="false" hint="I flag to return only the req. fields as JSON payload for archiving an object" />
@@ -260,10 +288,14 @@
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
     <cfargument name="where"  type="string" default="">
+    <cfargument name="order"  type="string" default="">
 
       <cfset stParam = StructNew()>
       <cfset stParam["where"] = arguments.where>
-      <cfset this.setParameters(stParam)>
+      <cfset stParam["order"] = arguments.order>
+      <cfset this.setParameters(stParam)>    
+      <cfset this.setModifiedSince(arguments.ifModifiedSince)>
+
       <cfset this.setList(this.get(endpoint="Accounts"))>
     <cfreturn this>
   </cffunction>

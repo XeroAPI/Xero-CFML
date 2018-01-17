@@ -124,6 +124,15 @@
 
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
+    <cfargument name="where"  type="string" default="">
+    <cfargument name="order"  type="string" default="">
+
+      <cfset stParam = StructNew()>
+      <cfset stParam["where"] = arguments.where>
+      <cfset stParam["order"] = arguments.order>
+      <cfset this.setParameters(stParam)>    
+      <cfset this.setModifiedSince(arguments.ifModifiedSince)>
+      
       <cfset this.setList(this.get(endpoint="TrackingCategories"))>
       <cfset temp = this.populate(StructNew())>
     <cfreturn this>

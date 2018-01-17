@@ -75,7 +75,6 @@
   </cffunction>
 
   <cffunction name="getAll" access="public" returntype="any">
-    <cfargument name="ifModifiedSince"  type="string" default="">
       <cfset this.setList(this.get(endpoint="InvoiceReminders",child="Settings"))>
     <cfreturn this>
   </cffunction>

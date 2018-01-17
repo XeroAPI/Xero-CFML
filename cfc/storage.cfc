@@ -13,7 +13,6 @@
   
 <!--- INIT --->
 	<cffunction name="init" access="public" output="false" returntype="storage" hint="I am the constructor method for the Storage Class.">
-    
     	<cfreturn this />
   	</cffunction>
 
@@ -28,7 +27,7 @@
 	<cffunction name="setRequestOAuthToken" access="public" >
 		<cfargument name="request_oauth_token" required="true" type="String" default="" hint="I am a string of this object." />
 
-		<cfif application.config["AppType"] NEQ "Private" AND StructKeyExists(session, "stToken")>
+		<cfif application.config["AppType"] NEQ "Private">
 			<cfset session.stToken["request_oauth_token"] = arguments.request_oauth_token> 	
 		</cfif>
 	</cffunction>
@@ -44,7 +43,7 @@
 	<cffunction name="setRequestOAuthTokenSecret" access="public" >
 		<cfargument name="request_oauth_token_secret" required="true" type="String" default="" hint="I am a string of this object." />
 
-		<cfif application.config["AppType"] NEQ "Private" AND StructKeyExists(session, "stToken")>
+		<cfif application.config["AppType"] NEQ "Private">
 			<cfset session.stToken["request_oauth_token_secret"] = arguments.request_oauth_token_secret> 	
 		</cfif>
 	</cffunction>

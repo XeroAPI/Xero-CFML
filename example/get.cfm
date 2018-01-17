@@ -8,10 +8,14 @@
 	<cfinclude template="/common/header.cfm" >
 	<cfparam name="form.endpoint" default="None">
 	<cfparam name="form.action" default="None">
+	<cfparam name="showform" default="true">
+
 </head>
 <body>
-<cfinclude template="/common/resource.cfm">
 
+<cfif showform>
+	<cfinclude template="/common/resource.cfm">
+</cfif>
 <div class="container">
 	<div class="row">
   		<div class="col-md-6">
@@ -22,9 +26,11 @@ try {
 
 	switch(form.endpoint) {
 		case "Accounts": 
-		writeOutput("<strong>ACCOUNTS</strong><br>");
+		if(showform) {
+			writeOutput("<strong>ACCOUNTS</strong><br>");
+		}
 		account=createObject("component","cfc.model.Account").init(); 
-		
+
 		switch(form.action) {
 			case "Create":
 				account.setName("Generated " & RandRange(1, 100000, "SHA1PRNG"));
@@ -65,7 +71,7 @@ try {
 				account.create();
 
 				account.delete();
-				writeOutput("DELETED - ID: " & account.getAccountID() & "<br>");
+				writeOutput("Deleted - ID: " & account.getAccountID() & "<br>");
 
 			break;
 	        case "Archive":
@@ -75,7 +81,7 @@ try {
 				account.setType("CURRENT");
 				account.create();
 
-				account.delete();
+				account.archive();
 				writeOutput("Archive - ID: " & account.getAccountID() & "<br>");
 			break;
 			default: 
@@ -84,11 +90,13 @@ try {
 			}
 		break;
 	    case "BankTransactions":
-	    	writeOutput("<strong>BANK TRANSACTIONS</strong><br>");
-			banktransaction=createObject("component","cfc.model.BankTransaction").init(); 
+			if(showform) {
+				writeOutput("<strong>BANK TRANSACTIONS</strong><br>");
+			}
+	    	banktransaction=createObject("component","cfc.model.BankTransaction").init(); 
 			switch(form.action) {
 			case "Create":
-				bankaccount = createObject("component","cfc.model.BankAccount").init().getAll().getObject(1);
+				bankaccount = createObject("component","cfc.model.Account").init().getAll(where='Type=="BANK"').getObject(1);
 				salesaccount =  createObject("component","cfc.model.Account").init().getAll(where='Type=="REVENUE"').getObject(1);
 				contact = createObject("component","cfc.model.Contact").init().getAll().getObject(1);
 
@@ -139,28 +147,36 @@ try {
 			}
 		break;
 		case "BankTransfers":
-			writeOutput("<strong>BANK TRANSFER</strong><br>");
+			if(showform) {
+				writeOutput("<strong>BANK TRANSFER</strong><br>");
+			}
 			banktransfer=createObject("component","cfc.model.BankTransfer").init(); 	
 		
 			switch(form.action) {
 			case "Create":
-				bankaccount = createObject("component","cfc.model.BankAccount").init().getAll();	
-				banktransfer.setFromBankAccount(bankaccount.getObject(1).toStruct());
-				banktransfer.setToBankAccount(bankaccount.getObject(2).toStruct());
-				banktransfer.setAmount("10");
-				banktransfer.create();
-				writeOutput("Create - ID: " & banktransfer.getBanktransferID() & "<br>");
+				bankaccount = createObject("component","cfc.model.Account").init().getAll(where='Type=="BANK"');
+				if (ArrayLen(bankaccount.getList()) GT 1) {	
+					banktransfer.setFromBankAccount(bankaccount.getObject(1).toStruct());
+					banktransfer.setToBankAccount(bankaccount.getObject(2).toStruct());
+					banktransfer.setAmount("10");
+					banktransfer.create();
+					writeOutput("Create - ID: " & banktransfer.getBanktransferID() & "<br>");
+				} else {
+					writeOutput("You need 2 bank accounts to create a transfer.<br>");
+				}
 
 	        break;
 	        case "Read":
 				banktransfer.getAll();
 				writeOutput("Get ALL - count: " & ArrayLen(banktransfer.getList()) & "<br>");
-
-				banktransfer.getObject(1);
-				writeOutput("Get 3rd Item -ID: " & banktransfer.getBankTransferID() & "<br>");
-			
-				banktransfer.getById(banktransfer.getBanktransferID());
-				writeOutput("Get By - ID: " & banktransfer.getBanktransferID() & "<br>");
+				if (ArrayLen(banktransfer.getList()) GT 0) {	
+				
+					banktransfer.getObject(1);
+					writeOutput("Get 3rd Item -ID: " & banktransfer.getBankTransferID() & "<br>");
+				
+					banktransfer.getById(banktransfer.getBanktransferID());
+					writeOutput("Get By - ID: " & banktransfer.getBanktransferID() & "<br>");
+				}
 	        break;
 			default: 
 				writeOutput(form.action & " not supported on the " & form.endpoint & " endpoint");
@@ -168,7 +184,9 @@ try {
 			}
 		break;
 		case "BrandingThemes":
-			writeOutput("<strong>BRANDING THEME</strong><br>");
+			if(showform) {
+				writeOutput("<strong>BRANDING THEME</strong><br>");
+			}
 			brandingtheme=createObject("component","cfc.model.BrandingTheme").init(); 	
 		
 			switch(form.action) {
@@ -188,7 +206,9 @@ try {
 			}
 		break;
 		case "Contacts":
-			writeOutput("<strong>CONTACTS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>CONTACTS</strong><br>");
+			}
 			contact=createObject("component","cfc.model.Contact").init(); 
 
 			switch(form.action) {
@@ -220,7 +240,7 @@ try {
 	           	contact.getAll().getObject(1);
 				contact.setContactStatus("ARCHIVED");
 				contact.archive();
-				writeOutput("ARCHIVED - ID: " & contact.getContactID() & "<br>");
+				writeOutput("Archived - ID: " & contact.getContactID() & "<br>");
 
 			break;
 			default: 
@@ -230,7 +250,9 @@ try {
 
 		break;
 		case "ContactGroups":
-			writeOutput("<strong>CONTACTGROUP</strong><br>");
+			if(showform) {
+				writeOutput("<strong>CONTACTGROUP</strong><br>");
+			}
 			contactgroup=createObject("component","cfc.model.ContactGroup").init(); 
 
 			switch(form.action) {
@@ -296,7 +318,9 @@ try {
 
 		break;
 		case "CreditNotes":
-			writeOutput("<strong>CREDIT NOTE</strong><br>");
+			if(showform) {
+				writeOutput("<strong>CREDIT NOTE</strong><br>");
+			}
 			creditnote=createObject("component","cfc.model.CreditNote").init(); 
 
 			switch(form.action) {
@@ -343,7 +367,9 @@ try {
 			}
 		break;
 		case "Currencies":
-			writeOutput("<strong>CURRENCY</strong><br>");
+			if(showform) {
+				writeOutput("<strong>CURRENCY</strong><br>");
+			}
 			currency=createObject("component","cfc.model.Currency").init(); 
 
 			switch(form.action) {
@@ -371,7 +397,9 @@ try {
 			}
 		break;
 		case "Employees":
-			writeOutput("<strong>EMPLOYEES</strong><br>");
+			if(showform) {
+				writeOutput("<strong>EMPLOYEES</strong><br>");
+			}
 			employee=createObject("component","cfc.model.Employee").init(); 
 
 			switch(form.action) {
@@ -406,7 +434,9 @@ try {
 			}
 		break;
 		case "Invoices":
-			writeOutput("<strong>INVOICES</strong><br>");
+			if(showform) {
+				writeOutput("<strong>INVOICES</strong><br>");
+			}
 			invoice=createObject("component","cfc.model.Invoice").init(); 
 			
 			contact=createObject("component","cfc.model.Contact").init(); 
@@ -478,7 +508,7 @@ try {
 				invoice.setDueDate("2018-5-5");
 				invoice.create();
 	    		invoice.void();
-				writeOutput("VOIDED - ID: " & invoice.getInvoiceID() & "<br>");
+				writeOutput("Voided - ID: " & invoice.getInvoiceID() & "<br>");
 
 			break;
 			default: 
@@ -487,9 +517,10 @@ try {
 			}
 		break;
 		case "InvoiceReminders":
+			if(showform) {
 				writeOutput("<strong>INVOICE REMINDERS</strong><br>");
-				invoicereminder=createObject("component","cfc.model.InvoiceReminder").init(); 
-
+			}
+			invoicereminder=createObject("component","cfc.model.InvoiceReminder").init(); 
 		
 			switch(form.action) {
 	        case "Read":
@@ -503,7 +534,9 @@ try {
 			}
 		break;
 		case "Items":
-			writeOutput("<strong>ITEMS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>ITEMS</strong><br>");
+			}
 			item=createObject("component","cfc.model.Item").init(); 
 
 			switch(form.action) {
@@ -535,8 +568,10 @@ try {
 	        break;
 	        case "Delete":
 				item.getAll().getObject(1);
+				writeOutput("About to delete - Item: " & item.getName() & "<br>");					
 				item.delete();
-				writeOutput("DELETED - Desc: " & item.getDescription() & "<br>");
+
+				writeOutput("Deleted - Item: <br>");
 	         
 			break;
 			default: 
@@ -545,7 +580,9 @@ try {
 			}
 		break;
 		case "Journals":
-			writeOutput("<strong>JOURNALS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>JOURNALS</strong><br>");
+			}
 			journal=createObject("component","cfc.model.Journal").init(); 
 
 			switch(form.action) {
@@ -566,11 +603,13 @@ try {
 			}
 		break;
 		case "LinkedTransactions":
-			writeOutput("<strong>LINKED TRANSACTIONS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>LINKED TRANSACTIONS</strong><br>");
+			}
 			linkedtransaction=createObject("component","cfc.model.LinkedTransaction").init(); 
 
 			banktransaction = createObject("component","cfc.model.BankTransaction").init();
-			bankaccount = createObject("component","cfc.model.BankAccount").init().getAll().getObject(1);
+			bankaccount = createObject("component","cfc.model.Account").init().getAll(where='Type=="BANK"').getObject(1);
 			salesaccount =  createObject("component","cfc.model.Account").init().getAll(where='Type=="REVENUE"').getObject(1);
 			contact = createObject("component","cfc.model.Contact").init().getAll().getObject(1);
 			lineitem=createObject("component","cfc.model.LineItem").init(); 
@@ -625,7 +664,7 @@ try {
 				linkedtransaction.create();
 
 				linkedtransaction.delete();
-				writeOutput("DELETED - ID: " & linkedtransaction.getLinkedTransactionID() & "<br>");
+				writeOutput("Deleted - ID: " & linkedtransaction.getLinkedTransactionID() & "<br>");
 
 			break;
 			default: 
@@ -634,7 +673,9 @@ try {
 			}
 		break;
 		case "ManualJournals":
-			writeOutput("<strong>MANUAL JOURNALS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>MANUAL JOURNALS</strong><br>");
+			}
 			manualjournal=createObject("component","cfc.model.ManualJournal").init(); 
 			
 			journalline=createObject("component","cfc.model.JournalLine").init(); 
@@ -691,7 +732,9 @@ try {
 			}
 		break;
 		case "Organisation":
-			writeOutput("<strong>ORGANISATION</strong><br>");
+			if(showform) {
+				writeOutput("<strong>ORGANISATION</strong><br>");
+			}
 			organisation=createObject("component","cfc.model.Organisation").init(); 
 		
 			switch(form.action) {
@@ -709,13 +752,14 @@ try {
 			}
 		break;
 		case "Overpayments":
-
-			writeOutput("<strong>OVERPAYMENTS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>OVERPAYMENTS</strong><br>");
+			}
 			overpayment=createObject("component","cfc.model.Overpayment").init(); 
 
 			//CREATE OVERPAYMENT via BANK TRANSACTION
 			banktransaction=createObject("component","cfc.model.BankTransaction").init(); 
-			bankaccount = createObject("component","cfc.model.BankAccount").init().getAll().getObject(1);
+			bankaccount = createObject("component","cfc.model.Account").init().getAll(where='Type=="BANK"').getObject(1);
 			contact = createObject("component","cfc.model.Contact").init().getAll().getObject(1);
 			lineitem=createObject("component","cfc.model.LineItem").init(); 
 			lineitem.setDescription("consulting");
@@ -756,7 +800,7 @@ try {
 				overpayment.getAll();
 				writeOutput("Get ALL - count: " & ArrayLen(overpayment.getList()) & "<br>");
 
-				overpayment.getObject(2);
+				overpayment.getObject(1);
 				writeOutput("Get an Item from List -ID: " & overpayment.getOverpaymentID() & "<br>");
 
 				overpayment.getById(overpayment.getOverpaymentID());
@@ -786,7 +830,9 @@ try {
 			}
 		break;
 		case "Payments":
-			writeOutput("<strong>PAYMENTS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>PAYMENTS</strong><br>");
+			}
 			payment=createObject("component","cfc.model.Payment").init(); 
 
 			invoice=createObject("component","cfc.model.Invoice").init(); 
@@ -806,7 +852,7 @@ try {
 			invoice.setDueDate("2018-5-5");
 			invoice.create();
 
-			bankaccount = createObject("component","cfc.model.BankAccount").init().getAll().getObject(1);
+			bankaccount = createObject("component","cfc.model.Account").init().getAll(where='Type=="BANK"').getObject(1);
 
 			switch(form.action) {
 			case "Create":
@@ -838,7 +884,7 @@ try {
 				payment.create();
 
 	        	payment.delete();
-				writeOutput("DELETE - ID: " & payment.getPaymentID() & "<br>");	
+				writeOutput("delete - ID: " & payment.getPaymentID() & "<br>");	
 
 	        break;
 	 
@@ -848,12 +894,14 @@ try {
 			}
 		break;
 		case "Prepayments":
-			writeOutput("<strong>PREPAYMENTS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>PREPAYMENTS</strong><br>");
+			}
 			prepayment=createObject("component","cfc.model.Prepayment").init(); 
 
 			//CREATE OVERPAYMENT via BANK TRANSACTION
 			banktransaction=createObject("component","cfc.model.BankTransaction").init(); 
-			bankaccount = createObject("component","cfc.model.BankAccount").init().getAll().getObject(1);
+			bankaccount = createObject("component","cfc.model.Account").init().getAll(where='Type=="BANK"').getObject(1);
 			contact = createObject("component","cfc.model.Contact").init().getAll().getObject(1);
 			lineitem=createObject("component","cfc.model.LineItem").init(); 
 			lineitem.setDescription("consulting");
@@ -896,7 +944,7 @@ try {
 	        	prepayment.getAll();
 				writeOutput("Get ALL - count: " & ArrayLen(prepayment.getList()) & "<br>");
 
-				prepayment.getObject(2);
+				prepayment.getObject(1);
 				writeOutput("Get an Item from List -ID: " & prepayment.getPrepaymentID() & "<br>");								
 
 				prepayment.getById(prepayment.getPrepaymentID());
@@ -925,7 +973,9 @@ try {
 			}
 		break;
 		case "PurchaseOrders":
-			writeOutput("<strong>PURCHASE ORDERS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>PURCHASE ORDERS</strong><br>");
+			}
 			purchaseorder=createObject("component","cfc.model.Purchaseorder").init(); 
 
 			// Create
@@ -978,9 +1028,10 @@ try {
 			}
 		break;
 		case "RepeatingInvoices":
-			writeOutput("<strong>REPEATING INVOICES</strong><br>");
+			if(showform) {
+				writeOutput("<strong>REPEATING INVOICES</strong><br>");
+			}
 			repeatinginvoice=createObject("component","cfc.model.RepeatingInvoice").init(); 
-	
 	
 			switch(form.action) {
 	        case "Read":				
@@ -994,9 +1045,53 @@ try {
 				writeOutput("Get By ID: " & repeatinginvoice.getRepeatingInvoiceID() & "<br>");
 							
 	        break;
-	        case "Update":
-	        	
+	        
+			default: 
+				writeOutput(form.action & " not supported on the " & form.endpoint & " endpoint");
+				break;
+			}
+		break;
+		case "Reports":
+			if(showform) {
+				writeOutput("<strong>REPORTS</strong><br>");
+			}
+			report=createObject("component","cfc.model.Report").init(); 
+			contact=createObject("component","cfc.model.Contact").init().getAll().getObject(1); 
+			bankaccount = createObject("component","cfc.model.Account").init().getAll(where='Type=="BANK"').getObject(1);
+			
+	
+			switch(form.action) {
+	        case "Read":				
+				report.getById("TenNinetyNine");
+				writeOutput("Get Report: " & report.getReportName() & "<br>");
 
+				report.getById(id="AgedPayablesByContact",ContactID=contact.getContactID());
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+
+				report.getById(id="AgedReceivablesByContact",ContactID=contact.getContactID());
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+
+				report.getById(id="BalanceSheet",periods="3",timeframe="month");
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+
+				report.getById(id="BankStatement",bankAccountID=bankaccount.getAccountID());
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+
+				report.getById(id="BankSummary",toDate="2017-03-01",fromDate="2017-01-01");
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+
+				report.getById(id="BudgetSummary");
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+
+				report.getById(id="ExecutiveSummary");
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+
+				report.getById("ProfitAndLoss");
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+
+				report.getById("TrialBalance");
+				writeOutput("Get Report: " & report.getReportID() & "<br>");
+							
 	        break;
 			default: 
 				writeOutput(form.action & " not supported on the " & form.endpoint & " endpoint");
@@ -1004,7 +1099,9 @@ try {
 			}
 		break;
 		case "TaxRates":
-			writeOutput("<strong>TAX RATES</strong><br>");
+			if(showform) {
+				writeOutput("<strong>TAX RATES</strong><br>");
+			}
 			taxrate=createObject("component","cfc.model.TaxRate").init(); 
 
 			// Create
@@ -1059,7 +1156,10 @@ try {
 			}
 		break;
 		case "TrackingCategories":
-			writeOutput("<strong>TRACKING CATEGORIES</strong><br>");
+			if(showform) {
+				writeOutput("<strong>TRACKING CATEGORIES</strong><br>");
+			}
+
 			trackingcategory=createObject("component","cfc.model.TrackingCategory").init(); 	
 
 			switch(form.action) {
@@ -1149,7 +1249,10 @@ try {
 			}
 		break;
 		case "Users":
-			writeOutput("<strong>USERS</strong><br>");
+			if(showform) {
+				writeOutput("<strong>USERS</strong><br>");
+			}
+
 			user=createObject("component","cfc.model.User").init(); 
 
 			switch(form.action) {

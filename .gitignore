@@ -1,5 +1,6 @@
 config.json
 _update.cfm
+test.cfm
 *.cer
 *.pfx
 *.pem

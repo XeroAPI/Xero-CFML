@@ -226,6 +226,15 @@
 
   <cffunction name="getAll" access="public" returntype="any">
     <cfargument name="ifModifiedSince"  type="string" default="">
+    <cfargument name="where"  type="string" default="">
+    <cfargument name="order"  type="string" default="">
+
+      <cfset stParam = StructNew()>
+      <cfset stParam["where"] = arguments.where>
+      <cfset stParam["order"] = arguments.order>
+      <cfset this.setParameters(stParam)>    
+      <cfset this.setModifiedSince(arguments.ifModifiedSince)>
+      
       <cfset this.setList(this.get(endpoint="Items"))>
     <cfreturn this>
   </cffunction>
@@ -273,8 +282,8 @@
 
   <cffunction name="delete" access="public" output="false">
     <cfset variables.result = Super.delete(endpoint="Items",body=this.toJSON(),id=this.getItemID())>
-    
-      <cfset temp = this.populate(variables.result)>
+      
+     <cfset temp = this.populate(variables.result)>
     <cfreturn this />
   </cffunction>
 

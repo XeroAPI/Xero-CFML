@@ -4,7 +4,7 @@
 --->
 <html>
 <head>
-	<title>CFML Xero Public Application - Callback</title>
+	<title>CFML Xero Application - Callback</title>
 	<cfinclude template="/common/header.cfm" >
 </head>
 <body>

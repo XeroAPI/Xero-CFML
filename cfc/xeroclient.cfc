@@ -22,9 +22,22 @@
 		<cfset variables.parameters = arguments.parameters />
 	</cffunction>
 
+
+	<cffunction name="getModifiedSince" access="public" returntype="string">
+		<cfset variables.modifiedsince = "">
+	
+		<cfreturn  variables.modifiedsince>
+	</cffunction>
+
+	<cffunction name="setModifiedSince" access="public" >
+		<cfargument name="modifiedsince"  type="string" default="">
+
+		<cfset variables.modifiedsince = arguments.modifiedsince />
+	</cffunction>
+
+
 	<cffunction name="get" access="public" >
 		<cfargument name="endpoint"  type="string" default="">
-		<cfargument name="ifModifiedSince"  type="string" default="">
 		<cfargument name="accept"  type="string" default="application/json">
 		<cfargument name="id"  type="string" default="">
 		<cfargument name="child"  type="string" default="">
@@ -50,7 +63,7 @@
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "GET",
-			sIfModifiedSince = arguments.ifModifiedSince)>
+			sIfModifiedSince = this.getModifiedSince())>
 
 		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
 			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
@@ -171,10 +184,10 @@
 			sMethod = "DELETE",
 			sBody = arguments.body)>
 
+
 		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
 			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
 		</cfif>
-
 		<cfif len(oRequestResult["RESPONSE"]) GT 0 >
 			<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
 			<cfif structKeyExists(rawResult,"ErrorNumber")>
@@ -182,7 +195,9 @@
 			</cfif>
 
 			<cfif isJSON(variables.oRequestResult["RESPONSE"])>
-				<cfif StructKeyExists(rawResult,arguments.endpoint)>
+				<cfif StructKeyExists(rawResult,"Deleted")>
+					<cfset variables.result = StructNew()>
+				<cfelseif StructKeyExists(rawResult,arguments.endpoint)>
 					<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
 				<cfelseif StructKeyExists(rawResult,arguments.child)>
 					<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.child]>
@@ -191,10 +206,13 @@
 					
 				</cfif>
 			<cfelse>
-				<cfset variables.result = this.toJSON()>
+				<cfset variables.result = StructNew()>
 			</cfif>
 		<cfelse>
-			<cfset variables.result = this.toStruct()>
+
+			<cfset myStruct = StructNew()>
+			<cfset myStruct.foo = "bar">
+			<cfset variables.result = myStruct>
 		</cfif>
 		<cfreturn variables.result>
 	</cffunction>

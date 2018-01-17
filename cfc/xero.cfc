@@ -130,7 +130,6 @@ History:
 				"&" & "endpoint=" & config.AuthenticateUrl>
 
 			<cfset sAuthURL = config.AuthenticateUrl & "?oauth_token=" & this.storage.getRequestOAuthToken() & "&" & "oauth_callback=" & URLEncodedFormat(config.CallbackBaseUrl & config.CallbackPath) >
-
 		<cfreturn sAuthURL>
 	</cffunction>
 
@@ -197,8 +196,11 @@ History:
 
 	<cffunction name="IsTokeExpired" access="public" returntype="boolean">
 		<cfset expired = false>
-		<cfif datediff('n',this.storage.getTimestamp(),now()) GTE 29>
-			<cfset expired = true>
+
+		<cfif len(this.storage.getTimestamp()) GT 0>
+			<cfif datediff('n',this.storage.getTimestamp(),now()) GTE 29>
+				<cfset expired = true>
+			</cfif>
 		</cfif>
 
 		<cfreturn expired>
@@ -326,7 +328,6 @@ History:
 				oConsumer = oConsumer,
 				oToken = oToken)>
 
-
 			<!--- Request data from Xero API --->
 			<cfhttp 
 				url="#oREQ.getString()#" 
@@ -343,13 +344,17 @@ History:
 				</cfif>
 			</cfhttp>
 
+
 		<cfset stReturn = structNew()>
 		<cfif isXML(tokenResponse.Filecontent)>
 			<cfset stReturn.response = ConvertXmlToStruct(tokenResponse.Filecontent,structNew())>
 		<cfelse>
-			<cfset stReturn.response = tokenResponse.Filecontent>
+				<cfif len(tokenResponse.Filecontent) EQ 0>
+					<cfset stReturn.response = '{ "Status": "OK",  "Deleted": "true",  "ValidationErrors": [] }'>
+				<cfelse>
+					<cfset stReturn.response = tokenResponse.Filecontent>
+				</cfif>
 		</cfif>
-
 
 		<cfreturn stReturn>
 	</cffunction>
