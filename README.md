@@ -18,7 +18,9 @@ Xero CFML SDK - connect to Xero API with CFML application servers.
 ### Sample App
 Install the sample app with [CommandBox]( https://www.ortussolutions.com/products/commandbox)
 
+```javascript
   box install xero-cfml-sample-app
+```
 
 Alternatively, you can [clone or download the app](https://github.com/XeroAPI/xero-cfml-sample-app) into your wwwroot folder
 
