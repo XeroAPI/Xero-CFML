@@ -365,7 +365,7 @@ If you find yourself limited by the models, you can always hack your own raw API
 ## Additional Reading
 * [oAuth Bibile](http://oauthbible.com/)
 
-##Acknowledgements
+## Acknowledgements
 Thanks to the following Developers and Open Source libraries for making the SDK and samples easier
 
 * [ColdFusion oAuth Library](http://oauth.riaforge.org/) - OAuth 1.0
@@ -373,7 +373,7 @@ Thanks to the following Developers and Open Source libraries for making the SDK 
 * [Matthew Bryant](http://au.linkedin.com/in/mjbryant) - For his work on a Xero API wrapper for Private applications
 
 
-##License
+## License
 
 This software is published under the [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 
