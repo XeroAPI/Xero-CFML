@@ -26,7 +26,9 @@ Alternatively, you can [clone or download the app](https://github.com/XeroAPI/xe
 
 ### Install as a dependency with [CommandBox]( https://www.ortussolutions.com/products/commandbox)
 
+```javascript
   box install xero-cfml
+```
 
 Alternatively, you can clone or download this repo and add to your application
 
