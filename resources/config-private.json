@@ -1,7 +1,0 @@
-{ 
-	"AppType" : "PRIVATE",
-	"UserAgent" : "MyAppName",
-	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
-	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
-	"PrivateKeyCert" :  "certs/privatekey.pk8"
-}

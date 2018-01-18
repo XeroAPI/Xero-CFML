@@ -1,9 +1,0 @@
-{ 
-	"AppType" : "PARTNER",
-	"UserAgent" : "MyAppName",
-	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
-	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
-	"CallbackBaseUrl" : "http://localhost:8500",
-	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm",
-	"PrivateKeyCert" :  "certs/privatekey.pk8"
-}
