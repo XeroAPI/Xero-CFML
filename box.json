@@ -1,0 +1,56 @@
+{
+    "name":"Xero CFML SDK",
+    "version":"0.5.0",
+    "author":"",
+    "location":"https://github.com/SidneyAllen/Xero-CFML/archive/master.zip",
+    "homepage":"",
+    "documentation":"",
+    "repository":{
+        "type":"",
+        "URL":""
+    },
+    "bugs":"",
+    "slug":"xero-cfml",
+    "shortDescription":"CFML SDK for Xero API",
+    "description":"This is a beta release that includes SDK source and an example app",
+    "instructions":"",
+    "changelog":"",
+    "type":"modules",
+    "keywords":[],
+    "private":false,
+    "projectURL":"",
+    "license":[
+        {
+            "type":"",
+            "URL":""
+        }
+    ],
+    "contributors":[],
+    "dependencies":{},
+    "devDependencies":{},
+    "installPaths":{},
+    "scripts":{},
+    "ignore":[
+        "**/.*",
+        "test",
+        "tests"
+    ],
+    "testbox":{
+        "runner":[
+            {
+                "default":""
+            }
+        ],
+        "labels":"",
+        "reporter":"",
+        "bundles":"",
+        "recurse":true,
+        "directory":"tests.specs",
+        "testBundles":"",
+        "testSuites":"",
+        "testSpecs":"",
+        "verbose":true,
+        "watchDelay":500,
+        "watchPaths":"**.cfc"
+    }
+}
