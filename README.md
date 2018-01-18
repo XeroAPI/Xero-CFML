@@ -1,11 +1,9 @@
-Xero-CFML
-=========
-
-CFML SDK for Xero API - use with CFML application servers.
+Xero CFML SDK - connect to Xero API with CFML application servers.
 
 * [Things to note](#things-to-note)
-* [Select an Application Type](#select-an-application-type)
 * [Getting Started](#getting-started)
+* [OAuth Flow](#oauth-flow)
+* [Methods](#methods)
 * [To Do](#to-do)
 * [Additional Reading](#additional-reading)
 * [Acknowledgements](#acknowledgements)
@@ -16,117 +14,112 @@ CFML SDK for Xero API - use with CFML application servers.
 * Not tested on Lucee, please submit issues if you encounter any.
 
 
-## Select an application type
-Xero's API supports [3 application types](http://developer.xero.com/documentation/getting-started/api-application-types/). All Xero Apps types supported by this SDK.  Please [review  each type](http://developer.xero.com/documentation/getting-started/api-application-types/) to determine the right one for your integration.
+## Getting Started
+### Install as a dependency with [CommandBox]( https://www.ortussolutions.com/products/commandbox)
+
+  box install xero-cfml
+
+Alternatively, you can clone or download this repo and add to your application
+
+Add directory map in your Application.cfc file.
+
+```javascript
+	<cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" /> 
+```
+
+### Create a Xero User Account
+[Create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the free Demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
+
+### Create a Xero a App
+You'll need to decide which type of Xero app you'll be building.
 
 * [Public](http://developer.xero.com/documentation/auth-and-limits/public-applications/)
 * [Private](http://developer.xero.com/documentation/auth-and-limits/private-applications/)
 * [Partner](http://developer.xero.com/documentation/auth-and-limits/partner-applications/)
 
+Go to [http://app.xero.com](http://app.xero.com) and login with your Xero user account to create a Xero app.
 
-## Getting Started
-### Create a Xero User Account
-[Create a Xero user account](https://www.xero.com/signup) for free.  Xero does not have a designated "sandbox" for development.  Instead you'll use the free Demo company for development.  Learn how to get started with [Xero Development Accounts](http://developer.xero.com/documentation/getting-started/development-accounts/).
+### Update Config.json with Keys and Certificates
 
-### Install Xero-CFML Library
-Download this library and place it in your webroot. There are two directory maps in the Application.cfc file.
+Look in the resources directory for your config.json file.  The min required attirbutes for each app type is show below.
 
-	<cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" /> 
-    <cfset this.mappings["/common"] = getDirectoryFromPath(getCurrentTemplatePath()) & "common/" /> 
+Refer to Xero Developer Center [Getting Started](http://developer.xero.com/documentation/getting-started/getting-started-guide/) if you haven't created your Xero App yet - this is where you'll find the Consumer Key and Secret. 
 
-## Configuration of API Keys and Certificates
-### Securing your resources directory
+Private and Partner apps require a [public/private key pair](http://developer.xero.com/documentation/api-guides/create-publicprivate-key/) created with OpenSSL.  The private key should be exported as a pk8 file and placed in the "resources/certs" folder.  Jump to Generate Public/Private Key below to see terminal commands.
+
+**Public Application**
+```javascript
+{ 
+  "AppType" : "PUBLIC",
+  "UserAgent": "YourAppName",
+  "ConsumerKey" : "__YOUR_CONSUMER_KEY__",
+  "ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
+  "CallbackBaseUrl" : "http://localhost:8500",
+  "CallbackPath" : "/xero-cfml-sample-app/callback.cfm"
+}
+```
+
+**Private Application**
+Note: private applications connect to a single Xero organzation and therefore do not require the 3-legged oAuth flow.
+```javascript
+{ 
+  "AppType" : "PRIVATE",
+  "UserAgent": "YourAppName",
+  "ConsumerKey" : "__YOUR_CONSUMER_KEY__",
+  "ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
+  "PrivateKeyCert" :  "certs/public_privatekey.pfx",
+  "PrivateKeyPassword" :  "1234"
+}
+```
+**Partner Application**
+```javascript
+{ 
+  "AppType" : "PARTNER",
+  "UserAgent": "YourAppName",
+  "ConsumerKey" : "__YOUR_CONSUMER_KEY__",
+  "ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
+  "CallbackBaseUrl" : "http://localhost:8500",
+  "CallbackPath" : "/xero-cfml-sample-app/callback.cfm",
+  "PrivateKeyCert" :  "certs/public_privatekey.pfx",
+  "PrivateKeyPassword" :  "1234"
+}
+```
+
+**Optionals Attributes**
+
+* Accept: format of data returned from API  (application/xml, application/json, application/pdf) *default is application/json*
+* ApiBaseUrl: base URL for API calls      *default is https://api.xero.com*
+* ApiEndpointPath: path for API Calls      *default is /api.xro/2.0/*
+* RequestTokenPath: path for Request Token      *default it /oauth/RequestToken*
+* AuthenticateUrl: path for redirect to authorize      *default is /oauth/RequestToken*
+* AccessTokenPath: path for Access Token         *default is https://api.xero.com/oauth/Authorize*
+
+
+### Secure your Keys and Certificates
 All configuration files and certificates are located in the resources directory.  In a production environment, you will move this directory outside the webroot for security reasons.  Remember to update the *pathToConfigJSON* variable in your Application.cfc.  
 
+```javascript
 <cfset pathToConfigJSON = getDirectoryFromPath(getCurrentTemplatePath()) & "resources/config.json"> 
+```
 
-### Config.json
-Inside the resources directory, you'll find 4 files.  *the ONLY file used is config.json*.  The other 3 files show required values based on the type of Xero Application.  For example, if you are building a Xero Public App, you can open *config-public.json* and save it as *config.json*, then follow the steps below to set the values for your App.
-
-* config.json
-* config-partner.json
-* config-private.json
-* config-public.json
-
-### Public Application
-#### Configure Xero Application
-Create a [Xero Public application](https://app.xero.com/). Enter a callback domain i.e. localhost.
-
-Open *config.json* file located in the resources directory.  Copy and paste your consumer key and secret.
-
-	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
-	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
-
-Customize your callback base URL and callback path to point to the location of example/callback.cfm. 
-
-	"CallbackBaseUrl" : "http://localhost:8500",
-	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm"
-
-Point your browser to example/index.cfm and click "Connect to Xero" to begin the authentication flow.  Public application access tokens expire after 30 minutes and require the user to authenticate again.
-
-### Private Application
-#### Generate Public/Private Key
-A [public/private key pair](http://developer.xero.com/documentation/api-guides/create-publicprivate-key/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you create your Xero application.  Store the private key in the /resources/certs/ directory. 
+### Generate Public-Private Key
+A [public/private key pair](http://developer.xero.com/documentation/api-guides/create-publicprivate-key/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key for Private and Partner apps at http://app.xero.com.  Store the private key  in the /resources/certs directory.
 
 The basic command line steps to generate a public and private key using OpenSSL are as follows:
 
-	openssl genrsa -out privatekey.pem 1024
-	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
-	openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
+  openssl genrsa -out privatekey.pem 1024
+  openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
+  openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
 
 For this SDK, you will need to run one additional command to create a .pk8 formatted private key.
 
-	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
-
-#### Configure Xero Application
-Create a [Xero Private application](https://app.xero.com/Application). Select which Xero organization you are connecting to. Upload the *publickey.cer* created as part of the public/private key pair. 
-
-
-Open *config-private.json* located in the *resources* directory and save it as *config.json*, Open *config.json* then copy and paste the consumer key.
-
-	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
-
-Point your browser to example/index.cfm and click "Connect to Xero" to begin accessing API resources. Note: private applications connect to a single Xero organzation and therefore do not require the 3-legged oAuth flow.
-
-### Partner Application
-Partner applications are only available to those joining [Xero's Add-on Partner Program](http://developer.xero.com/partner/).
-
-After you've applied to join the Partner Program and validated your integration with Xero Developer Evangelist team, build your integration as a Public Application.  Public and Partner applications share all the same data endpoints. Public and Partner application access tokens both expire after 30 minutes, but Partner applications can refresh access tokens when they expire.
-
-Once your integration is complete, contact Xero Developer Evangelist team to review your integration and upgrade from Public to Partner Application.
-
-#### Generate Public/Private Key
-A [public/private key pair](http://developer.xero.com/documentation/api-guides/create-publicprivate-key/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key when you upgrade to a Partner application.  Store the private key  in the /resources/certs directory.
-
-The basic command line steps to generate a public and private key using OpenSSL are as follows:
-
-	openssl genrsa -out privatekey.pem 1024
-	openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
-	openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
-
-For this SDK, you will need to run one additional command to create a .pk8 formatted private key.
-
-	openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
-
-#### Configure Xero Application
-Go to your upgraded [Xero Partner application](https://app.xero.com/). Enter a callback domain i.e. localhost.
-
-Open *config-partner.json* located in the resources directory and save it as *config.json*, Open *config.json* then copy and paste the consumer key and secret.
-
-	"ConsumerKey" : "__YOUR_CONSUMER_KEY__",
-	"ConsumerSecret" : "__YOUR_CONSUMER_KEY_SECRET__",
-
-Customize your callback base URL and callback path to point to the location of example/callback.cfm. 
-
-	"CallbackBaseUrl" : "http://localhost:8500",
-	"CallbackPath" : "/Xero-CFML-master/example/callback.cfm"
-
-
-Point your browser to example/index.cfm and click "Connect to Xero" to begin the authentication flow. 
+  openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
 
 ## OAuth Flow
 
-For Public & Parnter Aps you'll use 3 legged oAuth, which involves a RequestToken Call, then redirecting the user to Xero to select a Xero org, then callback to your server where you'll swap the request token for your 30 min access tokens.
+For Public & Partner Apps you'll use 3 legged oAuth, which involves a RequestToken Call, then redirecting the user to Xero to select a Xero org, then callback to your server where you'll swap the request token for your 30 min access tokens.  Partner Apps will check if a token is expired an refresh for you.
+
+Note: Tokens are managed in the session scope through the storage.cfc file.  You'll want to extend storage.cfc to persist individual tokens in a database.
 
 ### requesttoken.cfm
 
@@ -190,7 +183,7 @@ Reading all objects from an endpoint
 
   // Get all items 
   account.getAll();
-	// After you getAll - you can loop over an Array of items (NOTE: Your object is not populated with the getAll method)
+  // After you getAll - you can loop over an Array of items (NOTE: Your object is not populated with the getAll method)
   account.getList();
 
   //After you getAll - Populate your object with the first item in the Array
@@ -206,9 +199,6 @@ Reading all objects from an endpoint
   dateTime24hoursAgo = DateAdd("d", -1, now());
   ifModifiedSince = DateConvert("local2utc", dateTime24hoursAgo);
   account.getAll(ifModifiedSince=ifModifiedSince);
-
- //Get an item by a specific ID (No need to getAll with this method)
-  account.getById("XXXXXXXXXXXXXXXXX");
 </cfscript>		
 ```
 
