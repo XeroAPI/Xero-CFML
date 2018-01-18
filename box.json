@@ -1,13 +1,13 @@
 {
     "name":"Xero-CFML SDK",
-    "version":"0.5.0",
+    "version":"0.5.1",
     "author":"Xero",
     "location":"https://github.com/XeroAPI/Xero-CFML",
     "homepage":"https://developer.xero.com",
     "documentation":"https://github.com/XeroAPI/Xero-CFML/blob/master/README.md",
     "repository":{
         "type":"zip",
-        "URL":"https://github.com/SidneyAllen/Xero-CFML/archive/0.5.0.zip"
+        "URL":"https://github.com/SidneyAllen/Xero-CFML/archive/0.5.1.zip"
     },
     "bugs":"",
     "slug":"@xeroapi/xero-cfml",
