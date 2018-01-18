@@ -1,6 +1,6 @@
 {
     "name":"Xero CFML SDK",
-    "version":"0.5.2",
+    "version":"0.5.0",
     "author":"",
     "location":"https://github.com/SidneyAllen/Xero-CFML/archive/master.zip",
     "homepage":"",
@@ -12,7 +12,7 @@
     "bugs":"",
     "slug":"xero-cfml",
     "shortDescription":"CFML SDK for Xero API",
-    "description":"",
+    "description":"This is a beta release that includes SDK source and an example app",
     "instructions":"",
     "changelog":"",
     "type":"modules",
