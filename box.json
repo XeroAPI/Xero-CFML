@@ -1,28 +1,28 @@
 {
-    "name":"Xero-CFML SDK",
-    "version":"0.5.1",
-    "author":"Xero",
-    "location":"https://github.com/XeroAPI/Xero-CFML",
-    "homepage":"https://developer.xero.com",
-    "documentation":"https://github.com/XeroAPI/Xero-CFML/blob/master/README.md",
+    "name":"Xero CFML SDK",
+    "version":"0.5.2",
+    "author":"",
+    "location":"https://github.com/SidneyAllen/Xero-CFML/archive/master.zip",
+    "homepage":"",
+    "documentation":"",
     "repository":{
-        "type":"zip",
-        "URL":"https://github.com/SidneyAllen/Xero-CFML/archive/0.5.1.zip"
+        "type":"",
+        "URL":""
     },
     "bugs":"",
-    "slug":"@xeroapi/xero-cfml",
+    "slug":"xero-cfml",
     "shortDescription":"CFML SDK for Xero API",
     "description":"",
     "instructions":"",
     "changelog":"",
-    "type":"",
+    "type":"modules",
     "keywords":[],
     "private":false,
     "projectURL":"",
     "license":[
         {
-            "type":"MIT",
-            "URL":"https://github.com/XeroAPI/Xero-CFML/blob/master/README.md#license"
+            "type":"",
+            "URL":""
         }
     ],
     "contributors":[],
