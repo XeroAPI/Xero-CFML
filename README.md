@@ -117,15 +117,15 @@ All configuration files and certificates are located in the resources directory.
 A [public/private key pair](http://developer.xero.com/documentation/api-guides/create-publicprivate-key/) is required to sign your RSA-SHA1 oAuth requests.  Upload the public key for Private and Partner apps at http://app.xero.com.  Store the private key  in the /resources/certs directory.
 
 The basic command line steps to generate a public and private key using OpenSSL are as follows:
-
+```javascript
   openssl genrsa -out privatekey.pem 1024
   openssl req -new -x509 -key privatekey.pem -out publickey.cer -days 1825
   openssl pkcs12 -export -out public_privatekey.pfx -inkey privatekey.pem -in publickey.cer
-
+```
 For this SDK, you will need to run one additional command to create a .pk8 formatted private key.
-
+```javascript
   openssl pkcs8 -topk8 -in privatekey.pem -outform DER -nocrypt -out privatekey.pk8
-
+```
 ## OAuth Flow
 
 For Public & Partner Apps you'll use 3 legged oAuth, which involves a RequestToken Call, then redirecting the user to Xero to select a Xero org, then callback to your server where you'll swap the request token for your 30 min access tokens.  Partner Apps will check if a token is expired an refresh for you.
