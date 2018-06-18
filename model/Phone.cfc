@@ -2,7 +2,7 @@
   hint="I am the Phone Class.">
 
 <!--- PROPERTIES --->
-
+  <cfproperty name="PhoneType" type="String" default="" />
   <cfproperty name="PhoneNumber" type="String" default="" />
   <cfproperty name="PhoneAreaCode" type="String" default="" />
   <cfproperty name="PhoneCountryCode" type="String" default="" />
@@ -57,7 +57,11 @@
             myStruct.PhoneID=getPhoneID();
             myStruct.Status=getStatus();
           } else {
-
+            if (structKeyExists(variables.instance,"PhoneType")) {
+              if (NOT listFindNoCase(arguments.exclude, "PhoneType")) {
+                myStruct.PhoneType=getPhoneType();
+              }
+            }
             if (structKeyExists(variables.instance,"PhoneNumber")) {
               if (NOT listFindNoCase(arguments.exclude, "PhoneNumber")) {
                 myStruct.PhoneNumber=getPhoneNumber();
@@ -89,7 +93,11 @@
 
         <cfset obj = arguments.objects>
         <cfscript>
-
+        if (structKeyExists(obj,"PhoneType")) {
+          setPhoneType(obj.PhoneType);
+        } else {
+          setPhoneType("");
+        }
         if (structKeyExists(obj,"PhoneNumber")) {
           setPhoneNumber(obj.PhoneNumber);
         } else {
@@ -186,7 +194,18 @@
   </cffunction>
 
 <!--- GETTER / SETTER  --->
+   <!---
+   * See Tax Types
+   * @return PhoneType
+  --->
+  <cffunction name="getPhoneType" access="public" output="false" hint="I return the PhoneType">
+    <cfreturn variables.instance.PhoneType />
+  </cffunction>
 
+  <cffunction name="setPhoneType" access="public"  output="false" hint="I set the PhoneType into the variables.instance scope.">
+    <cfargument name="PhoneType" type="String" hint="I am the PhoneType." />
+      <cfset variables.instance.PhoneType = arguments.PhoneType />
+  </cffunction>
   <!---
    * max length = 50
    * @return PhoneNumber

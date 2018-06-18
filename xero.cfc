@@ -182,7 +182,7 @@ History:
 
 			<!--- was an oauth_token returned in the response if its there save the new access token --->
 			<cfif findNoCase("oauth_token",tokenresponse.filecontent)>
-				<cfset this.storage.setTimestamp('#DateFormat(now(), "mmm-dd-yyyy")# #TimeFormat(now(), "hh:mm:ss")#') >
+				<cfset this.storage.setTimestamp('#DateFormat(now(), "mmm-dd-yyyy")# #TimeFormat(now(), "HH:mm:ss")#') >
 				<cfset this.storage.saveAccessToken(tokenResponse.filecontent)>
 				<cfreturn true>
 <!---				<cfset oResultRequest["content"] = "success" >--->
@@ -243,7 +243,7 @@ History:
 
 		<!--- was an oauth_token returned in the response if its there save the new access token --->
 		<cfif findNoCase("oauth_token",tokenresponse.filecontent)>
-			<cfset this.storage.setTimestamp('#DateFormat(now(), "mmm-dd-yyyy")# #TimeFormat(now(), "hh:mm:ss")#') >
+			<cfset this.storage.setTimestamp('#DateFormat(now(), "mmm-dd-yyyy")# #TimeFormat(now(), "HH:mm:ss")#') >
 			<cfset this.storage.saveAccessToken(tokenResponse.filecontent)>
 			<cfreturn true>
 		<cfelse>		
