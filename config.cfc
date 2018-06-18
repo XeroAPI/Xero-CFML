@@ -68,7 +68,7 @@ History:
 			<cfset this.AppType = this.json["AppType"]>
 		</cfif>
 		<cfif structKeyExists(this.json, "UserAgent")>
-			<cfset this.UserAgent = this.json["UserAgent"] & "-CFML-[0.5.0]">
+			<cfset this.UserAgent = this.json["UserAgent"] & '-' & this.json["ConsumerKey"] & "-CFML-[0.5.1]">
 		</cfif>
 		<cfif structKeyExists(this.json, "Accept")>
 			<cfset this.Accept = this.json["Accept"]>
