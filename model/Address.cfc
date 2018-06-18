@@ -2,7 +2,7 @@
   hint="I am the Address Class.">
 
 <!--- PROPERTIES --->
-
+  <cfproperty name="AddressType" type="String" default="" />
   <cfproperty name="AddressLine1" type="String" default="" />
   <cfproperty name="AddressLine2" type="String" default="" />
   <cfproperty name="AddressLine3" type="String" default="" />
@@ -48,7 +48,11 @@
             myStruct.AddressID=getAddressID();
             myStruct.Status=getStatus();
           } else {
-
+            if (structKeyExists(variables.instance,"AddressType")) {
+              if (NOT listFindNoCase(arguments.exclude, "AddressType")) {
+                myStruct.AddressType=getAddressType();
+              }
+            }
             if (structKeyExists(variables.instance,"AddressLine1")) {
               if (NOT listFindNoCase(arguments.exclude, "AddressLine1")) {
                 myStruct.AddressLine1=getAddressLine1();
@@ -107,7 +111,11 @@
 
         <cfset obj = arguments.objects>
         <cfscript>
-
+        if (structKeyExists(obj,"AddressType")) {
+          setAddressType(obj.AddressType);
+        } else {
+          setAddressType("");
+        }
         if (structKeyExists(obj,"AddressLine1")) {
           setAddressLine1(obj.AddressLine1);
         } else {
@@ -233,6 +241,19 @@
   </cffunction>
 
 <!--- GETTER / SETTER  --->
+
+  <!---
+   * See Address Types
+   * @return AddressType
+  --->
+  <cffunction name="getAddressType" access="public" output="false" hint="I return the AddressType">
+    <cfreturn variables.instance.AddressType />
+  </cffunction>
+
+  <cffunction name="setAddressType" access="public"  output="false" hint="I set the AddressType into the variables.instance scope.">
+    <cfargument name="AddressType" type="String" hint="I am the AddressType." />
+      <cfset variables.instance.AddressType = arguments.AddressType />
+  </cffunction>
 
   <!---
    * max length = 500
