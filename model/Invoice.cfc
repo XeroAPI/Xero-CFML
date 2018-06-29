@@ -565,7 +565,7 @@
 		   <cfscript>
             var arr = ArrayNew(1);
             for (var i=1;i LTE ArrayLen(arguments.Lineitems);i=i+1) {
-              var item=createObject("component","cfc.model.Lineitem").init().populate(arguments.Lineitems[i]); 
+              var item=createObject("component","cfc.model.LineItem").init().populate(arguments.Lineitems[i]); 
               ArrayAppend(arr,item);
             }
       </cfscript>
