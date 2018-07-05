@@ -43,7 +43,9 @@ History:
 
 	<cffunction name="init" access="public" output="false"
     	returntype="any" hint="I am the constructor method for the Xero Class.">
-      	<cfset this.storage = CreateObject("component", "cfc.storage").init()>
+    	<cfargument name="pathToConfigJSON" default="" displayname="path to config.json file" type="string">
+    	<cfset this.config = CreateObject("component", "config").init(arguments.pathToConfigJSON)>
+      	<cfset this.storage = CreateObject("component", "storage").init(this)>
     	<cfreturn this />
   	</cffunction>
 
@@ -66,34 +68,33 @@ History:
 	<!--- attempt to build up a requestToken URL from the config details --->
 	<cffunction name="requestToken" access="public" returntype="struct">
 	
-		<cfset var config = application.config>
 		<cfset var oResultRequest = StructNew()>
 
-		<cfset var oToken = CreateObject("component", "cfc.oauth.oauthtoken").createEmptyToken()>
+		<cfset var oToken = CreateObject("component", "oauth.oauthtoken").createEmptyToken()>
 
 		<!--- set up the required objects including signature method--->
 		<cfif config.AppType EQ "PUBLIC">
-			<cfset var oReqSigMethodSHA = CreateObject("component", "cfc.oauth.oauthsignaturemethod_hmac_sha1")>
-			<cfset var oConsumer = CreateObject("component", "cfc.oauth.oauthconsumer").init(
-				sKey = config.ConsumerKey, 
-				sSecret = config.ConsumerSecret)>
+			<cfset var oReqSigMethodSHA = CreateObject("component", "oauth.oauthsignaturemethod_hmac_sha1")>
+			<cfset var oConsumer = CreateObject("component", "oauth.oauthconsumer").init(
+				sKey = this.config.ConsumerKey, 
+				sSecret = this.config.ConsumerSecret)>
 		<cfelse>
-			<cfset var oReqSigMethodSHA = CreateObject("component", "cfc.oauth.oauthsignaturemethod_rsa_sha1")>
-			<cfset var oConsumer = CreateObject("component", "cfc.oauth.oauthconsumer").init(
-				sKey = config.ConsumerKey, 
-				sSecret = config.ConsumerSecret,
+			<cfset var oReqSigMethodSHA = CreateObject("component", "oauth.oauthsignaturemethod_rsa_sha1")>
+			<cfset var oConsumer = CreateObject("component", "oauth.oauthconsumer").init(
+				sKey = this.config.ConsumerKey, 
+				sSecret = this.config.ConsumerSecret,
 				sPathToPrivateKey = config.PathToPrivateKey)>
 		</cfif>
 
 			
 		<cfset var stDefault = StructNew()>
-		<cfset stDefault["oauth_callback"] = config.CallbackBaseUrl & config.CallbackPath>
+		<cfset stDefault["oauth_callback"] = this.config.CallbackBaseUrl & this.config.CallbackPath>
 
-		<cfset oReq = CreateObject("component", "cfc.oauth.oauthrequest").fromConsumerAndToken(
+		<cfset oReq = CreateObject("component", "oauth.oauthrequest").fromConsumerAndToken(
 			oConsumer = oConsumer,
 			oToken = oToken,
 			sHttpMethod = "GET",
-			sHttpURL = config.ApiBaseUrl & config.RequestTokenPath,
+			sHttpURL = this.config.ApiBaseUrl & this.config.RequestTokenPath,
 			stParameters = stDefault)>
 		
 		<cfset oReq.signRequest(
@@ -119,17 +120,16 @@ History:
 
 	<!--- attempt to build up an authorization URL from what was returned from the server --->
 	<cffunction name="authorize" access="public" returntype="String">
-			<cfset var config = application.config>
-			
+						
 			<!--- you can add some additional parameters to the callback --->
-			<cfset sCallbackURL = config.CallbackBaseUrl & config.CallbackPath & "?" &
-				"key=" & config.ConsumerKey &
-				"&" & "secret=" & config.ConsumerSecret &
+			<cfset sCallbackURL = this.config.CallbackBaseUrl & this.config.CallbackPath & "?" &
+				"key=" & this.config.ConsumerKey &
+				"&" & "secret=" & this.config.ConsumerSecret &
 				"&" & "token=" & this.storage.getRequestOAuthToken() &
 				"&" & "token_secret=" & this.storage.getRequestOAuthTokenSecret() &
-				"&" & "endpoint=" & config.AuthenticateUrl>
+				"&" & "endpoint=" & this.config.AuthenticateUrl>
 
-			<cfset sAuthURL = config.AuthenticateUrl & "?oauth_token=" & this.storage.getRequestOAuthToken() & "&" & "oauth_callback=" & URLEncodedFormat(config.CallbackBaseUrl & config.CallbackPath) >
+			<cfset sAuthURL = this.config.AuthenticateUrl & "?oauth_token=" & this.storage.getRequestOAuthToken() & "&" & "oauth_callback=" & URLEncodedFormat(config.CallbackBaseUrl & config.CallbackPath) >
 		<cfreturn sAuthURL>
 	</cffunction>
 
@@ -137,37 +137,36 @@ History:
 	<cffunction name="accessToken" access="public" returntype="boolean" output="true">
 		<cfargument name="aCallbackParams" required="true" type="string" default="">
 	
-			<cfset var config = application.config>
 			<cfset var oResultRequest = StructNew()>
 
 			<!--- set up the parameters --->
 			<cfset this.storage.saveCallback(arguments.aCallbackParams)>
 	
-			<cfset var oToken = CreateObject("component", "cfc.oauth.oauthtoken").init(
+			<cfset var oToken = CreateObject("component", "oauth.oauthtoken").init(
 				sKey= this.storage.getRequestOAuthToken(),
 				sSecret=this.storage.getRequestOAuthTokenSecret())>
 
-			<cfif config.AppType EQ "PUBLIC">
-				<cfset var oReqSigMethodSHA = CreateObject("component", "cfc.oauth.oauthsignaturemethod_hmac_sha1")>
-				<cfset var  oConsumer = CreateObject("component", "cfc.oauth.oauthconsumer").init(
-					sKey = config.ConsumerKey, 
-					sSecret = config.ConsumerSecret)>
+			<cfif this.config.AppType EQ "PUBLIC">
+				<cfset var oReqSigMethodSHA = CreateObject("component", "oauth.oauthsignaturemethod_hmac_sha1")>
+				<cfset var  oConsumer = CreateObject("component", "oauth.oauthconsumer").init(
+					sKey = this.config.ConsumerKey, 
+					sSecret = this.config.ConsumerSecret)>
 			<cfelse>
-				<cfset var oReqSigMethodSHA = CreateObject("component", "cfc.oauth.oauthsignaturemethod_rsa_sha1")>
-				<cfset var oConsumer = CreateObject("component", "cfc.oauth.oauthconsumer").init(
-					sKey = config.ConsumerKey, 
-					sSecret = config.ConsumerSecret,
-					sPathToPrivateKey = config.PathToPrivateKey)>
+				<cfset var oReqSigMethodSHA = CreateObject("component", "oauth.oauthsignaturemethod_rsa_sha1")>
+				<cfset var oConsumer = CreateObject("component", "oauth.oauthconsumer").init(
+					sKey = this.config.ConsumerKey, 
+					sSecret = this.config.ConsumerSecret,
+					sPathToPrivateKey = this.config.PathToPrivateKey)>
 			</cfif>
 
 			<cfset var stParameters = structNew()>
 			<cfset var stParameters.oauth_verifier = this.storage.getVerifier()>
 
-			<cfset var oReq = CreateObject("component", "cfc.oauth.oauthrequest").fromConsumerAndToken(
+			<cfset var oReq = CreateObject("component", "oauth.oauthrequest").fromConsumerAndToken(
 				oConsumer = oConsumer,
 				oToken = oToken,
 				sHttpMethod = "GET",
-				sHttpURL = config.ApiBaseUrl & config.AccessTokenPath,
+				sHttpURL = this.config.ApiBaseUrl & this.config.AccessTokenPath,
 				stparameters= stParameters )>
 
 			<cfset oReq.signRequest(
@@ -208,27 +207,26 @@ History:
 
 	<cffunction name="refreshToken" access="public" returntype="boolean">
 
-		<cfset var config = application.config>
 		<cfset var oResultRequest = StructNew()>
 			
-		<cfset var oToken = CreateObject("component", "cfc.oauth.oauthtoken").init(
+		<cfset var oToken = CreateObject("component", "oauth.oauthtoken").init(
 			sKey= this.storage.getOAuthToken(),
 			sSecret=this.storage.getOAuthToken())>
 
-		<cfset var oReqSigMethodSHA = CreateObject("component", "cfc.oauth.oauthsignaturemethod_rsa_sha1")>
-		<cfset var oConsumer = CreateObject("component", "cfc.oauth.oauthconsumer").init(
-			sKey = config.ConsumerKey, 
-			sSecret = config.ConsumerSecret,
-			sPathToPrivateKey = config.PathToPrivateKey)>
+		<cfset var oReqSigMethodSHA = CreateObject("component", "oauth.oauthsignaturemethod_rsa_sha1")>
+		<cfset var oConsumer = CreateObject("component", "oauth.oauthconsumer").init(
+			sKey = this.config.ConsumerKey, 
+			sSecret = this.config.ConsumerSecret,
+			sPathToPrivateKey = this.config.PathToPrivateKey)>
 
 		<cfset var stParameters = structNew()>
 		<cfset var stParameters.oauth_session_handle = this.storage.getOAuthSessionHandle()>
 
-		<cfset var oReq = CreateObject("component", "cfc.oauth.oauthrequest").fromConsumerAndToken(
+		<cfset var oReq = CreateObject("component", "oauth.oauthrequest").fromConsumerAndToken(
 			oConsumer = oConsumer,
 			oToken = oToken,
 			sHttpMethod = "GET",
-			sHttpURL = config.ApiBaseUrl & config.AccessTokenPath,
+			sHttpURL = this.config.ApiBaseUrl & this.config.AccessTokenPath,
 			stparameters= stParameters )>
 
 		<cfset oReq.signRequest(
@@ -258,14 +256,13 @@ History:
 		<cfargument name="sOAuthToken" required="false" type="string" default="">
 		<cfargument name="sOAuthTokenSecret" required="false" type="string" default="">
 		<cfargument name="stParameters" required="false" type="struct" default="">
-		<cfargument name="sAccept" required="false" type="string" default="#application.config.json["Accept"]#">
+		<cfargument name="sAccept" required="false" type="string" default="#application.xeroConfig.json["Accept"]#">
 		<cfargument name="sIfModifiedSince" required="false" type="string" default="">
 		<cfargument name="sMethod" required="false" type="string" default="GET">
 		<cfargument name="sBody" required="false" type="string" default="">
 		<cfargument name="contentType" required="false" type="string" default="application/json">
 		<cfargument name="debug" required="false" type="boolean" default="false">
 
-			<cfset var config = application.config>
 			<cfset var oResultRequest = StructNew()>
 			
 			<cfif len(arguments.sOAuthToken) gt 0>
@@ -280,10 +277,10 @@ History:
 				<cfset var TokenSecret = this.storage.getOAuthTokenSecret()>
 			</cfif>
 			<cfif IsTokeExpired()>
-				<cfif config.AppType EQ "PUBLIC">	
+				<cfif this.config.AppType EQ "PUBLIC">	
 					<cfthrow errorCode='401' message="Token Expired" Type='Application'>
 				</cfif>
-				<cfif config.AppType EQ "PARTNER">
+				<cfif this.config.AppType EQ "PARTNER">
 					<cfset refreshToken()>
 					<cfset var Token = this.storage.getOAuthToken()>
 					<cfset var TokenSecret = this.storage.getOAuthTokenSecret()>
@@ -291,32 +288,32 @@ History:
 			</cfif>
 
 			<!--- set up the required objects including signature method--->
-			<cfif config.AppType EQ "PUBLIC">	
-				<cfset oReqSigMethodSHA = CreateObject("component", "cfc.oauth.oauthsignaturemethod_hmac_sha1")>
-				<cfset oConsumer = CreateObject("component", "cfc.oauth.oauthconsumer").init(
-					sKey = config.ConsumerKey, 
-					sSecret = config.ConsumerSecret)>
+			<cfif this.config.AppType EQ "PUBLIC">	
+				<cfset oReqSigMethodSHA = CreateObject("component", "oauth.oauthsignaturemethod_hmac_sha1")>
+				<cfset oConsumer = CreateObject("component", "oauth.oauthconsumer").init(
+					sKey = this.config.ConsumerKey, 
+					sSecret = this.config.ConsumerSecret)>
 			<cfelse>
-				<cfset oReqSigMethodSHA = CreateObject("component", "cfc.oauth.oauthsignaturemethod_rsa_sha1")>
-				<cfset oConsumer = CreateObject("component", "cfc.oauth.oauthconsumer").init(
-					sKey = config.ConsumerKey, 
-					sSecret = config.ConsumerSecret,
-					sPathToPrivateKey = config.PathToPrivateKey)>
+				<cfset oReqSigMethodSHA = CreateObject("component", "oauth.oauthsignaturemethod_rsa_sha1")>
+				<cfset oConsumer = CreateObject("component", "oauth.oauthconsumer").init(
+					sKey = this.config.ConsumerKey, 
+					sSecret = this.config.ConsumerSecret,
+					sPathToPrivateKey = this.config.PathToPrivateKey)>
 			</cfif>
 
-			<cfif config.AppType EQ "PRIVATE">
-				<cfset this.Token = config.ConsumerKey>
-				<cfset this.TokenSecret = config.ConsumerSecret>
+			<cfif this.config.AppType EQ "PRIVATE">
+				<cfset this.Token = this.config.ConsumerKey>
+				<cfset this.TokenSecret = this.config.ConsumerSecret>
 			<cfelse>
 				<cfset this.Token = Token>
 				<cfset this.TokenSecret = TokenSecret>
 			</cfif>
 
-			<cfset oToken = CreateObject("component", "cfc.oauth.oauthtoken").init(
+			<cfset oToken = CreateObject("component", "oauth.oauthtoken").init(
 					sKey = this.Token,
 					sSecret = this.TokenSecret)>
 
-			<cfset oReq = CreateObject("component", "cfc.oauth.oauthrequest").fromConsumerAndToken(
+			<cfset oReq = CreateObject("component", "oauth.oauthrequest").fromConsumerAndToken(
 				oConsumer = oConsumer,
 				oToken = oToken,
 				sHttpMethod = arguments.sMethod,
@@ -333,7 +330,7 @@ History:
 				url="#oREQ.getString()#" 
 				method= "#arguments.sMethod#" 
 				result="tokenResponse" 
-				useragent="#config.UserAgent#">
+				useragent="#this.config.UserAgent#">
 				<cfhttpparam type="header" name="accept" value="#arguments.sAccept#">
 				<cfhttpparam type="header" name="Content-Type" value="#arguments.sAccept#">
 				<cfif len(arguments.sIfModifiedSince)>
@@ -465,6 +462,12 @@ History:
 		<!--- return struct: --->
 
 		<cfreturn astr />
+	</cffunction>
+
+
+	<cffunction name="getModel" access="public" returntype="any">
+		<cfargument name="modelName" required="true" type="string">
+		<cfreturn CreateObject("component", "model.#arguments.modelName#").init(this)>
 	</cffunction>
 
 </cfcomponent>

@@ -1,4 +1,4 @@
-<cfcomponent displayname="TaxRate" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="TaxRate" output="false" extends="xeroclient"
   hint="I am the TaxRate Class.">
 
 <!--- PROPERTIES --->
@@ -19,7 +19,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the TaxRate Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -63,68 +64,68 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.Name=getName();
-            myStruct.Status=getStatus();
+            myStruct["Name"]=getName();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"Name")) {
               if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+                myStruct["Name"]=getName();
               }
             }
             if (structKeyExists(variables.instance,"TaxType")) {
               if (NOT listFindNoCase(arguments.exclude, "TaxType")) {
-                myStruct.TaxType=getTaxType();
+                myStruct["TaxType"]=getTaxType();
               }
             }
             if (structKeyExists(variables.instance,"TaxComponents")) {
               if (NOT listFindNoCase(arguments.exclude, "TaxComponents")) {
-                myStruct.TaxComponents=getTaxComponents();
+                myStruct["TaxComponents"]=getTaxComponents();
               }
             }
             if (structKeyExists(variables.instance,"Status")) {
               if (NOT listFindNoCase(arguments.exclude, "Status")) {
-                myStruct.Status=getStatus();
+                myStruct["Status"]=getStatus();
               }
             }
             if (structKeyExists(variables.instance,"ReportTaxType")) {
               if (NOT listFindNoCase(arguments.exclude, "ReportTaxType")) {
-                myStruct.ReportTaxType=getReportTaxType();
+                myStruct["ReportTaxType"]=getReportTaxType();
               }
             }
             if (structKeyExists(variables.instance,"CanApplyToAssets")) {
               if (NOT listFindNoCase(arguments.exclude, "CanApplyToAssets")) {
-                myStruct.CanApplyToAssets=getCanApplyToAssets();
+                myStruct["CanApplyToAssets"]=getCanApplyToAssets();
               }
             }
             if (structKeyExists(variables.instance,"CanApplyToEquity")) {
               if (NOT listFindNoCase(arguments.exclude, "CanApplyToEquity")) {
-                myStruct.CanApplyToEquity=getCanApplyToEquity();
+                myStruct["CanApplyToEquity"]=getCanApplyToEquity();
               }
             }
             if (structKeyExists(variables.instance,"CanApplyToExpenses")) {
               if (NOT listFindNoCase(arguments.exclude, "CanApplyToExpenses")) {
-                myStruct.CanApplyToExpenses=getCanApplyToExpenses();
+                myStruct["CanApplyToExpenses"]=getCanApplyToExpenses();
               }
             }
             if (structKeyExists(variables.instance,"CanApplyToLiabilities")) {
               if (NOT listFindNoCase(arguments.exclude, "CanApplyToLiabilities")) {
-                myStruct.CanApplyToLiabilities=getCanApplyToLiabilities();
+                myStruct["CanApplyToLiabilities"]=getCanApplyToLiabilities();
               }
             }
             if (structKeyExists(variables.instance,"CanApplyToRevenue")) {
               if (NOT listFindNoCase(arguments.exclude, "CanApplyToRevenue")) {
-                myStruct.CanApplyToRevenue=getCanApplyToRevenue();
+                myStruct["CanApplyToRevenue"]=getCanApplyToRevenue();
               }
             }
             if (structKeyExists(variables.instance,"DisplayTaxRate")) {
               if (NOT listFindNoCase(arguments.exclude, "DisplayTaxRate")) {
-                myStruct.DisplayTaxRate=getDisplayTaxRate();
+                myStruct["DisplayTaxRate"]=getDisplayTaxRate();
               }
             }
             if (structKeyExists(variables.instance,"EffectiveRate")) {
               if (NOT listFindNoCase(arguments.exclude, "EffectiveRate")) {
-                myStruct.EffectiveRate=getEffectiveRate();
+                myStruct["EffectiveRate"]=getEffectiveRate();
               }
             }
           }
@@ -332,7 +333,7 @@
 			<cfscript>
 		        var arr = ArrayNew(1);
 		        for (var i=1;i LTE ArrayLen(arguments.TaxComponents);i=i+1) {
-		          var item=createObject("component","cfc.model.TaxComponent").init().populate(arguments.TaxComponents[i]); 
+		          var item=createObject("component","TaxComponent").init(variables.xero).populate(arguments.TaxComponents[i]); 
 		          ArrayAppend(arr,item);
 		        }
 		      </cfscript>

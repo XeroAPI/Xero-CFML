@@ -1,4 +1,4 @@
-<cfcomponent displayname="Allocation" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="Allocation" output="false" extends="xeroclient"
   hint="I am the Allocation Class.">
 
 <!--- PROPERTIES --->
@@ -9,7 +9,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the Allocation Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>      
     <cfreturn this />
   </cffunction>
 
@@ -38,18 +39,18 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.AllocationID=getAllocationID();
-            myStruct.Status=getStatus();
+            myStruct["AllocationID"]=getAllocationID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"AppliedAmount")) {
               if (NOT listFindNoCase(arguments.exclude, "AppliedAmount")) {
-                myStruct.AppliedAmount=getAppliedAmount();
+                myStruct["AppliedAmount"]=getAppliedAmount();
               }
             }
             if (structKeyExists(variables.instance,"Date")) {
               if (NOT listFindNoCase(arguments.exclude, "Date")) {
-                myStruct.Date=getDate();
+                myStruct["Date"]=getDate();
               }
             }
           }

@@ -1,4 +1,4 @@
-<cfcomponent displayname="PaymentTerm" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="PaymentTerm" output="false" extends="xeroclient"
   hint="I am the PaymentTerm Class.">
 
 <!--- PROPERTIES --->
@@ -9,7 +9,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the PaymentTerm Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -53,18 +54,18 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.PaymentTermID=getPaymentTermID();
-            myStruct.Status=getStatus();
+            myStruct["PaymentTermID"]=getPaymentTermID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"Day")) {
               if (NOT listFindNoCase(arguments.exclude, "Day")) {
-                myStruct.Day=getDay();
+                myStruct["Day"]=getDay();
               }
             }
             if (structKeyExists(variables.instance,"Type")) {
               if (NOT listFindNoCase(arguments.exclude, "Type")) {
-                myStruct.Type=getType();
+                myStruct["Type"]=getType();
               }
             }
           }

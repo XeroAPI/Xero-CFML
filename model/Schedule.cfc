@@ -1,4 +1,4 @@
-<cfcomponent displayname="Schedule" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="Schedule" output="false" extends="xeroclient"
   hint="I am the Schedule Class.">
 
 <!--- PROPERTIES --->
@@ -14,7 +14,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the Schedule Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -58,43 +59,43 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.ScheduleID=getScheduleID();
-            myStruct.Status=getStatus();
+            myStruct["ScheduleID"]=getScheduleID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"Period")) {
               if (NOT listFindNoCase(arguments.exclude, "Period")) {
-                myStruct.Period=getPeriod();
+                myStruct["Period"]=getPeriod();
               }
             }
             if (structKeyExists(variables.instance,"Unit")) {
               if (NOT listFindNoCase(arguments.exclude, "Unit")) {
-                myStruct.Unit=getUnit();
+                myStruct["Unit"]=getUnit();
               }
             }
             if (structKeyExists(variables.instance,"DueDate")) {
               if (NOT listFindNoCase(arguments.exclude, "DueDate")) {
-                myStruct.DueDate=getDueDate();
+                myStruct["DueDate"]=getDueDate();
               }
             }
             if (structKeyExists(variables.instance,"DueDateType")) {
               if (NOT listFindNoCase(arguments.exclude, "DueDateType")) {
-                myStruct.DueDateType=getDueDateType();
+                myStruct["DueDateType"]=getDueDateType();
               }
             }
             if (structKeyExists(variables.instance,"StartDate")) {
               if (NOT listFindNoCase(arguments.exclude, "StartDate")) {
-                myStruct.StartDate=getStartDate();
+                myStruct["StartDate"]=getStartDate();
               }
             }
             if (structKeyExists(variables.instance,"NextScheduledDate")) {
               if (NOT listFindNoCase(arguments.exclude, "NextScheduledDate")) {
-                myStruct.NextScheduledDate=getNextScheduledDate();
+                myStruct["NextScheduledDate"]=getNextScheduledDate();
               }
             }
             if (structKeyExists(variables.instance,"EndDate")) {
               if (NOT listFindNoCase(arguments.exclude, "EndDate")) {
-                myStruct.EndDate=getEndDate();
+                myStruct["EndDate"]=getEndDate();
               }
             }
           }

@@ -1,4 +1,4 @@
-<cfcomponent displayname="TaxComponent" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="TaxComponent" output="false" extends="xeroclient"
   hint="I am the TaxComponent Class.">
 
 <!--- PROPERTIES --->
@@ -11,7 +11,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the TaxComponent Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -55,28 +56,28 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.TaxComponentID=getTaxComponentID();
-            myStruct.Status=getStatus();
+            myStruct["TaxComponentID"]=getTaxComponentID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"Name")) {
               if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+                myStruct["Name"]=getName();
               }
             }
             if (structKeyExists(variables.instance,"Rate")) {
               if (NOT listFindNoCase(arguments.exclude, "Rate")) {
-                myStruct.Rate=getRate();
+                myStruct["Rate"]=getRate();
               }
             }
             if (structKeyExists(variables.instance,"IsCompound")) {
               if (NOT listFindNoCase(arguments.exclude, "IsCompound")) {
-                myStruct.IsCompound=getIsCompound();
+                myStruct["IsCompound"]=getIsCompound();
               }
             }
             if (structKeyExists(variables.instance,"IsNonRecoverable")) {
               if (NOT listFindNoCase(arguments.exclude, "IsNonRecoverable")) {
-                myStruct.IsNonRecoverable=getIsNonRecoverable();
+                myStruct["IsNonRecoverable"]=getIsNonRecoverable();
               }
             }
           }

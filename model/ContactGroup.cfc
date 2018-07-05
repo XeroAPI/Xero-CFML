@@ -1,4 +1,4 @@
-<cfcomponent displayname="ContactGroup" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="ContactGroup" output="false" extends="xeroclient"
   hint="I am the ContactGroup Class.">
 
 <!--- PROPERTIES --->
@@ -11,7 +11,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the ContactGroup Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -53,28 +54,28 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.ContactGroupID=getContactGroupID();
-            myStruct.Status=getStatus();
+            myStruct["ContactGroupID"]=getContactGroupID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"Name")) {
               if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+                myStruct["Name"]=getName();
               }
             }
             if (structKeyExists(variables.instance,"Status")) {
               if (NOT listFindNoCase(arguments.exclude, "Status")) {
-                myStruct.Status=getStatus();
+                myStruct["Status"]=getStatus();
               }
             }
             if (structKeyExists(variables.instance,"ContactGroupID")) {
               if (NOT listFindNoCase(arguments.exclude, "ContactGroupID")) {
-                myStruct.ContactGroupID=getContactGroupID();
+                myStruct["ContactGroupID"]=getContactGroupID();
               }
             }
             if (structKeyExists(variables.instance,"Contacts")) {
               if (NOT listFindNoCase(arguments.exclude, "Contacts")) {
-                myStruct.Contacts=getContacts();
+                myStruct["Contacts"]=getContacts();
               }
             }
           }
@@ -291,7 +292,7 @@
      <cfscript>
             var arr = ArrayNew(1);
             for (var i=1;i LTE ArrayLen(arguments.Contacts);i=i+1) {
-              var item=createObject("component","cfc.model.Contact").init().populate(arguments.Contacts[i]); 
+              var item=createObject("component","Contact").init().populate(arguments.Contacts[i]); 
               ArrayAppend(arr,item);
             }
       </cfscript>

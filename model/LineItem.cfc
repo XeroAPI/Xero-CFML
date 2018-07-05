@@ -1,4 +1,4 @@
-<cfcomponent displayname="LineItem" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="LineItem" output="false" extends="xeroclient"
   hint="I am the LineItem Class.">
 
 <!--- PROPERTIES --->
@@ -19,7 +19,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the LineItem Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -70,64 +71,64 @@
 
           if (structKeyExists(variables.instance,"Description")) {
             if (NOT listFindNoCase(arguments.exclude, "Description")) {
-              myStruct.Description=getDescription();
+              myStruct["Description"]=getDescription();
             }
           }
           if (structKeyExists(variables.instance,"Quantity")) {
             if (NOT listFindNoCase(arguments.exclude, "Quantity")) {
-              myStruct.Quantity=getQuantity();
+              myStruct["Quantity"]=getQuantity();
             }
           }
           if (structKeyExists(variables.instance,"UnitAmount")) {
             if (NOT listFindNoCase(arguments.exclude, "UnitAmount")) {
-              myStruct.UnitAmount=getUnitAmount();
+              myStruct["UnitAmount"]=getUnitAmount();
             }
           }
           if (structKeyExists(variables.instance,"ItemCode")) {
             if (NOT listFindNoCase(arguments.exclude, "ItemCode")) {
               if(len(variables.instance.ItemCode) GT 0){
-                myStruct.ItemCode=getItemCode();
+                myStruct["ItemCode"]=getItemCode();
               }
             }
           }
           if (structKeyExists(variables.instance,"AccountCode")) {
             if (NOT listFindNoCase(arguments.exclude, "AccountCode")) {
-              myStruct.AccountCode=getAccountCode();
+              myStruct["AccountCode"]=getAccountCode();
             }
           }
           if (structKeyExists(variables.instance,"TaxType")) {
             if (NOT listFindNoCase(arguments.exclude, "TaxType")) {
-              myStruct.TaxType=getTaxType();
+              myStruct["TaxType"]=getTaxType();
             }
           }
           if (structKeyExists(variables.instance,"TaxAmount")) {
             if (NOT listFindNoCase(arguments.exclude, "TaxAmount")) {
-              myStruct.TaxAmount=getTaxAmount();
+              myStruct["TaxAmount"]=getTaxAmount();
             }
           }
           if (structKeyExists(variables.instance,"LineAmount")) {
             if (NOT listFindNoCase(arguments.exclude, "LineAmount")) {
-              myStruct.LineAmount=getLineAmount();
+              myStruct["LineAmount"]=getLineAmount();
             }
           }
           if (structKeyExists(variables.instance,"Tracking")) {
             if (NOT listFindNoCase(arguments.exclude, "Tracking")) {
-              myStruct.Tracking=getTracking();
+              myStruct["Tracking"]=getTracking();
             }
           }
           if (structKeyExists(variables.instance,"DiscountRate")) {
             if (NOT listFindNoCase(arguments.exclude, "DiscountRate")) {
-              myStruct.DiscountRate=getDiscountRate();
+              myStruct["DiscountRate"]=getDiscountRate();
             }
           }
           if (structKeyExists(variables.instance,"RepeatingInvoiceID")) {
             if (NOT listFindNoCase(arguments.exclude, "RepeatingInvoiceID")) {
-              myStruct.RepeatingInvoiceID=getRepeatingInvoiceID();
+              myStruct["RepeatingInvoiceID"]=getRepeatingInvoiceID();
             }
           }
          if (structKeyExists(variables.instance,"LineItemID")) {
             if (NOT listFindNoCase(arguments.exclude, "LineItemID")) {
-              myStruct.LineItemID=getLineItemID();
+              myStruct["LineItemID"]=getLineItemID();
             }
           }
         </cfscript>

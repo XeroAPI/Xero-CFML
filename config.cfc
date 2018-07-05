@@ -131,7 +131,7 @@ History:
 		<cfif structKeyExists(this.json, "PrivateKeyCert")>
 			<cfset this.PathToPrivateKey = pathToConfig & this.json["PrivateKeyCert"]>
 			<cfif NOT FileExists(this.PathToPrivateKey)>
-				<cfoutput>No Private Key File Found	- Check the path set in /resource/config.json - #this.PathToPrivateKey#</cfoutput>
+				<cfoutput>No Private Key File Found	- Check the path set in #pathToConfigJSON# - #this.PathToPrivateKey#</cfoutput>
 				<cfabort>
 			</cfif>
 		</cfif>

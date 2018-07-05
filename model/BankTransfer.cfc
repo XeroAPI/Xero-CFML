@@ -1,4 +1,4 @@
-<cfcomponent displayname="BankTransfer" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="BankTransfer" output="false" extends="xeroclient"
   hint="I am the BankTransfer Class.">
 
 <!--- PROPERTIES --->
@@ -17,7 +17,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the BankTransfer Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>      
     <cfreturn this />
   </cffunction>
 
@@ -54,58 +55,58 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.BankTransferID=getBankTransferID();
-            myStruct.Status=getStatus();
+            myStruct["BankTransferID"]=getBankTransferID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"FromBankAccount")) {
               if (NOT listFindNoCase(arguments.exclude, "FromBankAccount")) {
-                myStruct.FromBankAccount=getFromBankAccount();
+                myStruct["FromBankAccount"]=getFromBankAccount();
               }
             }
             if (structKeyExists(variables.instance,"ToBankAccount")) {
               if (NOT listFindNoCase(arguments.exclude, "ToBankAccount")) {
-                myStruct.ToBankAccount=getToBankAccount();
+                myStruct["ToBankAccount"]=getToBankAccount();
               }
             }
             if (structKeyExists(variables.instance,"Amount")) {
               if (NOT listFindNoCase(arguments.exclude, "Amount")) {
-                myStruct.Amount=getAmount();
+                myStruct["Amount"]=getAmount();
               }
             }
             if (structKeyExists(variables.instance,"Date")) {
               if (NOT listFindNoCase(arguments.exclude, "Date")) {
-                myStruct.Date=getDate();
+                myStruct["Date"]=getDate();
               }
             }
             if (structKeyExists(variables.instance,"BankTransferID")) {
               if (NOT listFindNoCase(arguments.exclude, "BankTransferID")) {
-                myStruct.BankTransferID=getBankTransferID();
+                myStruct["BankTransferID"]=getBankTransferID();
               }
             }
             if (structKeyExists(variables.instance,"CurrencyRate")) {
               if (NOT listFindNoCase(arguments.exclude, "CurrencyRate")) {
-                myStruct.CurrencyRate=getCurrencyRate();
+                myStruct["CurrencyRate"]=getCurrencyRate();
               }
             }
             if (structKeyExists(variables.instance,"FromBankTransactionID")) {
               if (NOT listFindNoCase(arguments.exclude, "FromBankTransactionID")) {
-                myStruct.FromBankTransactionID=getFromBankTransactionID();
+                myStruct["FromBankTransactionID"]=getFromBankTransactionID();
               }
             }
             if (structKeyExists(variables.instance,"ToBankTransactionID")) {
               if (NOT listFindNoCase(arguments.exclude, "ToBankTransactionID")) {
-                myStruct.ToBankTransactionID=getToBankTransactionID();
+                myStruct["ToBankTransactionID"]=getToBankTransactionID();
               }
             }
             if (structKeyExists(variables.instance,"HasAttachments")) {
               if (NOT listFindNoCase(arguments.exclude, "HasAttachments")) {
-                myStruct.HasAttachments=getHasAttachments();
+                myStruct["HasAttachments"]=getHasAttachments();
               }
             }
             if (structKeyExists(variables.instance,"CreatedDateUTC")) {
               if (NOT listFindNoCase(arguments.exclude, "CreatedDateUTC")) {
-                myStruct.CreatedDateUTC=getCreatedDateUTC();
+                myStruct["CreatedDateUTC"]=getCreatedDateUTC();
               }
             }
           }

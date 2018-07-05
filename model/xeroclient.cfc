@@ -1,8 +1,10 @@
 
 <cfcomponent displayname="xeroclient">
 
+	<cfset variables.xero = "">
+
 	<cffunction name="getBaseURL" access="public" returntype="string">
-		<cfset variables.baseUrl = "#application.config.ApiBaseUrl##application.config.ApiEndpointPath#"> 
+		<cfset variables.baseUrl = "#variables.xero.config.ApiBaseUrl##variables.xero.config.ApiEndpointPath#"> 
 		
 		<cfreturn variables.baseUrl>
 	</cffunction>
@@ -58,7 +60,7 @@
 			</cfif>
 		</cfif>
 		
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").init().requestData(
+		<cfset oRequestResult = variables.xero.requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
@@ -104,7 +106,7 @@
 			</cfif>
 		</cfif>
 
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").init().requestData(
+		<cfset oRequestResult = variables.xero.requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
@@ -137,7 +139,7 @@
 
 		<cfset resource = arguments.endpoint & "/" & arguments.id>
 
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").init().requestData(
+		<cfset oRequestResult = variables.xero.requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
@@ -177,7 +179,7 @@
 			</cfif>
 		</cfif>
 
-		<cfset oRequestResult = CreateObject("component", "cfc.xero").init().requestData(
+		<cfset oRequestResult = variables.xero.requestData(
 			sResourceEndpoint = this.getBaseURL() & resource,
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
