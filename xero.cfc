@@ -256,7 +256,7 @@ History:
 		<cfargument name="sOAuthToken" required="false" type="string" default="">
 		<cfargument name="sOAuthTokenSecret" required="false" type="string" default="">
 		<cfargument name="stParameters" required="false" type="struct" default="">
-		<cfargument name="sAccept" required="false" type="string" default="#application.xeroConfig.json["Accept"]#">
+		<cfargument name="sAccept" required="false" type="string" default="#this.config.json["Accept"]#">
 		<cfargument name="sIfModifiedSince" required="false" type="string" default="">
 		<cfargument name="sMethod" required="false" type="string" default="GET">
 		<cfargument name="sBody" required="false" type="string" default="">
