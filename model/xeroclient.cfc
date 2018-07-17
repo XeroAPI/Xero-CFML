@@ -45,41 +45,41 @@
 		<cfargument name="child"  type="string" default="">
 		<cfargument name="childId"  type="string" default="">
 		<cfif len(arguments.id) GT 0> 
-			<cfset resource = arguments.endpoint & "/" & arguments.id>
+			<cfset local.resource = arguments.endpoint & "/" & arguments.id>
 		<cfelse>
-			<cfset resource = arguments.endpoint>
+			<cfset local.resource = arguments.endpoint>
 		</cfif>
 
-		<cfset child = arguments.child>
-		<cfset childId = arguments.childId>
+		<cfset local.child = arguments.child>
+		<cfset local.childId = arguments.childId>
 		
-		<cfif len(child) GT 0>
-			<cfset resource = resource & "/" & child>
-			<cfif len(childId) GT 0>
-				<cfset resource = resource & "/" & childId>
+		<cfif len(local.child) GT 0>
+			<cfset local.resource = local.resource & "/" & local.child>
+			<cfif len(local.childId) GT 0>
+				<cfset local.resource = local.resource & "/" & local.childId>
 			</cfif>
 		</cfif>
 		
-		<cfset oRequestResult = variables.xero.requestData(
-			sResourceEndpoint = this.getBaseURL() & resource,
+		<cfset local.oRequestResult = variables.xero.requestData(
+			sResourceEndpoint = this.getBaseURL() & local.resource,
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "GET",
 			sIfModifiedSince = this.getModifiedSince())>
 
-		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
-			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
+		<cfif NOT isJSON(local.oRequestResult["RESPONSE"])>
+			<cfthrow errorCode='401' message="#local.oRequestResult["RESPONSE"]#" Type='Application'>
 		</cfif>
 
-		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
+		<cfset local.rawResult = deserializeJson(local.oRequestResult["RESPONSE"])>
 
-		<cfif structKeyExists(rawResult,"ErrorNumber")>
-			<cfthrow errorCode='400' message="#rawResult["Message"]#" Type='#rawResult["Type"]#' detail="#serializeJSON(rawResult["Elements"][1]["ValidationErrors"])#">
+		<cfif structKeyExists(local.rawResult,"ErrorNumber")>
+			<cfthrow errorCode='400' message="#local.rawResult["Message"]#" Type='#local.rawResult["Type"]#' detail="#serializeJSON(local.rawResult["Elements"][1]["ValidationErrors"])#">
 		</cfif>
 
-		<cfset variables.ArrayResult = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
+		<cfset local.ArrayResult = deserializeJson(local.oRequestResult["RESPONSE"])[arguments.endpoint]>
 
-		<cfreturn variables.ArrayResult>
+		<cfreturn local.ArrayResult>
 	
 	</cffunction>
 
@@ -92,43 +92,43 @@
 		<cfargument name="id"  type="string" default="">
 		
 		<cfif len(arguments.id) GT 0> 
-			<cfset resource = arguments.endpoint & "/" & arguments.id>
+			<cfset local.resource = arguments.endpoint & "/" & arguments.id>
 		<cfelse>
-			<cfset resource = arguments.endpoint>
+			<cfset local.resource = arguments.endpoint>
 		</cfif>
-		<cfset child = arguments.child>
-		<cfset childId = arguments.childId>
+		<cfset local.child = arguments.child>
+		<cfset local.childId = arguments.childId>
 		
-		<cfif len(child) GT 0>
-			<cfset resource = resource & "/" & child>
-			<cfif len(childId) GT 0>
-				<cfset resource = resource & "/" & childId>
+		<cfif len(local.child) GT 0>
+			<cfset local.resource = local.resource & "/" & local.child>
+			<cfif len(local.childId) GT 0>
+				<cfset local.resource = local.resource & "/" & local.childId>
 			</cfif>
 		</cfif>
 
-		<cfset oRequestResult = variables.xero.requestData(
-			sResourceEndpoint = this.getBaseURL() & resource,
+		<cfset local.oRequestResult = variables.xero.requestData(
+			sResourceEndpoint = this.getBaseURL() & local.resource,
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "PUT",
 			sBody = arguments.body)>
 
-		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
-			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
+		<cfif NOT isJSON(local.oRequestResult["RESPONSE"])>
+			<cfthrow errorCode='401' message="#local.oRequestResult["RESPONSE"]#" Type='Application'>
 		</cfif>
 
-		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
+		<cfset local.rawResult = deserializeJson(local.oRequestResult["RESPONSE"])>
 
-		<cfif structKeyExists(rawResult,"ErrorNumber")>
-			<cfthrow errorCode='400' message="#rawResult["Message"]#" Type='#rawResult["Type"]#' detail="#serializeJSON(rawResult["Elements"][1]["ValidationErrors"])#">
+		<cfif structKeyExists(local.rawResult,"ErrorNumber")>
+			<cfthrow errorCode='400' message="#local.rawResult["Message"]#" Type='#local.rawResult["Type"]#' detail="#serializeJSON(local.rawResult["Elements"][1]["ValidationErrors"])#">
 		</cfif>
 
-		<cfif len(child) GT 0>
-			<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.child]>	
+		<cfif len(local.child) GT 0>
+			<cfset local.result = deserializeJson(local.oRequestResult["RESPONSE"])[arguments.child]>	
 		<cfelse>
-			<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
+			<cfset local.result = deserializeJson(local.oRequestResult["RESPONSE"])[arguments.endpoint]>
 		</cfif>
-		<cfreturn variables.result>	
+		<cfreturn local.result>	
 	</cffunction>
 
 	<cffunction name="post" access="public" returntype="array">
@@ -137,27 +137,27 @@
 		<cfargument name="body"  type="string" default="">
 		<cfargument name="id"  type="string" default="">
 
-		<cfset resource = arguments.endpoint & "/" & arguments.id>
+		<cfset local.resource = arguments.endpoint & "/" & arguments.id>
 
-		<cfset oRequestResult = variables.xero.requestData(
-			sResourceEndpoint = this.getBaseURL() & resource,
+		<cfset local.oRequestResult = variables.xero.requestData(
+			sResourceEndpoint = this.getBaseURL() & local.resource,
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "POST",
 			sBody = arguments.body)>
 
-		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
-			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
+		<cfif NOT isJSON(local.oRequestResult["RESPONSE"])>
+			<cfthrow errorCode='401' message="#local.oRequestResult["RESPONSE"]#" Type='Application'>
 		</cfif>
 	
-		<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
+		<cfset local.rawResult = deserializeJson(local.oRequestResult["RESPONSE"])>
 
-		<cfif structKeyExists(rawResult,"ErrorNumber")>
-			<cfthrow errorCode='400' message="#rawResult["Message"]#" Type='#rawResult["Type"]#' detail="#serializeJSON(rawResult["Elements"][1]["ValidationErrors"])#">			
+		<cfif structKeyExists(local.rawResult,"ErrorNumber")>
+			<cfthrow errorCode='400' message="#local.rawResult["Message"]#" Type='#local.rawResult["Type"]#' detail="#serializeJSON(local.rawResult["Elements"][1]["ValidationErrors"])#">			
 		</cfif>
 
-		<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
-		<cfreturn variables.result>
+		<cfset local.result = deserializeJson(local.oRequestResult["RESPONSE"])[arguments.endpoint]>
+		<cfreturn local.result>
 	</cffunction>
 
 	<cffunction name="delete" access="public" returntype="any">
@@ -167,56 +167,56 @@
 		<cfargument name="id"  type="string" default="">
 		<cfargument name="child"  type="string" default="">
 		<cfargument name="childId"  type="string" default="">
-		<cfset resource = arguments.endpoint & "/" & arguments.id>
+		<cfset local.resource = arguments.endpoint & "/" & arguments.id>
 
-		<cfset child = arguments.child>
-		<cfset childId = arguments.childId>
+		<cfset local.child = arguments.child>
+		<cfset local.childId = arguments.childId>
 		
-		<cfif len(child) GT 0>
-			<cfset resource = resource & "/" & child>
-			<cfif len(childId) GT 0>
-				<cfset resource = resource & "/" & childId>
+		<cfif len(local.child) GT 0>
+			<cfset local.resource = local.resource & "/" & local.child>
+			<cfif len(local.childId) GT 0>
+				<cfset local.resource = local.resource & "/" & local.childId>
 			</cfif>
 		</cfif>
 
-		<cfset oRequestResult = variables.xero.requestData(
-			sResourceEndpoint = this.getBaseURL() & resource,
+		<cfset local.oRequestResult = variables.xero.requestData(
+			sResourceEndpoint = this.getBaseURL() & local.resource,
 			stParameters= this.getParameters(),
 			sAccept = arguments.accept,
 			sMethod = "DELETE",
 			sBody = arguments.body)>
 
 
-		<cfif NOT isJSON(oRequestResult["RESPONSE"])>
-			<cfthrow errorCode='401' message="#oRequestResult["RESPONSE"]#" Type='Application'>
+		<cfif NOT isJSON(local.oRequestResult["RESPONSE"])>
+			<cfthrow errorCode='401' message="#local.oRequestResult["RESPONSE"]#" Type='Application'>
 		</cfif>
-		<cfif len(oRequestResult["RESPONSE"]) GT 0 >
-			<cfset rawResult = deserializeJson(oRequestResult["RESPONSE"])>
-			<cfif structKeyExists(rawResult,"ErrorNumber")>
-				<cfthrow errorCode='#rawResult["ErrorNumber"]#' message="#rawResult["Message"]#" Type='#rawResult["Type"]#'>
+		<cfif len(local.oRequestResult["RESPONSE"]) GT 0 >
+			<cfset local.rawResult = deserializeJson(local.oRequestResult["RESPONSE"])>
+			<cfif structKeyExists(local.rawResult,"ErrorNumber")>
+				<cfthrow errorCode='#local.rawResult["ErrorNumber"]#' message="#local.rawResult["Message"]#" Type='#local.rawResult["Type"]#'>
 			</cfif>
 
-			<cfif isJSON(variables.oRequestResult["RESPONSE"])>
-				<cfif StructKeyExists(rawResult,"Deleted")>
-					<cfset variables.result = StructNew()>
+			<cfif isJSON(local.oRequestResult["RESPONSE"])>
+				<cfif StructKeyExists(local.rawResult,"Deleted")>
+					<cfset local.result = StructNew()>
 				<cfelseif StructKeyExists(rawResult,arguments.endpoint)>
-					<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.endpoint]>
+					<cfset local.result = deserializeJson(local.oRequestResult["RESPONSE"])[arguments.endpoint]>
 				<cfelseif StructKeyExists(rawResult,arguments.child)>
-					<cfset variables.result = deserializeJson(variables.oRequestResult["RESPONSE"])[arguments.child]>
+					<cfset local.result = deserializeJson(local.oRequestResult["RESPONSE"])[arguments.child]>
 				<cfelse>
-					<cfthrow errorCode='400' message="#oRequestResult["RESPONSE"]["Message"]#" Type='#oRequestResult["RESPONSE"]["Type"]#' >	
+					<cfthrow errorCode='400' message="#local.oRequestResult["RESPONSE"]["Message"]#" Type='#local.oRequestResult["RESPONSE"]["Type"]#' >	
 					
 				</cfif>
 			<cfelse>
-				<cfset variables.result = StructNew()>
+				<cfset local.result = StructNew()>
 			</cfif>
 		<cfelse>
 
-			<cfset myStruct = StructNew()>
-			<cfset myStruct.foo = "bar">
-			<cfset variables.result = myStruct>
+			<cfset local.myStruct = StructNew()>
+			<cfset local.myStruct.foo = "bar">
+			<cfset local.result = myStruct>
 		</cfif>
-		<cfreturn variables.result>
+		<cfreturn local.result>
 	</cffunction>
 
 </cfcomponent>

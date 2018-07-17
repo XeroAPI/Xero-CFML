@@ -151,12 +151,12 @@
 	<cffunction name="saveRequestToken" access="public" >
 		<cfargument name="response" required="true" type="String" default="" hint="I am a string of this object." />
 
-		<cfloop list="#arguments.response#" index="elem" delimiters="&">  
-			<cfif #listFirst(elem,"=")# EQ "oauth_token">
-				<cfset this.setRequestOAuthToken(listLast(elem,"="))>
+		<cfloop list="#arguments.response#" index="local.elem" delimiters="&">  
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_token">
+				<cfset this.setRequestOAuthToken(listLast(local.elem,"="))>
 			</cfif>
-			<cfif #listFirst(elem,"=")# EQ "oauth_token_secret">
-				<cfset this.setRequestOAuthTokenSecret(listLast(elem,"="))>
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_token_secret">
+				<cfset this.setRequestOAuthTokenSecret(listLast(local.elem,"="))>
 			</cfif>
 		</cfloop>  
 	</cffunction>
@@ -164,15 +164,15 @@
 	<cffunction name="saveCallback" access="public" >
 		<cfargument name="response" required="true" type="String" default="" hint="I am a string of this object." />
 
-		<cfloop list="#arguments.response#" index="elem" delimiters="&">  
-			<cfif #listFirst(elem,"=")# EQ "oauth_token">
-				<cfset this.setOAuthToken(listLast(elem,"="))>
+		<cfloop list="#arguments.response#" index="local.elem" delimiters="&">  
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_token">
+				<cfset this.setOAuthToken(listLast(local.elem,"="))>
 			</cfif>
-			<cfif #listFirst(elem,"=")# EQ "oauth_token_secret">
-				<cfset this.setOAuthTokenSecret(listLast(elem,"="))>
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_token_secret">
+				<cfset this.setOAuthTokenSecret(listLast(local.elem,"="))>
 			</cfif>
-			<cfif #listFirst(elem,"=")# EQ "oauth_verifier">
-				<cfset this.setVerifier(listLast(elem,"="))>
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_verifier">
+				<cfset this.setVerifier(listLast(local.elem,"="))>
 			</cfif>
 		</cfloop>  
 	</cffunction>
@@ -180,21 +180,21 @@
 	<cffunction name="saveAccessToken" access="public" >
 		<cfargument name="response" required="true" type="String" default="" hint="I am a string of this object." />
 
-		<cfloop list="#arguments.response#" index="elem" delimiters="&">  
-			<cfif #listFirst(elem,"=")# EQ "oauth_token">
-				<cfset this.setOAuthToken(listLast(elem,"="))>
+		<cfloop list="#arguments.response#" index="local.elem" delimiters="&">  
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_token">
+				<cfset this.setOAuthToken(listLast(local.elem,"="))>
 			</cfif>
-			<cfif #listFirst(elem,"=")# EQ "oauth_token_secret">
-				<cfset this.setOAuthTokenSecret(listLast(elem,"="))>
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_token_secret">
+				<cfset this.setOAuthTokenSecret(listLast(local.elem,"="))>
 			</cfif>
-			<cfif #listFirst(elem,"=")# EQ "oauth_verifier">
-				<cfset this.setVerifier(listLast(elem,"="))>
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_verifier">
+				<cfset this.setVerifier(listLast(local.elem,"="))>
 			</cfif>
-			<cfif #listFirst(elem,"=")# EQ "oauth_session_handle">
-				<cfset this.setOAuthSessionHandle(listLast(elem,"="))>
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_session_handle">
+				<cfset this.setOAuthSessionHandle(listLast(local.elem,"="))>
 			</cfif>
-			<cfif #listFirst(elem,"=")# EQ "oauth_expires_in">
-				<cfset this.setOAuthExpiresIn(listLast(elem,"="))>
+			<cfif #listFirst(local.elem,"=")# EQ "oauth_expires_in">
+				<cfset this.setOAuthExpiresIn(listLast(local.elem,"="))>
 			</cfif>
 		</cfloop>  
 	</cffunction>
