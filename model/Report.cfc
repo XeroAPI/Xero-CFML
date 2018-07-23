@@ -1,4 +1,4 @@
-<cfcomponent displayname="BrandingTheme" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="BrandingTheme" output="false" extends="xeroclient"
   hint="I am the BrandingTheme Class.">
 
 <!--- PROPERTIES --->
@@ -13,7 +13,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the BrandingTheme Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -42,41 +43,41 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.ReportID=getReportID();
-            myStruct.Status=getStatus();
+            myStruct["ReportID"]=getReportID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"ReportID")) {
               if (NOT listFindNoCase(arguments.exclude, "ReportID")) {
-                myStruct.ReportID=getReportID();
+                myStruct["ReportID"]=getReportID();
               }
             }
             if (structKeyExists(variables.instance,"ReportName")) {
               if (NOT listFindNoCase(arguments.exclude, "ReportName")) {
-                myStruct.ReportName=getReportName();
+                myStruct["ReportName"]=getReportName();
               }
             }
             if (structKeyExists(variables.instance,"ReportDate")) {
               if (NOT listFindNoCase(arguments.exclude, "ReportDate")) {
-                myStruct.ReportDate=getReportDate();
+                myStruct["ReportDate"]=getReportDate();
               }
             }
             if (structKeyExists(variables.instance,"ReportType")) {
               if (NOT listFindNoCase(arguments.exclude, "ReportType")) {
-                myStruct.ReportType=getReportType();
+                myStruct["ReportType"]=getReportType();
               }
             }
             if (structKeyExists(variables.instance,"ReportTitles")) {
               if (NOT listFindNoCase(arguments.exclude, "ReportTitles")) {
                 if (ArrayLen(variables.instance.ReportTitles) GT 0) {
-                  myStruct.ReportTitles=getReportTitles();
+                  myStruct["ReportTitles"]=getReportTitles();
                 }
               }
             }
             if (structKeyExists(variables.instance,"Rows")) {
               if (NOT listFindNoCase(arguments.exclude, "Rows")) {
                 if (ArrayLen(variables.instance.Rows) GT 0) {
-                  myStruct.Rows=getRows();
+                  myStruct["Rows"]=getRows();
                 }
               }
             }

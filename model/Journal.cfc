@@ -1,4 +1,4 @@
-<cfcomponent displayname="Journal" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="Journal" output="false" extends="xeroclient"
   hint="I am the Journal Class.">
 
 <!--- PROPERTIES --->
@@ -15,7 +15,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the Journal Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -45,42 +46,42 @@
 
           if (structKeyExists(variables.instance,"JournalID")) {
             if (NOT listFindNoCase(arguments.exclude, "JournalID")) {
-              myStruct.JournalID=getJournalID();
+              myStruct["JournalID"]=getJournalID();
             }
           }
           if (structKeyExists(variables.instance,"JournalDate")) {
             if (NOT listFindNoCase(arguments.exclude, "JournalDate")) {
-              myStruct.JournalDate=getJournalDate();
+              myStruct["JournalDate"]=getJournalDate();
             }
           }
           if (structKeyExists(variables.instance,"JournalNumber")) {
             if (NOT listFindNoCase(arguments.exclude, "JournalNumber")) {
-              myStruct.JournalNumber=getJournalNumber();
+              myStruct["JournalNumber"]=getJournalNumber();
             }
           }
           if (structKeyExists(variables.instance,"CreatedDateUTC")) {
             if (NOT listFindNoCase(arguments.exclude, "CreatedDateUTC")) {
-              myStruct.CreatedDateUTC=getCreatedDateUTC();
+              myStruct["CreatedDateUTC"]=getCreatedDateUTC();
             }
           }
           if (structKeyExists(variables.instance,"Reference")) {
             if (NOT listFindNoCase(arguments.exclude, "Reference")) {
-              myStruct.Reference=getReference();
+              myStruct["Reference"]=getReference();
             }
           }
           if (structKeyExists(variables.instance,"SourceID")) {
             if (NOT listFindNoCase(arguments.exclude, "SourceID")) {
-              myStruct.SourceID=getSourceID();
+              myStruct["SourceID"]=getSourceID();
             }
           }
           if (structKeyExists(variables.instance,"SourceType")) {
             if (NOT listFindNoCase(arguments.exclude, "SourceType")) {
-              myStruct.SourceType=getSourceType();
+              myStruct["SourceType"]=getSourceType();
             }
           }
           if (structKeyExists(variables.instance,"JournalLines")) {
             if (NOT listFindNoCase(arguments.exclude, "JournalLines")) {
-              myStruct.JournalLines=getJournalLines();
+              myStruct["JournalLines"]=getJournalLines();
             }
           }
         </cfscript>
@@ -330,7 +331,7 @@
 			<cfscript>
 		        var arr = ArrayNew(1);
 		        for (var i=1;i LTE ArrayLen(arguments.JournalLines);i=i+1) {
-		          var item=createObject("component","cfc.model.JournalLine").init().populate(arguments.JournalLines[i]); 
+		          var item=createObject("component","JournalLine").init(variables.xero).populate(arguments.JournalLines[i]); 
 		          ArrayAppend(arr,item);
 		        }
 		      </cfscript>

@@ -1,4 +1,4 @@
-<cfcomponent displayname="TrackingOption" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="TrackingOption" output="false" extends="xeroclient"
   hint="I am the TrackingOption Class.">
 
 <!--- PROPERTIES --->
@@ -11,7 +11,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the TrackingOption Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -55,28 +56,28 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.TrackingOptionID=getTrackingOptionID();
-            myStruct.Status=getStatus();
+            myStruct["TrackingOptionID"]=getTrackingOptionID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"TrackingOptionID")) {
               if (NOT listFindNoCase(arguments.exclude, "TrackingOptionID")) {
-                myStruct.TrackingOptionID=getTrackingOptionID();
+                myStruct["TrackingOptionID"]=getTrackingOptionID();
               }
             }
             if (structKeyExists(variables.instance,"Name")) {
               if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+                myStruct["Name"]=getName();
               }
             }
             if (structKeyExists(variables.instance,"Status")) {
               if (NOT listFindNoCase(arguments.exclude, "Status")) {
-                myStruct.Status=getStatus();
+                myStruct["Status"]=getStatus();
               }
             }
             if (structKeyExists(variables.instance,"TrackingCategoryID")) {
               if (NOT listFindNoCase(arguments.exclude, "TrackingCategoryID")) {
-                myStruct.TrackingCategoryID=getTrackingCategoryID();
+                myStruct["TrackingCategoryID"]=getTrackingCategoryID();
               }
             }
           }

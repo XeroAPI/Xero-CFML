@@ -1,4 +1,4 @@
-<cfcomponent displayname="Employee" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="Employee" output="false" extends="xeroclient"
   hint="I am the Employee Class.">
 
 <!--- PROPERTIES --->
@@ -12,7 +12,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the Employee Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -56,34 +57,34 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.EmployeeID=getEmployeeID();
-            myStruct.Status=getStatus();
+            myStruct["EmployeeID"]=getEmployeeID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"EmployeeID")) {
               if (NOT listFindNoCase(arguments.exclude, "EmployeeID")) {
-                myStruct.EmployeeID=getEmployeeID();
+                myStruct["EmployeeID"]=getEmployeeID();
               }
             }
             if (structKeyExists(variables.instance,"Status")) {
               if (NOT listFindNoCase(arguments.exclude, "Status")) {
-                myStruct.Status=getStatus();
+                myStruct["Status"]=getStatus();
               }
             }
             if (structKeyExists(variables.instance,"FirstName")) {
               if (NOT listFindNoCase(arguments.exclude, "FirstName")) {
-                myStruct.FirstName=getFirstName();
+                myStruct["FirstName"]=getFirstName();
               }
             }
             if (structKeyExists(variables.instance,"LastName")) {
               if (NOT listFindNoCase(arguments.exclude, "LastName")) {
-                myStruct.LastName=getLastName();
+                myStruct["LastName"]=getLastName();
               }
             }
             if (structKeyExists(variables.instance,"ExternalLink")) {
               if (NOT listFindNoCase(arguments.exclude, "ExternalLink")) {
                 if (NOT structIsEmpty(getExternalLink())){
-                  myStruct.ExternalLink=getExternalLink();
+                  myStruct["ExternalLink"]=getExternalLink();
                 }
               }
             }

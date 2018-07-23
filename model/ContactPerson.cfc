@@ -1,4 +1,4 @@
-<cfcomponent displayname="ContactPerson" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="ContactPerson" output="false" extends="xeroclient"
   hint="I am the ContactPerson Class.">
 
 <!--- PROPERTIES --->
@@ -10,7 +10,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the ContactPerson Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -47,28 +48,28 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.ContactPersonID=getContactPersonID();
-            myStruct.Status=getStatus();
+            myStruct["ContactPersonID"]=getContactPersonID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"FirstName")) {
               if (NOT listFindNoCase(arguments.exclude, "FirstName")) {
-                myStruct.FirstName=getFirstName();
+                myStruct["FirstName"]=getFirstName();
               }
             }
             if (structKeyExists(variables.instance,"LastName")) {
               if (NOT listFindNoCase(arguments.exclude, "LastName")) {
-                myStruct.LastName=getLastName();
+                myStruct["LastName"]=getLastName();
               }
             }
             if (structKeyExists(variables.instance,"EmailAddress")) {
               if (NOT listFindNoCase(arguments.exclude, "EmailAddress")) {
-                myStruct.EmailAddress=getEmailAddress();
+                myStruct["EmailAddress"]=getEmailAddress();
               }
             }
             if (structKeyExists(variables.instance,"IncludeInEmails")) {
               if (NOT listFindNoCase(arguments.exclude, "IncludeInEmails")) {
-                myStruct.IncludeInEmails=getIncludeInEmails();
+                myStruct["IncludeInEmails"]=getIncludeInEmails();
               }
             }
           }

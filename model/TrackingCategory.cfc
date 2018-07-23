@@ -1,4 +1,4 @@
-<cfcomponent displayname="TrackingCategory" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="TrackingCategory" output="false" extends="xeroclient"
   hint="I am the TrackingCategory Class.">
 
 <!--- PROPERTIES --->
@@ -12,7 +12,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the TrackingCategory Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -56,28 +57,28 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.TrackingCategoryID=getTrackingCategoryID();
-            myStruct.Status=getStatus();
+            myStruct["TrackingCategoryID"]=getTrackingCategoryID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"TrackingCategoryID")) {
               if (NOT listFindNoCase(arguments.exclude, "TrackingCategoryID")) {
-                myStruct.TrackingCategoryID=getTrackingCategoryID();
+                myStruct["TrackingCategoryID"]=getTrackingCategoryID();
               }
             }
             if (structKeyExists(variables.instance,"Name")) {
               if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+                myStruct["Name"]=getName();
               }
             }
             if (structKeyExists(variables.instance,"Status")) {
               if (NOT listFindNoCase(arguments.exclude, "Status")) {
-                myStruct.Status=getStatus();
+                myStruct["Status"]=getStatus();
               }
             }
             if (structKeyExists(variables.instance,"Options")) {
               if (NOT listFindNoCase(arguments.exclude, "Options")) {
-                myStruct.Options=getOptions();
+                myStruct["Options"]=getOptions();
               }
             }
           }
@@ -290,7 +291,7 @@
        <cfscript>
             var arr = ArrayNew(1);
             for (var i=1;i LTE ArrayLen(arguments.Options);i=i+1) {
-              var item=createObject("component","cfc.model.TrackingOption").init().populate(arguments.Options[i]); 
+              var item=createObject("component","TrackingOption").init(variables.xero).populate(arguments.Options[i]); 
               ArrayAppend(arr,item);
             }
       </cfscript>

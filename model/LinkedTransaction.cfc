@@ -1,4 +1,4 @@
-<cfcomponent displayname="LinkedTransaction" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="LinkedTransaction" output="false" extends="xeroclient"
   hint="I am the LinkedTransaction Class.">
 
 <!--- PROPERTIES --->
@@ -17,7 +17,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the LinkedTransaction Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -61,58 +62,58 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.LinkedTransactionID=getLinkedTransactionID();
-            myStruct.Status=getStatus();
+            myStruct["LinkedTransactionID"]=getLinkedTransactionID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"SourceTransactionID")) {
               if (NOT listFindNoCase(arguments.exclude, "SourceTransactionID")) {
-                myStruct.SourceTransactionID=getSourceTransactionID();
+                myStruct["SourceTransactionID"]=getSourceTransactionID();
               }
             }
             if (structKeyExists(variables.instance,"SourceLineItemID")) {
               if (NOT listFindNoCase(arguments.exclude, "SourceLineItemID")) {
-                myStruct.SourceLineItemID=getSourceLineItemID();
+                myStruct["SourceLineItemID"]=getSourceLineItemID();
               }
             }
             if (structKeyExists(variables.instance,"ContactID")) {
               if (NOT listFindNoCase(arguments.exclude, "ContactID")) {
-                myStruct.ContactID=getContactID();
+                myStruct["ContactID"]=getContactID();
               }
             }
             if (structKeyExists(variables.instance,"TargetTransactionID")) {
               if (NOT listFindNoCase(arguments.exclude, "TargetTransactionID")) {
-                myStruct.TargetTransactionID=getTargetTransactionID();
+                myStruct["TargetTransactionID"]=getTargetTransactionID();
               }
             }
             if (structKeyExists(variables.instance,"TargetLineItemID")) {
               if (NOT listFindNoCase(arguments.exclude, "TargetLineItemID")) {
-                myStruct.TargetLineItemID=getTargetLineItemID();
+                myStruct["TargetLineItemID"]=getTargetLineItemID();
               }
             }
             if (structKeyExists(variables.instance,"LinkedTransactionID")) {
               if (NOT listFindNoCase(arguments.exclude, "LinkedTransactionID")) {
-                myStruct.LinkedTransactionID=getLinkedTransactionID();
+                myStruct["LinkedTransactionID"]=getLinkedTransactionID();
               }
             }
             if (structKeyExists(variables.instance,"Status")) {
               if (NOT listFindNoCase(arguments.exclude, "Status")) {
-                myStruct.Status=getStatus();
+                myStruct["Status"]=getStatus();
               }
             }
             if (structKeyExists(variables.instance,"Type")) {
               if (NOT listFindNoCase(arguments.exclude, "Type")) {
-                myStruct.Type=getType();
+                myStruct["Type"]=getType();
               }
             }
             if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
               if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+                myStruct["UpdatedDateUTC"]=getUpdatedDateUTC();
               }
             }
             if (structKeyExists(variables.instance,"SourceTransactionTypeCode")) {
               if (NOT listFindNoCase(arguments.exclude, "SourceTransactionTypeCode")) {
-                myStruct.SourceTransactionTypeCode=getSourceTransactionTypeCode();
+                myStruct["SourceTransactionTypeCode"]=getSourceTransactionTypeCode();
               }
             }
           }

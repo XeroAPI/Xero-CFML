@@ -1,4 +1,4 @@
-<cfcomponent displayname="InvoiceReminder" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="InvoiceReminder" output="false" extends="xeroclient"
   hint="I am the InvoiceReminder Class.">
 
 <!--- PROPERTIES --->
@@ -8,7 +8,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the InvoiceReminder Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -46,7 +47,7 @@
           myStruct=StructNew();
           if (structKeyExists(variables.instance,"Enabled")) {
             if (NOT listFindNoCase(arguments.exclude, "Enabled")) {
-              myStruct.Enabled=getEnabled();
+              myStruct["Enabled"]=getEnabled();
             }
           }
         </cfscript>
