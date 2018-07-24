@@ -36,6 +36,7 @@ Add directory map in your Application.cfc file.
 
 ```javascript
   <cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" /> 
+  <cfset application.xero = CreateObject("component", "modules.xero-cfml.xero").init(pathToConfigJSON)>
 ```
 
 ### Create a Xero User Account
@@ -52,9 +53,14 @@ Go to [http://app.xero.com](http://app.xero.com) and login with your Xero user a
 
 ### Update Config.json with Keys and Certificates
 
-Look in the resources directory for your config.json file.  The min required attirbutes for each app type is show below.
+Refer to Xero Developer Center [Getting Started](http://developer.xero.com/documentation/getting-started/getting-started-guide/) if you haven't created your free Xero User account an a Xero App yet - this is where you'll find your config.json details. 
 
-Refer to Xero Developer Center [Getting Started](http://developer.xero.com/documentation/getting-started/getting-started-guide/) if you haven't created your Xero App yet - this is where you'll find the Consumer Key and Secret. 
+After you create a Xero App, look under the SDK Configuration heading and select "CFML" and copy the config.json information for your Xero App.
+
+Create a file called config.json and paste your information.  Our sample app looks for config.json in the resources directory.
+
+The min required attirbutes for each app type is show below.
+
 
 Private and Partner apps require a [public/private key pair](http://developer.xero.com/documentation/api-guides/create-publicprivate-key/) created with OpenSSL.  The private key should be exported as a pk8 file and placed in the "resources/certs" folder.  Jump to Generate Public/Private Key below to see terminal commands.
 
@@ -137,12 +143,10 @@ Note: Tokens are managed in the session scope through the storage.cfc file.  You
 ```java
 <cfscript>
 
-req=createObject("component","cfc.xero").init(); 
-
 try {
-  req.requestToken();
-  location(req.getAuthorizeUrl());
-}	
+  application.xero.requestToken();
+  location(application.xero.getAuthorizeUrl());
+} 
 
 catch(any e){
   if(e.ErrorCode EQ "401") {
@@ -152,6 +156,7 @@ catch(any e){
     abort;
   }
 }
+
 </cfscript>	
 ```
 
@@ -161,12 +166,11 @@ catch(any e){
 ```java
 <cfscript>
 
-res=createObject("component","cfc.xero").init(); 
 
 try {
-  res.accessToken(aCallbackParams = cgi.query_string);
+  application.xero.accessToken(aCallbackParams = cgi.query_string);
   location("get.cfm","false");
-}	
+} 
 
 catch(any e){
   if(e.ErrorCode EQ "401") {
@@ -176,6 +180,7 @@ catch(any e){
     abort;
   }
 }
+
 </cfscript>
 ```
 
@@ -190,8 +195,7 @@ Reading all objects from an endpoint
 
 ```java
 <cfscript>
-  account=createObject("component","cfc.model.Account").init();
-
+  account=application.xero.getModel("Account"); 
   // Get all items 
   account.getAll();
   // After you getAll - you can loop over an Array of items (NOTE: Your object is not populated with the getAll method)
@@ -218,7 +222,7 @@ Reading a single object from an endpoint.
 
 ```java
 <cfscript>  
-  account=createObject("component","cfc.model.Account").init();
+  account=application.xero.getModel("Account");
 
   //Get an item by a specific ID (No need to getAll with this method)
   account.getById("XXXXXXXXXXXXXXXXX");
@@ -230,7 +234,7 @@ Creating objects on an endpoint
 
 ```java
 <cfscript>
-  account=createObject("component","cfc.model.Account").init(); 
+  account=application.xero.getModel("Account");  
 
   account.setName("Dinner");
   account.setCode("4040");
@@ -244,7 +248,7 @@ Update an object on an endpoint
 
 ```java
 <cfscript>
-  account=createObject("component","cfc.model.Account").init(); 
+  account=application.xero.getModel("Account");  
 
   // Get all objects and set the first one in the Array to update
   account.getAll().getObject(1);
@@ -258,7 +262,7 @@ Delete an object on an endpoint
 
 ```java
 <cfscript>
-  account=createObject("component","cfc.model.Account").init(); 
+  account=application.xero.getModel("Account");  
 
   // Set the ID for the Account to Delete
   account.setAccountID("XXXXXXXXXXXXX");
@@ -271,7 +275,7 @@ Archive an object on an endpoint
 
 ```java
 <cfscript>
-  account=createObject("component","cfc.model.Account").init(); 
+  account=application.xero.getModel("Account"); 
 
   // Set the ID for the Account to Delete
   account.setAccountID("XXXXXXXXXXXXX");
@@ -283,9 +287,9 @@ Void an object on an endpoint
 
 ```java
 <cfscript>
-  invoice=createObject("component","cfc.model.Invoice").init(); 
+  invoice=application.xero.getModel("Invoice"); 
 
-  // Set the ID for the Account to Delete
+  // Set the ID for the Invoice to Void
   invoice.setInvoiceID("XXXXXXXXXXXXX");
   invoice.void();
 </cfscript>		
@@ -296,12 +300,12 @@ Add to an object on an endpoint
 
 ```java
 <cfscript>
-  trackingcategory=createObject("component","cfc.model.TrackingCategory").init(); 
+  trackingcategory=application.xero.getModel("TrackingCategory");
 
   // Set the ID for the Tracking Category
   trackingcategory.setTrackingCategoryID("XXXXXXXXXXXXX");
  
-  trackingoption=createObject("component","cfc.model.TrackingOption").init(); 
+  trackingoption=application.xero.getModel("TrackingOption");
   trackingoption.setName("Foobar" &RandRange(1, 10000, "SHA1PRNG"));
   aTrackingOption = ArrayNew(1);
   aTrackingOption.append(trackingoption.toStruct());
@@ -317,12 +321,13 @@ Remove from an object on an endpoint
 
 ```java
 <cfscript>
-  trackingcategory=createObject("component","cfc.model.TrackingCategory").init(); 	
+  trackingcategory=application.xero.getModel("TrackingCategory");
 
   // Set the ID for the Tracking Category
   trackingcategory.setTrackingCategoryID("XXXXXXXXXXXXX");
  
-  trackingoptionToDelete=createObject("component","cfc.model.TrackingOption").init().populate(trackingcategory.getOptions()[1]); 	
+  trackingoptionToDelete=application.xero.getModel("TrackingOption").populate(trackingcategory.getOptions()[1]);  
+
   trackingcategory.setOptionId(trackingoptionToDelete.getTrackingOptionId());	
   trackingcategory.deleteOption();				
 </cfscript>		
@@ -345,7 +350,7 @@ If you find yourself limited by the models, you can always hack your own raw API
   <cfset sResourceEndpoint = "#config.ApiBaseUrl##config.ApiEndpointPath##endpoint#">
   
   <!--- Build and Call API, return new structure of XML results --->
-  <cfset oRequestResult = CreateObject("component", "cfc.xero").requestData(
+  <cfset oRequestResult = application.xero.requestData(
     sResourceEndpoint = sResourceEndpoint,
     sOAuthToken = sOAuthToken,
     sOAuthTokenSecret= sOAuthTokenSecret,
