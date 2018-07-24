@@ -68,7 +68,7 @@ History:
 			<cfset this.AppType = this.json["AppType"]>
 		</cfif>
 		<cfif structKeyExists(this.json, "UserAgent")>
-			<cfset this.UserAgent = this.json["UserAgent"] & '-' & this.json["ConsumerKey"] & "-CFML-[0.5.2]">
+			<cfset this.UserAgent = this.json["UserAgent"] & '-' & this.json["ConsumerKey"] & "-CFML-[0.5.3]">
 		</cfif>
 		<cfif structKeyExists(this.json, "Accept")>
 			<cfset this.Accept = this.json["Accept"]>
@@ -131,7 +131,7 @@ History:
 		<cfif structKeyExists(this.json, "PrivateKeyCert")>
 			<cfset this.PathToPrivateKey = pathToConfig & this.json["PrivateKeyCert"]>
 			<cfif NOT FileExists(this.PathToPrivateKey)>
-				<cfoutput>No Private Key File Found	- Check the path set in /resource/config.json - #this.PathToPrivateKey#</cfoutput>
+				<cfoutput>No Private Key File Found	- Check the path set in #pathToConfigJSON# - #this.PathToPrivateKey#</cfoutput>
 				<cfabort>
 			</cfif>
 		</cfif>

@@ -1,4 +1,4 @@
-<cfcomponent displayname="Address" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="Address" output="false" extends="xeroclient"
   hint="I am the Address Class.">
 
 <!--- PROPERTIES --->
@@ -16,7 +16,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the Address Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -61,57 +62,57 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.AddressID=getAddressID();
-            myStruct.Status=getStatus();
+            myStruct["AddressID"]=getAddressID();
+            myStruct["Status"]=getStatus();
           } else {
             if (structKeyExists(variables.instance,"AddressType")) {
               if (NOT listFindNoCase(arguments.exclude, "AddressType")) {
-                myStruct.AddressType=getAddressType();
+                myStruct["AddressType"]=getAddressType();
               }
             }
             if (structKeyExists(variables.instance,"AddressLine1")) {
               if (NOT listFindNoCase(arguments.exclude, "AddressLine1")) {
-                myStruct.AddressLine1=getAddressLine1();
+                myStruct["AddressLine1"]=getAddressLine1();
               }
             }
             if (structKeyExists(variables.instance,"AddressLine2")) {
               if (NOT listFindNoCase(arguments.exclude, "AddressLine2")) {
-                myStruct.AddressLine2=getAddressLine2();
+                myStruct["AddressLine2"]=getAddressLine2();
               }
             }
             if (structKeyExists(variables.instance,"AddressLine3")) {
               if (NOT listFindNoCase(arguments.exclude, "AddressLine3")) {
-                myStruct.AddressLine3=getAddressLine3();
+                myStruct["AddressLine3"]=getAddressLine3();
               }
             }
             if (structKeyExists(variables.instance,"AddressLine4")) {
               if (NOT listFindNoCase(arguments.exclude, "AddressLine4")) {
-                myStruct.AddressLine4=getAddressLine4();
+                myStruct["AddressLine4"]=getAddressLine4();
               }
             }
             if (structKeyExists(variables.instance,"City")) {
               if (NOT listFindNoCase(arguments.exclude, "City")) {
-                myStruct.City=getCity();
+                myStruct["City"]=getCity();
               }
             }
             if (structKeyExists(variables.instance,"Region")) {
               if (NOT listFindNoCase(arguments.exclude, "Region")) {
-                myStruct.Region=getRegion();
+                myStruct["Region"]=getRegion();
               }
             }
             if (structKeyExists(variables.instance,"PostalCode")) {
               if (NOT listFindNoCase(arguments.exclude, "PostalCode")) {
-                myStruct.PostalCode=getPostalCode();
+                myStruct["PostalCode"]=getPostalCode();
               }
             }
             if (structKeyExists(variables.instance,"Country")) {
               if (NOT listFindNoCase(arguments.exclude, "Country")) {
-                myStruct.Country=getCountry();
+                myStruct["Country"]=getCountry();
               }
             }
             if (structKeyExists(variables.instance,"AttentionTo")) {
               if (NOT listFindNoCase(arguments.exclude, "AttentionTo")) {
-                myStruct.AttentionTo=getAttentionTo();
+                myStruct["AttentionTo"]=getAttentionTo();
               }
             }
           }

@@ -1,4 +1,4 @@
-<cfcomponent displayname="ExternalLink" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="ExternalLink" output="false" extends="xeroclient"
   hint="I am the ExternalLink Class.">
 
 <!--- PROPERTIES --->
@@ -9,7 +9,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the ExternalLink Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -46,18 +47,18 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.ExternalLinkID=getExternalLinkID();
-            myStruct.Status=getStatus();
+            myStruct["ExternalLinkID"]=getExternalLinkID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"LinkType")) {
               if (NOT listFindNoCase(arguments.exclude, "LinkType")) {
-                myStruct.LinkType=getLinkType();
+                myStruct["LinkType"]=getLinkType();
               }
             }
             if (structKeyExists(variables.instance,"Url")) {
               if (NOT listFindNoCase(arguments.exclude, "Url")) {
-                myStruct.Url=getUrl();
+                myStruct["Url"]=getUrl();
               }
             }
           }

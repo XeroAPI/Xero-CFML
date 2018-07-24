@@ -1,4 +1,4 @@
-<cfcomponent displayname="ManualJournal" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="ManualJournal" output="false" extends="xeroclient"
   hint="I am the ManualJournal Class.">
 
 <!--- PROPERTIES --->
@@ -17,7 +17,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the ManualJournal Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -61,55 +62,55 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.ManualJournalID=getManualJournalID();
-            myStruct.Status=getStatus();
+            myStruct["ManualJournalID"]=getManualJournalID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"Narration")) {
               if (NOT listFindNoCase(arguments.exclude, "Narration")) {
-                myStruct.Narration=getNarration();
+                myStruct["Narration"]=getNarration();
               }
             }
             if (structKeyExists(variables.instance,"JournalLines")) {
               if (NOT listFindNoCase(arguments.exclude, "JournalLines")) {
-                myStruct.JournalLines=getJournalLines();
+                myStruct["JournalLines"]=getJournalLines();
               }
             }
             if (structKeyExists(variables.instance,"Date")) {
               if (NOT listFindNoCase(arguments.exclude, "Date")) {
-                myStruct.Date=getDate();
+                myStruct["Date"]=getDate();
               }
             }
             if (structKeyExists(variables.instance,"LineAmountTypes")) {
               if (NOT listFindNoCase(arguments.exclude, "LineAmountTypes")) {
-                myStruct.LineAmountTypes=getLineAmountTypes();
+                myStruct["LineAmountTypes"]=getLineAmountTypes();
               }
             }
             if (structKeyExists(variables.instance,"Status")) {
               if (NOT listFindNoCase(arguments.exclude, "Status")) {
-                myStruct.Status=getStatus();
+                myStruct["Status"]=getStatus();
               }
             }
             if (structKeyExists(variables.instance,"Url")) {
               if (NOT listFindNoCase(arguments.exclude, "Url")) {
                 if(len(getUrl()) GT 0) {
-                  myStruct.Url=getUrl();
+                  myStruct["Url"]=getUrl();
                 }
               }
             }
             if (structKeyExists(variables.instance,"ShowOnCashBasisReports")) {
               if (NOT listFindNoCase(arguments.exclude, "ShowOnCashBasisReports")) {
-                myStruct.ShowOnCashBasisReports=getShowOnCashBasisReports();
+                myStruct["ShowOnCashBasisReports"]=getShowOnCashBasisReports();
               }
             }
             if (structKeyExists(variables.instance,"HasAttachments")) {
               if (NOT listFindNoCase(arguments.exclude, "HasAttachments")) {
-                myStruct.HasAttachments=getHasAttachments();
+                myStruct["HasAttachments"]=getHasAttachments();
               }
             }
             if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
               if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+                myStruct["UpdatedDateUTC"]=getUpdatedDateUTC();
               }
             }
           }
@@ -306,7 +307,7 @@
       <cfscript>
             var arr = ArrayNew(1);
 		        for (var i=1;i LTE ArrayLen(arguments.JournalLines);i=i+1) {
-		          var item=createObject("component","cfc.model.JournalLine").init().populate(arguments.JournalLines[i]); 
+		          var item=createObject("component","JournalLine").init(variables.xero).populate(arguments.JournalLines[i]); 
 		          ArrayAppend(arr,item);
 		        }
 		  </cfscript>

@@ -1,4 +1,4 @@
-<cfcomponent displayname="User" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="User" output="false" extends="xeroclient"
   hint="I am the User Class.">
 
 <!--- PROPERTIES --->
@@ -14,6 +14,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the User Class.">
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
       <cfset populate(StructNew())>
     <cfreturn this />
   </cffunction>
@@ -58,43 +60,43 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.UserID=getUserID();
-            myStruct.Status=getStatus();
+            myStruct["UserID"]=getUserID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"UserID")) {
               if (NOT listFindNoCase(arguments.exclude, "UserID")) {
-                myStruct.UserID=getUserID();
+                myStruct["UserID"]=getUserID();
               }
             }
             if (structKeyExists(variables.instance,"EmailAddress")) {
               if (NOT listFindNoCase(arguments.exclude, "EmailAddress")) {
-                myStruct.EmailAddress=getEmailAddress();
+                myStruct["EmailAddress"]=getEmailAddress();
               }
             }
             if (structKeyExists(variables.instance,"FirstName")) {
               if (NOT listFindNoCase(arguments.exclude, "FirstName")) {
-                myStruct.FirstName=getFirstName();
+                myStruct["FirstName"]=getFirstName();
               }
             }
             if (structKeyExists(variables.instance,"LastName")) {
               if (NOT listFindNoCase(arguments.exclude, "LastName")) {
-                myStruct.LastName=getLastName();
+                myStruct["LastName"]=getLastName();
               }
             }
             if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
               if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+                myStruct["UpdatedDateUTC"]=getUpdatedDateUTC();
               }
             }
             if (structKeyExists(variables.instance,"IsSubscriber")) {
               if (NOT listFindNoCase(arguments.exclude, "IsSubscriber")) {
-                myStruct.IsSubscriber=getIsSubscriber();
+                myStruct["IsSubscriber"]=getIsSubscriber();
               }
             }
             if (structKeyExists(variables.instance,"OrganisationRole")) {
               if (NOT listFindNoCase(arguments.exclude, "OrganisationRole")) {
-                myStruct.OrganisationRole=getOrganisationRole();
+                myStruct["OrganisationRole"]=getOrganisationRole();
               }
             }
           }

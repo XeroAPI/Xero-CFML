@@ -1,4 +1,4 @@
-<cfcomponent displayname="Item" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="Item" output="false" extends="xeroclient"
   hint="I am the Item Class.">
 
 <!--- PROPERTIES --->
@@ -21,7 +21,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the Item Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -58,78 +59,78 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.ItemID=getItemID();
-            myStruct.Status=getStatus();
+            myStruct["ItemID"]=getItemID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"Code")) {
               if (NOT listFindNoCase(arguments.exclude, "Code")) {
-                myStruct.Code=getCode();
+                myStruct["Code"]=getCode();
               }
             }
             if (structKeyExists(variables.instance,"InventoryAssetAccountCode")) {
               if (NOT listFindNoCase(arguments.exclude, "InventoryAssetAccountCode")) {
-                myStruct.InventoryAssetAccountCode=getInventoryAssetAccountCode();
+                myStruct["InventoryAssetAccountCode"]=getInventoryAssetAccountCode();
               }
             }
             if (structKeyExists(variables.instance,"Name")) {
               if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+                myStruct["Name"]=getName();
               }
             }
             if (structKeyExists(variables.instance,"IsSold")) {
               if (NOT listFindNoCase(arguments.exclude, "IsSold")) {
-                myStruct.IsSold=getIsSold();
+                myStruct["IsSold"]=getIsSold();
               }
             }
             if (structKeyExists(variables.instance,"IsPurchased")) {
               if (NOT listFindNoCase(arguments.exclude, "IsPurchased")) {
-                myStruct.IsPurchased=getIsPurchased();
+                myStruct["IsPurchased"]=getIsPurchased();
               }
             }
             if (structKeyExists(variables.instance,"Description")) {
               if (NOT listFindNoCase(arguments.exclude, "Description")) {
-                myStruct.Description=getDescription();
+                myStruct["Description"]=getDescription();
               }
             }
             if (structKeyExists(variables.instance,"PurchaseDescription")) {
               if (NOT listFindNoCase(arguments.exclude, "PurchaseDescription")) {
-                myStruct.PurchaseDescription=getPurchaseDescription();
+                myStruct["PurchaseDescription"]=getPurchaseDescription();
               }
             }
             if (structKeyExists(variables.instance,"PurchaseDetails")) {
               if (NOT listFindNoCase(arguments.exclude, "PurchaseDetails")) {
-                myStruct.PurchaseDetails=getPurchaseDetails();
+                myStruct["PurchaseDetails"]=getPurchaseDetails();
               }
             }
             if (structKeyExists(variables.instance,"SalesDetails")) {
               if (NOT listFindNoCase(arguments.exclude, "SalesDetails")) {
-                myStruct.SalesDetails=getSalesDetails();
+                myStruct["SalesDetails"]=getSalesDetails();
               }
             }
             if (structKeyExists(variables.instance,"IsTrackedAsInventory")) {
               if (NOT listFindNoCase(arguments.exclude, "IsTrackedAsInventory")) {
-                myStruct.IsTrackedAsInventory=getIsTrackedAsInventory();
+                myStruct["IsTrackedAsInventory"]=getIsTrackedAsInventory();
               }
             }
             if (structKeyExists(variables.instance,"TotalCostPool")) {
               if (NOT listFindNoCase(arguments.exclude, "TotalCostPool")) {
-                myStruct.TotalCostPool=getTotalCostPool();
+                myStruct["TotalCostPool"]=getTotalCostPool();
               }
             }
             if (structKeyExists(variables.instance,"QuantityOnHand")) {
               if (NOT listFindNoCase(arguments.exclude, "QuantityOnHand")) {
-                myStruct.QuantityOnHand=getQuantityOnHand();
+                myStruct["QuantityOnHand"]=getQuantityOnHand();
               }
             }
             if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
               if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+                myStruct["UpdatedDateUTC"]=getUpdatedDateUTC();
               }
             }
             if (structKeyExists(variables.instance,"ItemID")) {
               if (NOT listFindNoCase(arguments.exclude, "ItemID")) {
-                myStruct.ItemID=getItemID();
+                myStruct["ItemID"]=getItemID();
               }
             }
           }

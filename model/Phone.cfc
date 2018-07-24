@@ -1,4 +1,4 @@
-<cfcomponent displayname="Phone" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="Phone" output="false" extends="xeroclient"
   hint="I am the Phone Class.">
 
 <!--- PROPERTIES --->
@@ -10,7 +10,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the Phone Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -54,27 +55,27 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.PhoneID=getPhoneID();
-            myStruct.Status=getStatus();
+            myStruct["PhoneID"]=getPhoneID();
+            myStruct["Status"]=getStatus();
           } else {
             if (structKeyExists(variables.instance,"PhoneType")) {
               if (NOT listFindNoCase(arguments.exclude, "PhoneType")) {
-                myStruct.PhoneType=getPhoneType();
+                myStruct["PhoneType"]=getPhoneType();
               }
             }
             if (structKeyExists(variables.instance,"PhoneNumber")) {
               if (NOT listFindNoCase(arguments.exclude, "PhoneNumber")) {
-                myStruct.PhoneNumber=getPhoneNumber();
+                myStruct["PhoneNumber"]=getPhoneNumber();
               }
             }
             if (structKeyExists(variables.instance,"PhoneAreaCode")) {
               if (NOT listFindNoCase(arguments.exclude, "PhoneAreaCode")) {
-                myStruct.PhoneAreaCode=getPhoneAreaCode();
+                myStruct["PhoneAreaCode"]=getPhoneAreaCode();
               }
             }
             if (structKeyExists(variables.instance,"PhoneCountryCode")) {
               if (NOT listFindNoCase(arguments.exclude, "PhoneCountryCode")) {
-                myStruct.PhoneCountryCode=getPhoneCountryCode();
+                myStruct["PhoneCountryCode"]=getPhoneCountryCode();
               }
             }
           }

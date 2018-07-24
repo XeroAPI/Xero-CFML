@@ -1,4 +1,4 @@
-<cfcomponent displayname="BrandingTheme" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="BrandingTheme" output="false" extends="xeroclient"
   hint="I am the BrandingTheme Class.">
 
 <!--- PROPERTIES --->
@@ -11,7 +11,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the BrandingTheme Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>      
     <cfreturn this />
   </cffunction>
 
@@ -40,28 +41,28 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.BrandingThemeID=getBrandingThemeID();
-            myStruct.Status=getStatus();
+            myStruct["BrandingThemeID"]=getBrandingThemeID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"BrandingThemeID")) {
               if (NOT listFindNoCase(arguments.exclude, "BrandingThemeID")) {
-                myStruct.BrandingThemeID=getBrandingThemeID();
+                myStruct["BrandingThemeID"]=getBrandingThemeID();
               }
             }
             if (structKeyExists(variables.instance,"Name")) {
               if (NOT listFindNoCase(arguments.exclude, "Name")) {
-                myStruct.Name=getName();
+                myStruct["Name"]=getName();
               }
             }
             if (structKeyExists(variables.instance,"SortOrder")) {
               if (NOT listFindNoCase(arguments.exclude, "SortOrder")) {
-                myStruct.SortOrder=getSortOrder();
+                myStruct["SortOrder"]=getSortOrder();
               }
             }
             if (structKeyExists(variables.instance,"CreatedDateUTC")) {
               if (NOT listFindNoCase(arguments.exclude, "CreatedDateUTC")) {
-                myStruct.CreatedDateUTC=getCreatedDateUTC();
+                myStruct["CreatedDateUTC"]=getCreatedDateUTC();
               }
             }
           }

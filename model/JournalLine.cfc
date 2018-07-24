@@ -1,4 +1,4 @@
-<cfcomponent displayname="JournalLine" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="JournalLine" output="false" extends="xeroclient"
   hint="I am the JournalLine Class.">
 
 <!--- PROPERTIES --->
@@ -13,7 +13,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the JournalLine Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -57,40 +58,40 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.JournalLineID=getJournalLineID();
-            myStruct.Status=getStatus();
+            myStruct["JournalLineID"]=getJournalLineID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"LineAmount")) {
               if (NOT listFindNoCase(arguments.exclude, "LineAmount")) {
-                myStruct.LineAmount=getLineAmount();
+                myStruct["LineAmount"]=getLineAmount();
               }
             }
             if (structKeyExists(variables.instance,"AccountCode")) {
               if (NOT listFindNoCase(arguments.exclude, "AccountCode")) {
-                myStruct.AccountCode=getAccountCode();
+                myStruct["AccountCode"]=getAccountCode();
               }
             }
             if (structKeyExists(variables.instance,"Description")) {
               if (NOT listFindNoCase(arguments.exclude, "Description")) {
                 if(len(getDescription()) GT 0) {
-                  myStruct.Description=getDescription();
+                  myStruct["Description"]=getDescription();
                 }
               }
             }
             if (structKeyExists(variables.instance,"TaxType")) {
               if (NOT listFindNoCase(arguments.exclude, "TaxType")) {
-                myStruct.TaxType=getTaxType();
+                myStruct["TaxType"]=getTaxType();
               }
             }
             if (structKeyExists(variables.instance,"Tracking")) {
               if (NOT listFindNoCase(arguments.exclude, "Tracking")) {
-                myStruct.Tracking=getTracking();
+                myStruct["Tracking"]=getTracking();
               }
             }
             if (structKeyExists(variables.instance,"TaxAmount")) {
               if (NOT listFindNoCase(arguments.exclude, "TaxAmount")) {
-                myStruct.TaxAmount=getTaxAmount();
+                myStruct["TaxAmount"]=getTaxAmount();
               }
             }
           }

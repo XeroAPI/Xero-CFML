@@ -1,4 +1,4 @@
-<cfcomponent displayname="Invoice" output="false" extends="cfc.xeroclient"
+<cfcomponent displayname="Invoice" output="false" extends="xeroclient"
   hint="I am the Invoice Class.">
 
 <!--- PROPERTIES --->
@@ -38,7 +38,8 @@
 <!--- INIT --->
   <cffunction name="init" access="public" output="false"
     returntype="any" hint="I am the constructor method for the Invoice Class.">
-      
+    <cfargument name="xero" type="any">
+    <cfset variables.xero = arguments.xero>
     <cfreturn this />
   </cffunction>
 
@@ -88,167 +89,167 @@
         <cfscript>
           myStruct=StructNew();
           if (archive) {
-            myStruct.InvoiceID=getInvoiceID();
-            myStruct.Status=getStatus();
+            myStruct["InvoiceID"]=getInvoiceID();
+            myStruct["Status"]=getStatus();
           } else {
 
             if (structKeyExists(variables.instance,"Type")) {
               if (NOT listFindNoCase(arguments.exclude, "Type")) {
-                myStruct.Type=getType();
+                myStruct["Type"]=getType();
               }
             }
             if (structKeyExists(variables.instance,"Contact")) {
               if (NOT listFindNoCase(arguments.exclude, "Contact")) {
-                myStruct.Contact=getContact();
+                myStruct["Contact"]=getContact();
               }
             }
             if (structKeyExists(variables.instance,"LineItems")) {
               if (NOT listFindNoCase(arguments.exclude, "LineItems")) {
-                myStruct.LineItems=getLineItems();
+                myStruct["LineItems"]=getLineItems();
               }
             }
             if (structKeyExists(variables.instance,"Date")) {
               if (NOT listFindNoCase(arguments.exclude, "Date")) {
-                myStruct.Date=getDate();
+                myStruct["Date"]=getDate();
               }
             }
             if (structKeyExists(variables.instance,"DueDate")) {
               if (NOT listFindNoCase(arguments.exclude, "DueDate")) {
-                myStruct.DueDate=getDueDate();
+                myStruct["DueDate"]=getDueDate();
               }
             }
             if (structKeyExists(variables.instance,"LineAmountTypes")) {
               if (NOT listFindNoCase(arguments.exclude, "LineAmountTypes")) {
-                myStruct.LineAmountTypes=getLineAmountTypes();
+                myStruct["LineAmountTypes"]=getLineAmountTypes();
               }
             }
             if (structKeyExists(variables.instance,"InvoiceNumber")) {
               if (NOT listFindNoCase(arguments.exclude, "InvoiceNumber")) {
-                myStruct.InvoiceNumber=getInvoiceNumber();
+                myStruct["InvoiceNumber"]=getInvoiceNumber();
               }
             }
             if (structKeyExists(variables.instance,"Reference")) {
               if (NOT listFindNoCase(arguments.exclude, "Reference")) {
-                myStruct.Reference=getReference();
+                myStruct["Reference"]=getReference();
               }
             }
             if (structKeyExists(variables.instance,"BrandingThemeID")) {
               if (NOT listFindNoCase(arguments.exclude, "BrandingThemeID")) {
                 if(len(variables.instance.BrandingThemeID) GT 0) {
-                  myStruct.BrandingThemeID=getBrandingThemeID();
+                  myStruct["BrandingThemeID"]=getBrandingThemeID();
                 }
               }
             }
             if (structKeyExists(variables.instance,"Url")) {
               if (NOT listFindNoCase(arguments.exclude, "Url")) {
                  if(len(variables.instance.Url) GT 0) {
-                   myStruct.Url=getUrl();
+                   myStruct["Url"]=getUrl();
                 }
               }
             }
             if (structKeyExists(variables.instance,"CurrencyCode")) {
               if (NOT listFindNoCase(arguments.exclude, "CurrencyCode")) {
-                myStruct.CurrencyCode=getCurrencyCode();
+                myStruct["CurrencyCode"]=getCurrencyCode();
               }
             }
             if (structKeyExists(variables.instance,"CurrencyRate")) {
               if (NOT listFindNoCase(arguments.exclude, "CurrencyRate")) {
-                myStruct.CurrencyRate=getCurrencyRate();
+                myStruct["CurrencyRate"]=getCurrencyRate();
               }
             }
             if (structKeyExists(variables.instance,"Status")) {
               if (NOT listFindNoCase(arguments.exclude, "Status")) {
-                myStruct.Status=getStatus();
+                myStruct["Status"]=getStatus();
               }
             }
             if (structKeyExists(variables.instance,"SentToContact")) {
               if (NOT listFindNoCase(arguments.exclude, "SentToContact")) {
-                myStruct.SentToContact=getSentToContact();
+                myStruct["SentToContact"]=getSentToContact();
               }
             }
             if (structKeyExists(variables.instance,"ExpectedPaymentDate")) {
               if (NOT listFindNoCase(arguments.exclude, "ExpectedPaymentDate")) {
-                myStruct.ExpectedPaymentDate=getExpectedPaymentDate();
+                myStruct["ExpectedPaymentDate"]=getExpectedPaymentDate();
               }
             }
             if (structKeyExists(variables.instance,"PlannedPaymentDate")) {
               if (NOT listFindNoCase(arguments.exclude, "PlannedPaymentDate")) {
-                myStruct.PlannedPaymentDate=getPlannedPaymentDate();
+                myStruct["PlannedPaymentDate"]=getPlannedPaymentDate();
               }
             }
             if (structKeyExists(variables.instance,"SubTotal")) {
               if (NOT listFindNoCase(arguments.exclude, "SubTotal")) {
-                myStruct.SubTotal=getSubTotal();
+                myStruct["SubTotal"]=getSubTotal();
               }
             }
             if (structKeyExists(variables.instance,"TotalTax")) {
               if (NOT listFindNoCase(arguments.exclude, "TotalTax")) {
-                myStruct.TotalTax=getTotalTax();
+                myStruct["TotalTax"]=getTotalTax();
               }
             }
             if (structKeyExists(variables.instance,"Total")) {
               if (NOT listFindNoCase(arguments.exclude, "Total")) {
-                myStruct.Total=getTotal();
+                myStruct["Total"]=getTotal();
               }
             }
             if (structKeyExists(variables.instance,"TotalDiscount")) {
               if (NOT listFindNoCase(arguments.exclude, "TotalDiscount")) {
-                myStruct.TotalDiscount=getTotalDiscount();
+                myStruct["TotalDiscount"]=getTotalDiscount();
               }
             }
             if (structKeyExists(variables.instance,"InvoiceID")) {
               if (NOT listFindNoCase(arguments.exclude, "InvoiceID")) {
-                myStruct.InvoiceID=getInvoiceID();
+                myStruct["InvoiceID"]=getInvoiceID();
               }
             }
             if (structKeyExists(variables.instance,"HasAttachments")) {
               if (NOT listFindNoCase(arguments.exclude, "HasAttachments")) {
-                myStruct.HasAttachments=getHasAttachments();
+                myStruct["HasAttachments"]=getHasAttachments();
               }
             }
             if (structKeyExists(variables.instance,"Payments")) {
               if (NOT listFindNoCase(arguments.exclude, "Payments")) {
-                myStruct.Payments=getPayments();
+                myStruct["Payments"]=getPayments();
               }
             }
             if (structKeyExists(variables.instance,"Prepayments")) {
               if (NOT listFindNoCase(arguments.exclude, "Prepayments")) {
-                myStruct.Prepayments=getPrepayments();
+                myStruct["Prepayments"]=getPrepayments();
               }
             }
             if (structKeyExists(variables.instance,"Overpayments")) {
               if (NOT listFindNoCase(arguments.exclude, "Overpayments")) {
-                myStruct.Overpayments=getOverpayments();
+                myStruct["Overpayments"]=getOverpayments();
               }
             }
             if (structKeyExists(variables.instance,"AmountDue")) {
               if (NOT listFindNoCase(arguments.exclude, "AmountDue")) {
-                myStruct.AmountDue=getAmountDue();
+                myStruct["AmountDue"]=getAmountDue();
               }
             }
             if (structKeyExists(variables.instance,"AmountPaid")) {
               if (NOT listFindNoCase(arguments.exclude, "AmountPaid")) {
-                myStruct.AmountPaid=getAmountPaid();
+                myStruct["AmountPaid"]=getAmountPaid();
               }
             }
             if (structKeyExists(variables.instance,"FullyPaidOnDate")) {
               if (NOT listFindNoCase(arguments.exclude, "FullyPaidOnDate")) {
-                myStruct.FullyPaidOnDate=getFullyPaidOnDate();
+                myStruct["FullyPaidOnDate"]=getFullyPaidOnDate();
               }
             }
             if (structKeyExists(variables.instance,"AmountCredited")) {
               if (NOT listFindNoCase(arguments.exclude, "AmountCredited")) {
-                myStruct.AmountCredited=getAmountCredited();
+                myStruct["AmountCredited"]=getAmountCredited();
               }
             }
             if (structKeyExists(variables.instance,"UpdatedDateUTC")) {
               if (NOT listFindNoCase(arguments.exclude, "UpdatedDateUTC")) {
-                myStruct.UpdatedDateUTC=getUpdatedDateUTC();
+                myStruct["UpdatedDateUTC"]=getUpdatedDateUTC();
               }
             }
             if (structKeyExists(variables.instance,"CreditNotes")) {
               if (NOT listFindNoCase(arguments.exclude, "CreditNotes")) {
-                myStruct.CreditNotes=getCreditNotes();
+                myStruct["CreditNotes"]=getCreditNotes();
               }
             }
           }
@@ -565,7 +566,7 @@
 		   <cfscript>
             var arr = ArrayNew(1);
             for (var i=1;i LTE ArrayLen(arguments.Lineitems);i=i+1) {
-              var item=createObject("component","cfc.model.Lineitem").init().populate(arguments.Lineitems[i]); 
+              var item=createObject("component","LineItem").init(variables.xero).populate(arguments.Lineitems[i]); 
               ArrayAppend(arr,item);
             }
       </cfscript>
@@ -833,7 +834,7 @@
 			<cfscript>
 		        var arr = ArrayNew(1);
 		        for (var i=1;i LTE ArrayLen(arguments.Payments);i=i+1) {
-		          var item=createObject("component","cfc.model.Payment").init().populate(arguments.Payments[i]); 
+		          var item=createObject("component","Payment").init(variables.xero).populate(arguments.Payments[i]); 
 		          ArrayAppend(arr,item);
 		        }
 		      </cfscript>
@@ -854,7 +855,7 @@
 			<cfscript>
 		        var arr = ArrayNew(1);
 		        for (var i=1;i LTE ArrayLen(arguments.Prepayments);i=i+1) {
-		          var item=createObject("component","cfc.model.Prepayment").init().populate(arguments.Prepayments[i]); 
+		          var item=createObject("component","Prepayment").init(variables.xero).populate(arguments.Prepayments[i]); 
 		          ArrayAppend(arr,item);
 		        }
 		      </cfscript>
@@ -875,7 +876,7 @@
 			<cfscript>
 		        var arr = ArrayNew(1);
 		        for (var i=1;i LTE ArrayLen(arguments.Overpayments);i=i+1) {
-		          var item=createObject("component","cfc.model.Overpayment").init().populate(arguments.Overpayments[i]); 
+		          var item=createObject("component","Overpayment").init(variables.xero).populate(arguments.Overpayments[i]); 
 		          ArrayAppend(arr,item);
 		        }
 		      </cfscript>
@@ -961,7 +962,7 @@
 			<cfscript>
 		        var arr = ArrayNew(1);
 		        for (var i=1;i LTE ArrayLen(arguments.CreditNotes);i=i+1) {
-		          var item=createObject("component","cfc.model.CreditNote").init().populate(arguments.CreditNotes[i]); 
+		          var item=createObject("component","CreditNote").init(variables.xero).populate(arguments.CreditNotes[i]); 
 		          ArrayAppend(arr,item);
 		        }
 		      </cfscript>
