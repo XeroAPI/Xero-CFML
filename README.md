@@ -32,10 +32,10 @@ Alternatively, you can [clone or download the app](https://github.com/XeroAPI/xe
 
 Alternatively, you can clone or download this repo and add to your application
 
-Add directory map in your Application.cfc file.
+Iniate the component by passing it the path to your configuration file. It can be used as a singleton, so that you only need to do this once.
 
 ```javascript
-  <cfset this.mappings["/cfc"] = getDirectoryFromPath(getCurrentTemplatePath()) & "cfc/" /> 
+  <cfset pathToConfigJSON = getDirectoryFromPath(getCurrentTemplatePath()) & "resources/config.json"> 
   <cfset application.xero = CreateObject("component", "modules.xero-cfml.xero").init(pathToConfigJSON)>
 ```
 
@@ -339,7 +339,6 @@ Remove from an object on an endpoint
 If you find yourself limited by the models, you can always hack your own raw API call.
 
 ```java
-  <cfset config = application.config.json>
   <cfset parameters = structNew()>
   <cfset body = "">
   <cfset ifModifiedSince = "">
@@ -347,7 +346,7 @@ If you find yourself limited by the models, you can always hack your own raw API
   <cfset accept = "json/application">
   <cfset endpoint = "Organisation">
 
-  <cfset sResourceEndpoint = "#config.ApiBaseUrl##config.ApiEndpointPath##endpoint#">
+  <cfset sResourceEndpoint = "#application.xero.config.ApiBaseUrl##application.xero.config.ApiEndpointPath##endpoint#">
   
   <!--- Build and Call API, return new structure of XML results --->
   <cfset oRequestResult = application.xero.requestData(
