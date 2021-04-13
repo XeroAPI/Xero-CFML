@@ -1,3 +1,8 @@
+# Warning: This SDK is no longer maintained.
+
+## Looking for OAuth 2.0?
+Please checkout this open soruce [OAuth 2 library](https://github.com/coldfumonkeh/oauth2)
+
 Xero CFML SDK - connect to Xero API with CFML application servers.
 
 * [Things to note](#things-to-note)
